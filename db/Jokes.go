@@ -1,6 +1,6 @@
 package db
 
-import "models"
+import "github.com/ruiblaese/projeto-codenation-banco-uati/models"
 
 // We'll create a list of jokes
 var jokes = []models.Joke{
@@ -16,4 +16,5 @@ var jokes = []models.Joke{
 //GetJokes retorna lista de Piadas
 func GetJokes() []models.Joke {
 	return jokes
+
 }

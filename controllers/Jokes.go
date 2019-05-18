@@ -1,11 +1,11 @@
 package controllers
 
 import (
-	"db"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/ruiblaese/projeto-codenation-banco-uati/db"
 )
 
 // JokeHandler retrieves a list of available jokes

@@ -1,10 +1,9 @@
 package main
 
-import (
-	"routes"
-)
+import "github.com/ruiblaese/projeto-codenation-banco-uati/routes"
 
 func main() {
-	// Set the router as the default one shipped with Gin
+
 	routes.StartRouter()
+
 }
