@@ -14,8 +14,8 @@ func JokeHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, db.GetJokes())
 }
 
-// LikeJoke increments the likes of a particular joke Item
-func LikeJoke(c *gin.Context) {
+// JokeLikeHandler increments the likes of a particular joke Item
+func JokeLikeHandler(c *gin.Context) {
 	jokes := db.GetJokes()
 	// confirm Joke ID sent is valid
 	// remember to import the `strconv` package

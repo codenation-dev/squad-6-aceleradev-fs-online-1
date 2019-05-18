@@ -38,13 +38,13 @@ func StartRouter() {
 
 	//exemplos
 	auth.GET("/jokes", handlers.JokeHandler)
-	auth.POST("/jokes/like/:jokeID", handlers.LikeJoke)
+	auth.POST("/jokes/like/:jokeID", handlers.JokeLikeHandler)
 
 	//autenticar usuario
-	auth.POST("/signin/", handlers.LikeJoke)
+	auth.POST("/signin/", handlers.JokeLikeHandler)
 
 	//cadastrar usuario
-	auth.POST("/signup/", handlers.LikeJoke)
+	auth.POST("/signup/", handlers.JokeLikeHandler)
 
 	//inicia servidor
 	router.Run(":3000")

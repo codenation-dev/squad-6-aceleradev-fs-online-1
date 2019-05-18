@@ -6,12 +6,10 @@ import (
 
 	jwt "github.com/appleboy/gin-jwt"
 	"github.com/gin-gonic/gin"
+	"github.com/ruiblaese/projeto-codenation-banco-uati/models"
 )
 
-
 var identityKey = "id"
-
-
 
 //GetAuthMiddleware retorna middleware de autenticacao
 func GetAuthMiddleware() *jwt.GinJWTMiddleware {
@@ -23,7 +21,7 @@ func GetAuthMiddleware() *jwt.GinJWTMiddleware {
 		MaxRefresh:  time.Hour,
 		IdentityKey: identityKey,
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
-			if v, ok := data.(*User); ok {
+			if v, ok := data.(*models.User); ok {
 				return jwt.MapClaims{
 					identityKey: v.UserName,
 				}
@@ -32,12 +30,12 @@ func GetAuthMiddleware() *jwt.GinJWTMiddleware {
 		},
 		IdentityHandler: func(c *gin.Context) interface{} {
 			claims := jwt.ExtractClaims(c)
-			return &User{
+			return &models.User{
 				UserName: claims["id"].(string),
 			}
 		},
 		Authenticator: func(c *gin.Context) (interface{}, error) {
-			var loginVals login
+			var loginVals models.Login
 			if err := c.ShouldBind(&loginVals); err != nil {
 				return "", jwt.ErrMissingLoginValues
 			}
@@ -45,7 +43,7 @@ func GetAuthMiddleware() *jwt.GinJWTMiddleware {
 			password := loginVals.Password
 
 			if (userID == "admin" && password == "admin") || (userID == "test" && password == "test") {
-				return &User{
+				return &models.User{
 					UserName:  userID,
 					LastName:  "Bo-Yi",
 					FirstName: "Wu",
@@ -55,7 +53,7 @@ func GetAuthMiddleware() *jwt.GinJWTMiddleware {
 			return nil, jwt.ErrFailedAuthentication
 		},
 		Authorizator: func(data interface{}, c *gin.Context) bool {
-			if v, ok := data.(*User); ok && v.UserName == "admin" {
+			if v, ok := data.(*models.User); ok && v.UserName == "admin" {
 				return true
 			}
 
