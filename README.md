@@ -26,13 +26,13 @@
 
 
 ## Docker
-####Subindo com Docker
+#### Subindo com Docker
 `$ docker pull postgres`   
 `$ docker volume create pgdata`   
 `$ docker run --name postgres -e POSTGRES_PASSWORD=12345 -v`   
 `pgdata:/var/lib/postgresql/data -d postgres`
 
-#####Descobrindo Ip do Docker
+##### Descobrindo Ip do Docker
 Para gerenciar nosso postgres podemos usar o psql:
 Vamos descobrir o IP de nosso server postgres
 `$ docker inspect postgres | grep IPAddress`
@@ -41,7 +41,7 @@ retorno parecido com esse:
 `"SecondaryIPAddresses": null,`
 `"IPAddress": "172.17.0.2",`
 
-###Iniciando docker pela segunda vez
+### Iniciando docker pela segunda vez
 `docker start postgres`
 
 ## Recomendações
