@@ -36,7 +36,7 @@ func GetAuthMiddleware() *jwt.GinJWTMiddleware {
 
 		IdentityHandler: func(c *gin.Context) interface{} {
 			claims := jwt.ExtractClaims(c)
-			var user = db.GetUserByEmail(claims["email"].(string))
+			var user = db.FindUserByEmail(claims["email"].(string))
 			fmt.Println(user)
 			return user
 		},
@@ -46,7 +46,7 @@ func GetAuthMiddleware() *jwt.GinJWTMiddleware {
 			if err := c.ShouldBind(&loginVals); err != nil {
 				return "", jwt.ErrMissingLoginValues
 			}
-			var user = db.GetUserByEmail(loginVals.Email)
+			var user = db.FindUserByEmail(loginVals.Email)
 			if user.Email == loginVals.Email && user.Password == loginVals.Password {
 				return &user, nil
 			}

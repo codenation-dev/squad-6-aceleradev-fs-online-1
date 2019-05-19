@@ -24,6 +24,16 @@
 
  - acessar: http://localhost:3000
 
+## Rotas
+ - Login: http://localhost:3000/api/v1/signin
+ `enviar header com token nas proximas rotas`
+##### Usuario
+ - GET: http://localhost:3000/api/v1/user/
+ - GET (Id ou Email): http://localhost:3000/api/v1/user/:idOuEmail
+ - PUT: http://localhost:3000/api/v1/user/:id
+ - POST: http://localhost:3000/api/v1/user/  
+ - DELETE: http://localhost:3000/api/v1/user/:id   
+
 
 ## Docker
 #### Subindo com Docker

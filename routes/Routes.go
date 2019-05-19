@@ -20,7 +20,8 @@ func StartRouter() {
 	// Serve frontend static files
 	router.Use(static.Serve("/", static.LocalFile("./views", true)))
 
-	router.POST("/login", authMiddleware.LoginHandler)
+	router.POST("/api/v1/signin", authMiddleware.LoginHandler)
+	router.POST("/api/v1/signup", authMiddleware.LoginHandler)
 
 	router.NoRoute(authMiddleware.MiddlewareFunc(), func(c *gin.Context) {
 		claims := jwt.ExtractClaims(c)
@@ -28,23 +29,23 @@ func StartRouter() {
 		c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "Page not found"})
 	})
 
-	auth := router.Group("/auth")
+	v1 := router.Group("/api/v1")
 	// Refresh time can be longer than token timeout
-	auth.GET("/refresh_token", authMiddleware.RefreshHandler)
-	auth.Use(authMiddleware.MiddlewareFunc())
+	v1.GET("/refresh_token", authMiddleware.RefreshHandler)
+	v1.Use(authMiddleware.MiddlewareFunc())
 	{
-		auth.GET("/hello", handlers.HelloHandler)
+		v1.GET("/hello", handlers.HelloHandler)
+
+		//rotas para usuarios
+		user := v1.Group("/user")
+		{
+			user.GET("", handlers.GetUsers)
+			user.GET(":id", handlers.GetUser)
+			user.PUT(":id", handlers.PutUser)
+			user.POST("", handlers.NewUser)
+			user.DELETE(":id", handlers.DeleteUser)
+		}
 	}
-
-	//exemplos
-	auth.GET("/jokes", handlers.JokeHandler)
-	auth.POST("/jokes/like/:jokeID", handlers.JokeLikeHandler)
-
-	//autenticar usuario
-	auth.POST("/signin/", handlers.JokeLikeHandler)
-
-	//cadastrar usuario
-	auth.POST("/signup/", handlers.JokeLikeHandler)
 
 	//inicia servidor
 	router.Run(":3000")
