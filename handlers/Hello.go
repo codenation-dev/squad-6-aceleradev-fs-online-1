@@ -3,17 +3,18 @@ package handlers
 import (
 	jwt "github.com/appleboy/gin-jwt"
 	"github.com/gin-gonic/gin"
-	"github.com/ruiblaese/projeto-codenation-banco-uati/models"
+	"github.com/ruiblaese/projeto-codenation-banco-uati/db"
 )
 
-var identityKey = "id"
+var identityKey = "email"
 
+//HelloHandler teste de login
 func HelloHandler(c *gin.Context) {
 	claims := jwt.ExtractClaims(c)
-	user, _ := c.Get(identityKey)
+	var user = db.GetUserByEmail(claims["email"].(string))
 	c.JSON(200, gin.H{
-		"userID":   claims["id"],
-		"userName": user.(*models.User).UserName,
-		"text":     "Hello World.",
+		"email": claims["email"],
+		"user":  user,
+		"text":  "Hello World.",
 	})
 }

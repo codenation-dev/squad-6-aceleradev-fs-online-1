@@ -40,7 +40,7 @@ CREATE TABLE historico_pagamento(
     nome         VARCHAR(200) NOT NULL,   
     cargo        varchar(200) NOT NULL,
     orgao        varchar(200) NOT NULL,       
-    remuneracao  numeric(18.2) not null,     
+    remuneracao  numeric(18,2) not null,     
     pagame_id integer not null,    
     CONSTRAINT historico_pagamento_pk PRIMARY KEY (hispag_id)
 );
@@ -60,3 +60,11 @@ CREATE TABLE historico_alerta(
 CREATE SEQUENCE historico_alerta_hisale_id_seq;
 ALTER TABLE historico_alerta ALTER COLUMN hisale_id SET DEFAULT nextval('historico_alerta_hisale_id_seq'::regclass);
 ALTER TABLE historico_alerta ADD UNIQUE(hisale_id);  
+
+INSERT INTO public.usuario(
+	email, password, nome, recebe_alerta)
+	VALUES ('admin', 'admin', 'admin', true);
+
+INSERT INTO public.usuario(
+	email, password, nome, recebe_alerta)
+	VALUES ('ruiblaese@gmail.com', '1234', 'Rui', true);

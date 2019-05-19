@@ -1,65 +1,68 @@
 package middleware
 
 import (
+	"fmt"
 	"log"
+	"os"
 	"time"
 
 	jwt "github.com/appleboy/gin-jwt"
 	"github.com/gin-gonic/gin"
+	"github.com/ruiblaese/projeto-codenation-banco-uati/db"
 	"github.com/ruiblaese/projeto-codenation-banco-uati/models"
 )
 
-var identityKey = "id"
+var identityKey = "email"
 
 //GetAuthMiddleware retorna middleware de autenticacao
 func GetAuthMiddleware() *jwt.GinJWTMiddleware {
 
 	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
 		Realm:       "test zone",
-		Key:         []byte("FazerEnvKey"),
+		Key:         []byte(os.Getenv("JWT_SECRET")),
 		Timeout:     time.Hour,
 		MaxRefresh:  time.Hour,
 		IdentityKey: identityKey,
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
+
 			if v, ok := data.(*models.User); ok {
+				fmt.Println("alert 1-> ", v.ID)
 				return jwt.MapClaims{
-					identityKey: v.UserName,
+					identityKey: v.Email,
 				}
 			}
 			return jwt.MapClaims{}
 		},
+
 		IdentityHandler: func(c *gin.Context) interface{} {
 			claims := jwt.ExtractClaims(c)
-			return &models.User{
-				UserName: claims["id"].(string),
-			}
+			var user = db.GetUserByEmail(claims["email"].(string))
+			fmt.Println(user)
+			return user
 		},
+
 		Authenticator: func(c *gin.Context) (interface{}, error) {
 			var loginVals models.Login
 			if err := c.ShouldBind(&loginVals); err != nil {
 				return "", jwt.ErrMissingLoginValues
 			}
-			userID := loginVals.Username
-			password := loginVals.Password
-
-			if (userID == "admin" && password == "admin") || (userID == "test" && password == "test") {
-				return &models.User{
-					UserName:  userID,
-					LastName:  "Bo-Yi",
-					FirstName: "Wu",
-				}, nil
+			var user = db.GetUserByEmail(loginVals.Email)
+			if user.Email == loginVals.Email && user.Password == loginVals.Password {
+				return &user, nil
 			}
-
 			return nil, jwt.ErrFailedAuthentication
 		},
+
 		Authorizator: func(data interface{}, c *gin.Context) bool {
-			if v, ok := data.(*models.User); ok && v.UserName == "admin" {
+			user := data.(models.User)
+			if user.ID > 0 {
 				return true
 			}
-
 			return false
 		},
+
 		Unauthorized: func(c *gin.Context, code int, message string) {
+
 			c.JSON(code, gin.H{
 				"code":    code,
 				"message": message,

@@ -17,6 +17,9 @@ func StartRouter() {
 
 	authMiddleware := middleware.GetAuthMiddleware()
 
+	// Serve frontend static files
+	router.Use(static.Serve("/", static.LocalFile("./views", true)))
+
 	router.POST("/login", authMiddleware.LoginHandler)
 
 	router.NoRoute(authMiddleware.MiddlewareFunc(), func(c *gin.Context) {
@@ -32,9 +35,6 @@ func StartRouter() {
 	{
 		auth.GET("/hello", handlers.HelloHandler)
 	}
-
-	// Serve frontend static files
-	router.Use(static.Serve("/", static.LocalFile("./views", true)))
 
 	//exemplos
 	auth.GET("/jokes", handlers.JokeHandler)

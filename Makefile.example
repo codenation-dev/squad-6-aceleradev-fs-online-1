@@ -7,5 +7,8 @@ export DB_PASSWORD := 12345
 export DB_BANCO := codenation
 export DB_PORT := 5432
 
+export JWT_SECRET = SecretJWTKeyCodeNation
+
 run:
 	go run main.go
+err
