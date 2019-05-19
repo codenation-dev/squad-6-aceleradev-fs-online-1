@@ -15,7 +15,7 @@
  - criar sua versao do Makefile.exemple    
    `cp Makefile.example Makefile`
 
- - criar ou iniciar docker com postgresql
+ - criar\iniciar docker(postgresql) ou proprio postgresql
  - criar banco de dados no postgres: codenation
  - executar script com estrutura basica do banco (.\\assets\\estrutura.sql)
 
@@ -45,6 +45,18 @@ retorno parecido com esse:
 `docker start postgres`
 
 ## Recomendações
-  - Microsoft Visual Studio Code -> https://code.visualstudio.com/download
-  - insomnia -> https://insomnia.rest/download/
-  - docker
+  - [Microsoft Visual Studio Code](https://code.visualstudio.com/download)
+  - [Insomnia](https://insomnia.rest/download/)
+  - [Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
+
+## Links
+  - [Projeto](https://github.com/ruiblaese/projeto-codenation-banco-uati)
+  - [Chat CodeNation](https://chat.codenation.com.br/)
+  - [Chat CodeNation Nosso Squad](https://chat.codenation.com.br/group/fullstack-remote-1-squad6-v2)
+  - [Documentacao de configuracao de ambiente da CodeNation](https://drive.google.com/file/d/1639-YzRhVUEHHbh5E-2u6mjDHeNPKzP1/view)
+  
+  - [02 de maio | 1º Workshop - AceleraDev Full Stack Go + React - Codenation](https://www.youtube.com/watch?v=3iUf0jk2IzY)
+
+- [08 de maio | 2º Workshop - AceleraDev Full Stack Go + React - Codenation](https://www.youtube.com/watch?v=022c5nk-5oI)
+
+- [15 de maio | 3º Workshop - AceleraDev Full Stack Go + React - Codenation](https://www.youtube.com/watch?v=1Aa7mabvWRk)
