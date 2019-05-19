@@ -45,7 +45,7 @@ func init() {
 		//log.Println(err)
 		return
 	}
-	println("connected!")
+	println("Banco de dados PostgreSQL iniciando com sucesso!")
 	return
 }
 
