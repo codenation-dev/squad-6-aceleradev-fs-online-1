@@ -16,7 +16,7 @@ func GetAuthMiddleware() *jwt.GinJWTMiddleware {
 
 	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
 		Realm:       "test zone",
-		Key:         []byte("secret key"),
+		Key:         []byte("FazerEnvKey"),
 		Timeout:     time.Hour,
 		MaxRefresh:  time.Hour,
 		IdentityKey: identityKey,
