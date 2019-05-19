@@ -2,23 +2,23 @@
 
 ## Instruções
 
- - entrar na pasta "go/src", no meu caso "/home/rui/go/src/"
-
+ - entrar na pasta "go/src", no meu caso "/home/rui/go/src/"   
    `git clone https://github.com/ruiblaese/projeto-codenation-banco-uati`   
    `cd projeto-codenation-banco-uati`   
-
    
-- baixar dependencias
+- baixar dependencias   
    `go get github.com/gin-gonic/gin`   
    `go get github.com/gin-gonic/contrib/static`   
    `go get github.com/appleboy/gin-jwt`
    `go get github.com/lib/pq`
 
- - criar sua versao do Makefile.exemple
+ - criar sua versao do Makefile.exemple    
    `cp Makefile.example Makefile`
+
  - criar ou iniciar docker com postgresql
  - criar banco de dados no postgres: codenation
  - executar script com estrutura basica do banco (.\\assets\\estrutura.sql)
+
  - executar projeto
 `make run`
 
