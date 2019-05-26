@@ -11,4 +11,3 @@ export JWT_SECRET = SecretJWTKeyCodeNation
 
 run:
 	go run main.go
-err

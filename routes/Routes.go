@@ -54,6 +54,7 @@ func StartRouter() {
 			customer.PUT(":id", handlers.PutCustomer)
 			customer.POST("", handlers.NewCustomer)
 			customer.DELETE(":id", handlers.DeleteCustomer)
+			customer.POST("upload", handlers.UploadCustomersWithCSV)
 		}
 	}
 

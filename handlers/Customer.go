@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -90,5 +92,18 @@ func DeleteCustomer(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusInternalServerError, gin.H{"code": "ERROR", "message": "Internal Server Error"})
 	}
+
+}
+
+// UploadCustomersWithCSV atualiza informacoes do usuario
+func UploadCustomersWithCSV(c *gin.Context) {
+
+	file, _ := c.FormFile("file")
+	log.Println(file.Filename)
+
+	// Upload the file to specific dst.
+	c.SaveUploadedFile(file, "./temp/"+file.Filename)
+
+	c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
 
 }
