@@ -7,11 +7,11 @@ import (
 	"github.com/ruiblaese/projeto-codenation-banco-uati/models"
 )
 
-var id int
-var email string
-var password string
-var name string
-var receiveAlert bool
+var userID int
+var userEmail string
+var userPassword string
+var userName string
+var userReceiveAlert bool
 
 //FindAllUsers retorna todos os usuarios
 func FindAllUsers() []models.User {
@@ -31,16 +31,16 @@ func FindAllUsers() []models.User {
 
 	for rows.Next() {
 
-		err := rows.Scan(&id, &email, &password, &name, &receiveAlert)
+		err := rows.Scan(&userID, &userEmail, &userPassword, &userName, &userReceiveAlert)
 		if err != nil {
 			log.Fatal("db.FindAllUsers()->Erro ao executar consulta. Error:", err)
 		} else {
 			var user = models.User{
-				ID:           id,
-				Email:        email,
-				Password:     password,
-				Name:         name,
-				ReceiveAlert: receiveAlert,
+				ID:           userID,
+				Email:        userEmail,
+				Password:     userPassword,
+				Name:         userName,
+				ReceiveAlert: userReceiveAlert,
 			}
 			listUsers = append(listUsers, user)
 		}
@@ -63,16 +63,16 @@ func FindUserByID(id int) models.User {
 
 	row := db.QueryRow("select usuario.* from usuario where usuari_id = $1", id)
 
-	err := row.Scan(&id, &email, &password, &name, &receiveAlert)
+	err := row.Scan(&userID, &userEmail, &userPassword, &userName, &userReceiveAlert)
 	if err != nil {
 		log.Println("db.FindUserByID->Erro ao executar consulta. Error:", err)
 	} else {
 		user = models.User{
-			ID:           id,
-			Email:        email,
-			Password:     password,
-			Name:         name,
-			ReceiveAlert: receiveAlert,
+			ID:           userID,
+			Email:        userEmail,
+			Password:     userPassword,
+			Name:         userName,
+			ReceiveAlert: userReceiveAlert,
 		}
 	}
 	return user
@@ -90,18 +90,18 @@ func FindUserByEmail(email string) models.User {
 		db.Close()
 	}()
 
-	row := db.QueryRow("select usuario.* from usuario where email = $1", email)
+	row := db.QueryRow("select usuario.* from usuario where usuari_email = $1", email)
 
-	err := row.Scan(&id, &email, &password, &name, &receiveAlert)
+	err := row.Scan(&userID, &userEmail, &userPassword, &userName, &userReceiveAlert)
 	if err != nil {
 		log.Println("db.FindUserByEmail->Erro ao executar consulta. Error:", err)
 	} else {
 		user = models.User{
-			ID:           id,
-			Email:        email,
-			Password:     password,
-			Name:         name,
-			ReceiveAlert: receiveAlert,
+			ID:           userID,
+			Email:        userEmail,
+			Password:     userPassword,
+			Name:         userName,
+			ReceiveAlert: userReceiveAlert,
 		}
 	}
 	return user
@@ -121,21 +121,21 @@ func InsertUser(user models.User) models.User {
 
 	insert :=
 		`INSERT INTO public.usuario
-		(email, password, nome, recebe_alerta)
-		VALUES ($1, $2, $3, $4) returning usuari_id, email, password, nome, recebe_alerta;`
+		(usuari_email, usuari_password, usuari_nome, usuari_recebe_alerta)
+		VALUES ($1, $2, $3, $4) returning usuari_id, usuari_email, usuari_password, usuari_nome, usuari_recebe_alerta;`
 
 	errUpdate := db.QueryRow(insert,
-		user.Email, user.Password, user.Name, user.ReceiveAlert).Scan(&id, &email, &password, &name, &receiveAlert)
+		user.Email, user.Password, user.Name, user.ReceiveAlert).Scan(&userID, &userEmail, &userPassword, &userName, &userReceiveAlert)
 
 	if errUpdate != nil {
 		log.Println("db.UpdateUserByID->Erro ao executar insert. Error:", errUpdate)
 	} else {
 		userUpdated = models.User{
-			ID:           id,
-			Email:        email,
-			Password:     password,
-			Name:         name,
-			ReceiveAlert: receiveAlert,
+			ID:           userID,
+			Email:        userEmail,
+			Password:     userPassword,
+			Name:         userName,
+			ReceiveAlert: userReceiveAlert,
 		}
 	}
 	return userUpdated
@@ -164,17 +164,17 @@ func UpdateUserByID(id int, user models.User) models.User {
 			" where usuari_id = $1"+
 			" returning usuari_id, email, password, nome, recebe_alerta;",
 
-		id, user.Email, user.Password, user.Name, user.ReceiveAlert).Scan(&id, &email, &password, &name, &receiveAlert)
+		id, user.Email, user.Password, user.Name, user.ReceiveAlert).Scan(&userID, &userEmail, &userPassword, &userName, &userReceiveAlert)
 
 	if errUpdate != nil {
 		log.Println("db.UpdateUserByID->Erro ao executar update. Error:", errUpdate)
 	} else {
 		userUpdated = models.User{
-			ID:           id,
-			Email:        email,
-			Password:     password,
-			Name:         name,
-			ReceiveAlert: receiveAlert,
+			ID:           userID,
+			Email:        userEmail,
+			Password:     userPassword,
+			Name:         userName,
+			ReceiveAlert: userReceiveAlert,
 		}
 	}
 	return userUpdated

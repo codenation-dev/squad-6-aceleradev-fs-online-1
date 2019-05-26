@@ -34,6 +34,12 @@
  - POST: http://localhost:3000/api/v1/user/  
  - DELETE: http://localhost:3000/api/v1/user/:id   
 
+##### Cliente
+ - GET: http://localhost:3000/api/v1/customer/
+ - GET (Id ou Email): http://localhost:3000/api/v1/customer/:id
+ - PUT: http://localhost:3000/api/v1/customer/:id
+ - POST: http://localhost:3000/api/v1/customer/  
+ - DELETE: http://localhost:3000/api/v1/customer/:id   
 
 ## Docker
 #### Subindo com Docker
@@ -69,3 +75,7 @@ retorno parecido com esse:
 - [08 de maio | 2º Workshop - AceleraDev Full Stack Go + React - Codenation](https://www.youtube.com/watch?v=022c5nk-5oI)
 
 - [15 de maio | 3º Workshop - AceleraDev Full Stack Go + React - Codenation](https://www.youtube.com/watch?v=1Aa7mabvWRk)
+
+- [22 de maio | 4º Workshop - AceleraDev Full Stack Go + React - Codenation](https://www.youtube.com/watch?v=zZGT_DyYYSo)
+
+- [23 de maio | Webservice REST em Go com TDD | AceleraDev Full Stack Go + React - Codenation](https://www.youtube.com/watch?v=5I_IqL4Jb9U)

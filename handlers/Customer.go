@@ -9,45 +9,42 @@ import (
 	"github.com/ruiblaese/projeto-codenation-banco-uati/models"
 )
 
-// GetUsers retorna todos os usuarios
-func GetUsers(c *gin.Context) {
+// GetCustomers retorna todos os usuarios
+func GetCustomers(c *gin.Context) {
 	c.Header("Content-Type", "application/json")
-	c.JSON(http.StatusOK, db.FindAllUsers())
+	c.JSON(http.StatusOK, db.FindAllCustomers())
 }
 
-// GetUser retornoa um usuario, busca primeiro por id, se nao conseguir converter para inteiro busca por email
-func GetUser(c *gin.Context) {
+// GetCustomer retornoa um usuario, busca primeiro por id, se nao conseguir converter para inteiro busca por email
+func GetCustomer(c *gin.Context) {
 	c.Header("Content-Type", "application/json")
 
-	var user models.User
+	var customer models.Customer
 
 	if id, err := strconv.Atoi(c.Params.ByName("id")); err == nil {
-		user = db.FindUserByID(id)
-
-	} else {
-		user = db.FindUserByEmail(c.Params.ByName("id"))
+		customer = db.FindCustomerByID(id)
 	}
 
-	if user.ID > 0 {
-		c.JSON(http.StatusOK, user)
+	if customer.ID > 0 {
+		c.JSON(http.StatusOK, customer)
 	} else {
 		c.AbortWithStatus(http.StatusNotFound)
 	}
 
 }
 
-// PutUser atualiza informacoes do usuario
-func PutUser(c *gin.Context) {
+// PutCustomer atualiza informacoes do usuario
+func PutCustomer(c *gin.Context) {
 	c.Header("Content-Type", "application/json")
-	var user models.User
-	c.Bind(&user)
+	var customer models.Customer
+	c.Bind(&customer)
 
 	if id, err := strconv.Atoi(c.Params.ByName("id")); err == nil {
 
-		userUpdated := db.UpdateUserByID(id, user)
+		CustomerUpdated := db.UpdateCustomerByID(id, customer)
 
-		if userUpdated.ID > 0 {
-			c.JSON(http.StatusOK, userUpdated)
+		if CustomerUpdated.ID > 0 {
+			c.JSON(http.StatusOK, CustomerUpdated)
 		} else {
 			c.JSON(http.StatusInternalServerError, gin.H{"code": "ERROR", "message": "Internal Server Error"})
 		}
@@ -58,17 +55,17 @@ func PutUser(c *gin.Context) {
 
 }
 
-// NewUser cria novo usuario
-func NewUser(c *gin.Context) {
+// NewCustomer cria novo usuario
+func NewCustomer(c *gin.Context) {
 	c.Header("Content-Type", "application/json")
 
-	var user models.User
-	c.Bind(&user)
+	var customer models.Customer
+	c.Bind(&customer)
 
-	userInserted := db.InsertUser(user)
+	CustomerInserted := db.InsertCustomer(customer)
 
-	if userInserted.ID > 0 {
-		c.JSON(http.StatusOK, userInserted)
+	if CustomerInserted.ID > 0 {
+		c.JSON(http.StatusOK, CustomerInserted)
 
 	} else {
 		c.JSON(http.StatusInternalServerError, gin.H{"code": "ERROR", "message": "Internal Server Error"})
@@ -76,13 +73,13 @@ func NewUser(c *gin.Context) {
 
 }
 
-// DeleteUser deleta usuario
-func DeleteUser(c *gin.Context) {
+// DeleteCustomer deleta usuario
+func DeleteCustomer(c *gin.Context) {
 	c.Header("Content-Type", "application/json")
 
 	if id, err := strconv.Atoi(c.Params.ByName("id")); err == nil {
 
-		apagou := db.DeleteUserByID(id)
+		apagou := db.DeleteCustomerByID(id)
 
 		if apagou {
 			c.JSON(http.StatusOK, gin.H{"code": "OK", "message": ""})

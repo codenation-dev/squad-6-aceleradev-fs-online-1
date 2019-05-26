@@ -45,6 +45,16 @@ func StartRouter() {
 			user.POST("", handlers.NewUser)
 			user.DELETE(":id", handlers.DeleteUser)
 		}
+
+		//rotas para clientes
+		customer := v1.Group("/customer")
+		{
+			customer.GET("", handlers.GetCustomers)
+			customer.GET(":id", handlers.GetCustomer)
+			customer.PUT(":id", handlers.PutCustomer)
+			customer.POST("", handlers.NewCustomer)
+			customer.DELETE(":id", handlers.DeleteCustomer)
+		}
 	}
 
 	//inicia servidor
