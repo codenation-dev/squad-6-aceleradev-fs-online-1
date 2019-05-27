@@ -5,8 +5,8 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ruiblaese/projeto-codenation-banco-uati/db"
-	"github.com/ruiblaese/projeto-codenation-banco-uati/models"
+	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/db"
+	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/models"
 )
 
 // GetUsers retorna todos os usuarios

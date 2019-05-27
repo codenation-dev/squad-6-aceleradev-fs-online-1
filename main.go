@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/ruiblaese/projeto-codenation-banco-uati/db"
-	"github.com/ruiblaese/projeto-codenation-banco-uati/routes"
+	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/db"
+	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/routes"
 )
 
 func main() {

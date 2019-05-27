@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/ruiblaese/projeto-codenation-banco-uati/models"
+	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/models"
 )
 
 var customerID int
