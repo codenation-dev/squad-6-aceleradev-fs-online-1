@@ -43,7 +43,7 @@ func ConnectDataBase() *sql.DB {
 		log.Fatal("Erro ao 'pingar' banco de dados postgresql. Error:", err)
 		return nil
 	}
-	println("Banco de dados PostgreSQL iniciando com sucesso!")
+	println("PostgreSQL.Open()")
 
 	return db
 

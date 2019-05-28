@@ -17,7 +17,7 @@ func FindAllCustomers() []models.Customer {
 
 	db := ConnectDataBase()
 	defer func() {
-		fmt.Println("fechou conexao com postgresql")
+		fmt.Println("PostgreSQL.Close()")
 		db.Close()
 	}()
 
@@ -32,10 +32,10 @@ func FindAllCustomers() []models.Customer {
 		if err != nil {
 			log.Fatal("db.FindAllCustomers()->Erro ao executar consulta. Error:", err)
 		} else {
-			var Customer = models.Customer{
+			var customer = models.Customer{
 				ID:   customerID,
 				Name: customerName}
-			listCustomers = append(listCustomers, Customer)
+			listCustomers = append(listCustomers, customer)
 		}
 
 	}
@@ -46,11 +46,11 @@ func FindAllCustomers() []models.Customer {
 //FindCustomerByID retona usuario pelo seu id
 func FindCustomerByID(id int) models.Customer {
 
-	var Customer models.Customer
+	var customer models.Customer
 
 	db := ConnectDataBase()
 	defer func() {
-		fmt.Println("fechou conexao com postgresql")
+		fmt.Println("PostgreSQL.Close()")
 		db.Close()
 	}()
 
@@ -60,22 +60,48 @@ func FindCustomerByID(id int) models.Customer {
 	if err != nil {
 		log.Println("db.FindCustomerByID->Erro ao executar consulta. Error:", err)
 	} else {
-		Customer = models.Customer{
+		customer = models.Customer{
 			ID:   customerID,
 			Name: customerName}
 	}
-	return Customer
+	return customer
+
+}
+
+//FindCustomerByName retona usuaclienterio pelo seu email
+func FindCustomerByName(name string) models.Customer {
+
+	var customer models.Customer
+
+	db := ConnectDataBase()
+	defer func() {
+		fmt.Println("PostgreSQL.Close()")
+		db.Close()
+	}()
+
+	row := db.QueryRow("select cliente.* from cliente where client_nome = $1", name)
+
+	err := row.Scan(&customerID, &customerName)
+	if err != nil {
+		log.Println("db.FindCustomerByName->Erro ao executar consulta. Error:", err)
+	} else {
+		customer = models.Customer{
+			ID:   customerID,
+			Name: customerName,
+		}
+	}
+	return customer
 
 }
 
 //InsertCustomer retona usuario pelo seu email
-func InsertCustomer(Customer models.Customer) models.Customer {
+func InsertCustomer(customer models.Customer) models.Customer {
 
-	var CustomerUpdated models.Customer
+	var customerUpdated models.Customer
 
 	db := ConnectDataBase()
 	defer func() {
-		fmt.Println("fechou conexao com postgresql")
+		fmt.Println("PostgreSQL.Close()")
 		db.Close()
 	}()
 
@@ -85,27 +111,27 @@ func InsertCustomer(Customer models.Customer) models.Customer {
 		VALUES ($1) returning client_id, client_nome;`
 
 	errUpdate := db.QueryRow(insert,
-		Customer.Name).Scan(&customerID, &customerName)
+		customer.Name).Scan(&customerID, &customerName)
 
 	if errUpdate != nil {
 		log.Println("db.UpdateCustomerByID->Erro ao executar insert. Error:", errUpdate)
 	} else {
-		CustomerUpdated = models.Customer{
+		customerUpdated = models.Customer{
 			ID:   customerID,
 			Name: customerName}
 	}
-	return CustomerUpdated
+	return customerUpdated
 
 }
 
 //UpdateCustomerByID retona usuario pelo seu email
-func UpdateCustomerByID(id int, Customer models.Customer) models.Customer {
+func UpdateCustomerByID(id int, customer models.Customer) models.Customer {
 
-	var CustomerUpdated models.Customer
+	var customerUpdated models.Customer
 
 	db := ConnectDataBase()
 	defer func() {
-		fmt.Println("fechou conexao com postgresql")
+		fmt.Println("PostgreSQL.Close()")
 		db.Close()
 	}()
 
@@ -118,16 +144,16 @@ func UpdateCustomerByID(id int, Customer models.Customer) models.Customer {
 			" where client_id = $1"+
 			" returning client_id, client_nome;",
 
-		id, Customer.Name).Scan(&customerID, &customerName)
+		id, customer.Name).Scan(&customerID, &customerName)
 
 	if errUpdate != nil {
 		log.Println("db.UpdateCustomerByID->Erro ao executar update. Error:", errUpdate)
 	} else {
-		CustomerUpdated = models.Customer{
+		customerUpdated = models.Customer{
 			ID:   customerID,
 			Name: customerName}
 	}
-	return CustomerUpdated
+	return customerUpdated
 
 }
 
@@ -136,7 +162,7 @@ func DeleteCustomerByID(id int) bool {
 
 	db := ConnectDataBase()
 	defer func() {
-		fmt.Println("fechou conexao com postgresql")
+		fmt.Println("PostgreSQL.Close()")
 		db.Close()
 	}()
 

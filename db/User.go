@@ -20,7 +20,7 @@ func FindAllUsers() []models.User {
 
 	db := ConnectDataBase()
 	defer func() {
-		fmt.Println("fechou conexao com postgresql")
+		fmt.Println("PostgreSQL.Close()")
 		db.Close()
 	}()
 
@@ -57,7 +57,7 @@ func FindUserByID(id int) models.User {
 
 	db := ConnectDataBase()
 	defer func() {
-		fmt.Println("fechou conexao com postgresql")
+		fmt.Println("PostgreSQL.Close()")
 		db.Close()
 	}()
 
@@ -86,7 +86,7 @@ func FindUserByEmail(email string) models.User {
 
 	db := ConnectDataBase()
 	defer func() {
-		fmt.Println("fechou conexao com postgresql")
+		fmt.Println("PostgreSQL.Close()")
 		db.Close()
 	}()
 
@@ -115,7 +115,7 @@ func InsertUser(user models.User) models.User {
 
 	db := ConnectDataBase()
 	defer func() {
-		fmt.Println("fechou conexao com postgresql")
+		fmt.Println("PostgreSQL.Close()")
 		db.Close()
 	}()
 
@@ -149,7 +149,7 @@ func UpdateUserByID(id int, user models.User) models.User {
 
 	db := ConnectDataBase()
 	defer func() {
-		fmt.Println("fechou conexao com postgresql")
+		fmt.Println("PostgreSQL.Close()")
 		db.Close()
 	}()
 
@@ -186,7 +186,7 @@ func DeleteUserByID(id int) bool {
 
 	db := ConnectDataBase()
 	defer func() {
-		fmt.Println("fechou conexao com postgresql")
+		fmt.Println("PostgreSQL.Close()")
 		db.Close()
 	}()
 

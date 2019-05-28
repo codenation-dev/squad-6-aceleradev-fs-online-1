@@ -1,14 +1,16 @@
 package handlers
 
 import (
+	"encoding/csv"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 
-	"github.com/gin-gonic/gin"
 	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/db"
 	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/models"
+	"github.com/gin-gonic/gin"
 )
 
 // GetCustomers retorna todos os usuarios
@@ -101,9 +103,40 @@ func UploadCustomersWithCSV(c *gin.Context) {
 	file, _ := c.FormFile("file")
 	log.Println(file.Filename)
 
-	// Upload the file to specific dst.
-	c.SaveUploadedFile(file, "./temp/"+file.Filename)
+	fileTemp := "./temp/" + file.Filename
+	c.SaveUploadedFile(file, fileTemp)
+
+	go registerCustomersFromCSV(fileTemp)
 
 	c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
 
+}
+
+func registerCustomersFromCSV(file string) {
+	f, err := os.Open(file)
+	if err != nil {
+		log.Panicln(err)
+	}
+	defer f.Close() // this needs to be after the err check
+
+	lines, err := csv.NewReader(f).ReadAll()
+	if err != nil {
+		log.Panicln(err)
+	}
+
+	for _, line := range lines {
+
+		nomeCliente := line[0]
+		fmt.Println(nomeCliente)
+
+		custumer := db.FindCustomerByName(nomeCliente)
+
+		if custumer.ID > 0 {
+			//talvez fazer update com data ultima atualizacao, talvez nome ultimo arquivo
+			//db.UpdateCustomerByID(custumer.ID, models.Customer{Name: nomeCliente})
+		} else {
+			db.InsertCustomer(models.Customer{Name: nomeCliente})
+		}
+
+	}
 }
