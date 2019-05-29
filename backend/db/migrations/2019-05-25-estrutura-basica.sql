@@ -21,7 +21,6 @@ ALTER TABLE cliente ALTER COLUMN client_id SET DEFAULT nextval('cliente_client_i
 ALTER TABLE cliente ADD UNIQUE(client_id);  
 
 
-
 CREATE TABLE pagamento(
     pagame_id           INTEGER NOT NULL,
     pagame_arquivo      VARCHAR(200) NOT NULL,   
