@@ -3,7 +3,7 @@
 ## Instruções
 
  - entrar na pasta "go/src", no meu caso "/home/rui/go/src/"   
-   `git clone https://github.com/codenation-dev/squad-6-aceleradev-fs-online-1`   
+   `git clone https://github.com/codenation-dev/squad-6-aceleradev-fs-online-1/backend`   
    `cd squad-6-aceleradev-fs-online-1`   
    
 - baixar dependencias   
@@ -66,7 +66,7 @@ retorno parecido com esse:
   - [Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
 
 ## Links
-  - [Projeto](https://github.com/codenation-dev/squad-6-aceleradev-fs-online-1)
+  - [Projeto](https://github.com/codenation-dev/squad-6-aceleradev-fs-online-1/backend)
   - [Chat CodeNation](https://chat.codenation.com.br/)
   - [Chat CodeNation Nosso Squad](https://chat.codenation.com.br/group/fullstack-remote-1-squad6-v2)
   - [Documentacao de configuracao de ambiente da CodeNation](https://drive.google.com/file/d/1639-YzRhVUEHHbh5E-2u6mjDHeNPKzP1/view)

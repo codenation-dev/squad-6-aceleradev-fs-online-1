@@ -3,7 +3,7 @@ package handlers
 import (
 	jwt "github.com/appleboy/gin-jwt"
 	"github.com/gin-gonic/gin"
-	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/db"
+	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/backend/db"
 )
 
 //HelloHandler teste de login
