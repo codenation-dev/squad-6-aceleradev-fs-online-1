@@ -22,7 +22,7 @@ func TestStartRouter(t *testing.T) {
 	router := gin.Default()
 
 	w := performRequest(router, "GET", "/")
-	assert.Equal(t, http.StatusNotModified, w.Code)
+	assert.Equal(t, http.StatusOK, w.Code)
 	w  = performRequest(router, "POST", "/api/v1/signin")
 	assert.Equal(t, http.StatusOK, w.Code)
 	w  = performRequest(router, "POST", "/api/v1/signup")
