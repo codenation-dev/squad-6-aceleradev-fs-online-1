@@ -21,7 +21,7 @@ func TestStartRouter(t *testing.T) {
     // Perform a GET request with that handler.
 	router := gin.Default()
 
-	w := performRequest(router, "GET", "")
+	w := performRequest(router, "GET", "/")
 	assert.Equal(t, http.StatusOK, w.Code)
 	w  = performRequest(router, "POST", "/api/v1/signin")
 	assert.Equal(t, http.StatusOK, w.Code)
