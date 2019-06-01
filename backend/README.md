@@ -3,8 +3,9 @@
 ## Instruções
 
  - entrar na pasta "go/src", no meu caso "/home/rui/go/src/"   
-   `git clone https://github.com/codenation-dev/squad-6-aceleradev-fs-online-1/backend`   
+   `git clone https://github.com/codenation-dev/squad-6-aceleradev-fs-online-1/`   
    `cd squad-6-aceleradev-fs-online-1`   
+   `cd backend`   
    
 - baixar dependencias   
    `go get github.com/gin-gonic/gin`   
