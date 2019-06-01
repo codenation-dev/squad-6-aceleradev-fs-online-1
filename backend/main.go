@@ -7,6 +7,9 @@ import (
 
 func main() {
 
+	//testes rui //depois vou remover ;-)
+	//services.DownloadPaymentFile(2019, 3)
+
 	db.ConnectDataBase()
 
 	routes.StartRouter()
