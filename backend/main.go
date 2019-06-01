@@ -7,8 +7,9 @@ import (
 
 func main() {
 
-	//testes rui //depois vou remover ;-)
+	//testes rui //depois vou remover essas linhas de testes ;-)
 	//services.DownloadPaymentFile(2019, 3)
+	//services.ExtractRarFile("./temp/remuneracao_Marco_2019.rar", "./temp/remuneracao_Marco_2019")
 
 	db.ConnectDataBase()
 

@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+
+	"github.com/mholt/archiver"
 )
 
 //DownloadPaymentFile busca salario no site do governo
@@ -61,4 +63,17 @@ func DownloadPaymentFile(year int, month int) (string, error) {
 	}
 
 	return filepath, nil
+}
+
+// ExtractRarFile funcao para descompactar arquivos do tipo RAR
+func ExtractRarFile(filepath string, outpath string) error {
+
+	err := archiver.Unarchive(filepath, outpath)
+	if err != nil {
+		fmt.Println("Error->ExtractRarFile->", filepath, "Error: ", err)
+		return err
+	}
+
+	return nil
+
 }
