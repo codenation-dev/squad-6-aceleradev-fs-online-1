@@ -12,7 +12,7 @@ import (
 )
 
 //StartRouter inicia servidor e estabelece rotas
-func StartRouter() *gin.Engine {
+func StartRouter(*gin.Engine) *gin.Engine {
 	router := gin.Default()
 
 	authMiddleware := middleware.GetAuthMiddleware()
