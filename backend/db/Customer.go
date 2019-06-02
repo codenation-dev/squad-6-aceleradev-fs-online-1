@@ -1,6 +1,7 @@
 package db
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 
@@ -16,10 +17,7 @@ func FindAllCustomers() []models.Customer {
 	var listCustomers []models.Customer
 
 	db := ConnectDataBase()
-	defer func() {
-		fmt.Println("PostgreSQL.Close()")
-		db.Close()
-	}()
+	defer CloseDataBase(db)
 
 	rows, errQuery := db.Query("select cliente.* from cliente")
 	if errQuery != nil {
@@ -49,15 +47,12 @@ func FindCustomerByID(id int) models.Customer {
 	var customer models.Customer
 
 	db := ConnectDataBase()
-	defer func() {
-		fmt.Println("PostgreSQL.Close()")
-		db.Close()
-	}()
+	defer CloseDataBase(db)
 
 	row := db.QueryRow("select cliente.* from cliente where usuari_id = $1", id)
 
 	err := row.Scan(&customerID, &customerName)
-	if err != nil {
+	if (err != nil) && (err != sql.ErrNoRows) {
 		log.Println("db.FindCustomerByID->Erro ao executar consulta. Error:", err)
 	} else {
 		customer = models.Customer{
@@ -74,15 +69,12 @@ func FindCustomerByName(name string) models.Customer {
 	var customer models.Customer
 
 	db := ConnectDataBase()
-	defer func() {
-		fmt.Println("PostgreSQL.Close()")
-		db.Close()
-	}()
+	defer CloseDataBase(db)
 
 	row := db.QueryRow("select cliente.* from cliente where client_nome = $1", name)
 
 	err := row.Scan(&customerID, &customerName)
-	if err != nil {
+	if (err != nil) && (err != sql.ErrNoRows) {
 		log.Println("db.FindCustomerByName->Erro ao executar consulta. Error:", err)
 	} else {
 		customer = models.Customer{
@@ -100,10 +92,7 @@ func InsertCustomer(customer models.Customer) models.Customer {
 	var customerUpdated models.Customer
 
 	db := ConnectDataBase()
-	defer func() {
-		fmt.Println("PostgreSQL.Close()")
-		db.Close()
-	}()
+	defer CloseDataBase(db)
 
 	insert :=
 		`INSERT INTO public.cliente
@@ -113,7 +102,7 @@ func InsertCustomer(customer models.Customer) models.Customer {
 	errUpdate := db.QueryRow(insert,
 		customer.Name).Scan(&customerID, &customerName)
 
-	if errUpdate != nil {
+	if (errUpdate != nil) && (errUpdate != sql.ErrNoRows) {
 		log.Println("db.UpdateCustomerByID->Erro ao executar insert. Error:", errUpdate)
 	} else {
 		customerUpdated = models.Customer{
@@ -130,10 +119,7 @@ func UpdateCustomerByID(id int, customer models.Customer) models.Customer {
 	var customerUpdated models.Customer
 
 	db := ConnectDataBase()
-	defer func() {
-		fmt.Println("PostgreSQL.Close()")
-		db.Close()
-	}()
+	defer CloseDataBase(db)
 
 	fmt.Println(id)
 
@@ -146,7 +132,7 @@ func UpdateCustomerByID(id int, customer models.Customer) models.Customer {
 
 		id, customer.Name).Scan(&customerID, &customerName)
 
-	if errUpdate != nil {
+	if (errUpdate != nil) && (errUpdate != sql.ErrNoRows) {
 		log.Println("db.UpdateCustomerByID->Erro ao executar update. Error:", errUpdate)
 	} else {
 		customerUpdated = models.Customer{
@@ -161,10 +147,7 @@ func UpdateCustomerByID(id int, customer models.Customer) models.Customer {
 func DeleteCustomerByID(id int) bool {
 
 	db := ConnectDataBase()
-	defer func() {
-		fmt.Println("PostgreSQL.Close()")
-		db.Close()
-	}()
+	defer CloseDataBase(db)
 
 	fmt.Println(id)
 

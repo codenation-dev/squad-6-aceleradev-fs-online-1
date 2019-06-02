@@ -56,6 +56,24 @@ func StartRouter() {
 			customer.DELETE(":id", handlers.DeleteCustomer)
 			customer.POST("upload", handlers.UploadCustomersWithCSV)
 		}
+
+		//rotas para pagamentos
+		payment := v1.Group("/payment")
+		{
+			payment.GET("", handlers.GetPayments)
+			payment.GET(":id", handlers.GetCustomer)
+			payment.PUT(":id", handlers.PutCustomer)
+			payment.POST("", handlers.NewCustomer)
+			payment.DELETE(":id", handlers.DeleteCustomer)
+		}
+
+		//rotas para servicos
+		services := v1.Group("/services")
+		{
+			services.GET("checkPayments", handlers.GetPayments)
+
+		}
+
 	}
 
 	//inicia servidor

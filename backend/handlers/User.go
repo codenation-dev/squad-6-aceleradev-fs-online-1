@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/gin-gonic/gin"
 	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/backend/db"
 	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/backend/models"
+	"github.com/gin-gonic/gin"
 )
 
 // GetUsers retorna todos os usuarios
@@ -53,7 +53,7 @@ func PutUser(c *gin.Context) {
 		}
 
 	} else {
-		c.JSON(http.StatusNotFound, gin.H{"code": "ERROR", "message": "Invalid param"})
+		c.JSON(http.StatusBadRequest, gin.H{"code": "ERROR", "message": "Invalid param"})
 	}
 
 }
@@ -71,7 +71,7 @@ func NewUser(c *gin.Context) {
 		c.JSON(http.StatusOK, userInserted)
 
 	} else {
-		c.JSON(http.StatusInternalServerError, gin.H{"code": "ERROR", "message": "Internal Server Error"})
+		c.JSON(http.StatusBadRequest, gin.H{"code": "ERROR", "message": "Internal Server Error"})
 	}
 
 }
@@ -91,7 +91,7 @@ func DeleteUser(c *gin.Context) {
 		}
 
 	} else {
-		c.JSON(http.StatusInternalServerError, gin.H{"code": "ERROR", "message": "Internal Server Error"})
+		c.JSON(http.StatusBadRequest, gin.H{"code": "ERROR", "message": "Invalid param"})
 	}
 
 }

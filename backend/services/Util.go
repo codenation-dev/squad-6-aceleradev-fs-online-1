@@ -47,12 +47,16 @@ func DownloadPaymentFile(year int, month int) (string, error) {
 	// Get the data
 	resp, err := http.Get(url)
 	if err != nil {
+		out.Close()
+		os.Remove(filepath)
 		return "", err
 	}
 	defer resp.Body.Close()
 
 	// Check server response
 	if resp.StatusCode != http.StatusOK {
+		out.Close()
+		os.Remove(filepath)
 		return "", fmt.Errorf("bad status: %s", resp.Status)
 	}
 
