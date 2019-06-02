@@ -1,10 +1,13 @@
-package routes
+ package routes
 
 import ("github.com/stretchr/testify/assert"
+
          "testing"
-			"net/http" 
+			"net/http"
 			 "net/http/httptest"
-			"github.com/gin-gonic/gin")
+			//"github.com/gin-gonic/gin"
+
+		)
 
 
 
@@ -15,13 +18,16 @@ import ("github.com/stretchr/testify/assert"
 				return w
 			 }
 
+
 func TestStartRouter(t *testing.T) {
 	// Assert we encoded correctly,
    // the request gives a 200
     // Perform a GET request with that handler.
-	router := gin.Default()
+	router := StartRouter()
 
 	w := performRequest(router, "GET", "/")
+
+
 	assert.Equal(t, http.StatusOK, w.Code)
 	w  = performRequest(router, "POST", "/api/v1/signin")
 	assert.Equal(t, http.StatusOK, w.Code)
@@ -35,6 +41,6 @@ func TestStartRouter(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Code)
 	w = performRequest(router, "GET", "/customer/id")
 	assert.Equal(t, http.StatusOK, w.Code)
-  
 
-	}
+
+	} 
