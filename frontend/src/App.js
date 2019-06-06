@@ -1,26 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {Component} from 'react';
 import './App.css';
+import {login, register,logout} from "./services/Auth/JWTAuth"
 
-function App() {
+export default class App extends Component {
+  async login(){
+    let info = {
+      email: "kaima.abbes@email.com",
+      password: "123456789"
+    };
+
+    await login(info);
+
+  }
+
+
+  render(){
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <button className="btn estilo-1" onClick={this.login}> Login </button>
   );
-}
 
-export default App;
+
+}
+}

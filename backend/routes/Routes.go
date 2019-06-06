@@ -12,8 +12,13 @@ import (
 )
 
 //StartRouter inicia servidor e estabelece rotas
-func StartRouter(*gin.Engine) *gin.Engine {
+func StartRouter(a *gin.Engine) *gin.Engine {
 	router := gin.Default()
+	router.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	router.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+	router.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+	router.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE")
+
 
 	authMiddleware := middleware.GetAuthMiddleware()
 
