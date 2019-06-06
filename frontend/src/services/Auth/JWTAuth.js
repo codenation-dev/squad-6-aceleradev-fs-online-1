@@ -15,7 +15,7 @@ let expire_at = response.data.expireAt;
 
 localStorage.setItem("acess_token", jwt);
 localStorage.setItem("expires_at", expire_at);
-
+console.log(jwt, "login");
 
 }
 }
@@ -42,6 +42,14 @@ const register = async(data)=>{
      }
 
 
-
+ 
 
 }
+
+const logout = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("expire_at");
+}
+
+
+export {login, register , logout }
