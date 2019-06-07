@@ -1,6 +1,6 @@
 import {SERVER_URL,AUTH_TOKEN} from '../../Auth/JWTAuth' ;
 import  React,{Component} from 'react';
-import axios from 'axios';
+//import axios from 'axios';
 
 class AcessUserData extends Component {
 

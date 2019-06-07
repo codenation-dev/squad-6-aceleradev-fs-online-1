@@ -7,13 +7,13 @@ const LOGIN_ENDPOINT = `${SERVER_URL}/api/v1/signin`
 
 try {
 let response = await axios.post(LOGIN_ENDPOINT, data);
-console.log(response.data);
-if (response.status === 200 && response.data.jwt && response.data.expireAt){
+console.log(response.data.expire);
+if (response.status === 200 && response.data.token && response.data.expire){
 
-let jwt = response.data.jwt;
-let expire_at = response.data.expireAt;
+let jwt = response.data.token;
+let expire_at = response.data.expire;
 
-
+console.log("Teste Login !");
 AUTH_TOKEN = localStorage.setItem("acess_token", jwt);
 localStorage.setItem("expires_at", expire_at);
 
