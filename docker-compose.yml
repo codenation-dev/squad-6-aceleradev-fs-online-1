@@ -1,0 +1,78 @@
+version: '3.3'
+
+services:
+  proxy:
+    image: jwilder/nginx-proxy:alpine
+    container_name: cn-squad6-proxy
+    ports:
+      - 80:80
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    networks:
+      backend:
+        ipv4_address: 10.15.0.2
+
+  db:
+    image: postgres:11-alpine
+    container_name: cn-squad6-db
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: buati_dev
+      POSTGRES_USER: buati_user
+      POSTGRES_PASSWORD: secret
+    networks:
+      backend:
+        ipv4_address: 10.15.0.3
+
+  api:
+    build:
+      context: .docker/api
+    container_name: cn-squad6-api
+    ports:
+      - 4000:4000
+    expose:
+      - 4000
+    volumes:
+      - ./backend:/usr/src/app
+    working_dir: /usr/src/app
+    environment:
+      - VIRTUAL_HOST=api.buati.local
+    networks:
+      backend:
+        ipv4_address: 10.15.0.4
+    tty: true
+    stdin_open: true
+    depends_on:
+      - db
+
+  client:
+    build:
+      context: .docker/client
+    container_name: cn-squad6-client
+    ports:
+      - 3000:3000
+    expose:
+      - 3000
+    volumes:
+      - ./frontend:/usr/src/app
+    working_dir: /usr/src/app
+    environment:
+      - VIRTUAL_HOST=buati.local
+    networks:
+      frontend:
+      backend:
+        ipv4_address: 10.15.0.5
+    tty: true
+    stdin_open: true
+    depends_on:
+      - api
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.15.0.0/28
