@@ -1,3 +1,7 @@
-Makefile
-Makefile.
-temp/**
+# ASDF
+.tool-versions
+
+# Build files
+squad-6-aceleradev-fs-online-1
+
+.env
