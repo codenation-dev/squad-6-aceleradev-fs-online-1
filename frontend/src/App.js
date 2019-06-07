@@ -1,22 +1,36 @@
 import React, {Component} from 'react';
 import './App.css';
-import {login, register,logout} from "./services/Auth/JWTAuth"
+import Login from './components/pages/Login/index';
+import { login } from './services/Auth/JWTAuth';
+import UserData from './services/Data/UserData/AcessUserData'
 
 export default class App extends Component {
-  async login(){
-    let info = {
-      email: "ruiblaese@gmail.com",
-      password: "1234"
-    };
-
-    await login(info);
-
+  constructor(props){
+    super(props);
+    this.state = {
+         users: ''
+    }
   }
+    getUser(userData){
+
+      this.setState({ users: userData })
 
 
+    }
+  
+
+  
   render(){
   return (
-    <button className="btn estilo-1" onClick={this.login}> Login </button>
+   <div className="app-div">From app.js
+   
+   <Login/>
+   <UserData ></UserData>
+   <h1></h1>
+   
+   </div>
+   
+ 
   );
 
 

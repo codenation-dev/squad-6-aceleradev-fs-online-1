@@ -1,31 +1,30 @@
 import axios from 'axios';
-const SERVER_URL = "http://localhost:3000"
-
+const SERVER_URL = "http://localhost:3000";
+const AUTH_TOKEN = '';
 const login = async (data) => {
 
 const LOGIN_ENDPOINT = `${SERVER_URL}/api/v1/signin`
 
 try {
 let response = await axios.post(LOGIN_ENDPOINT, data);
-
+console.log(response.data);
 if (response.status === 200 && response.data.jwt && response.data.expireAt){
 
 let jwt = response.data.jwt;
 let expire_at = response.data.expireAt;
 
-localStorage.setItem("acess_token", jwt);
+
+AUTH_TOKEN = localStorage.setItem("acess_token", jwt);
 localStorage.setItem("expires_at", expire_at);
-console.log(jwt, "login");
 
 }
 }
 catch(e){
-console.log(e);
 
 }
 }
 
-const register = async(data)=>{
+const registro = async(data)=>{
   const SIGNUP_ENDEPOINT = `${SERVER_URL}/api/v1/signup`;
   
     try{
@@ -39,13 +38,13 @@ const register = async(data)=>{
           url : SIGNUP_ENDEPOINT,
           data: data
         });
-        console.log(response);
+       
      }catch(e){
 
         console.log(e);
      }
 
-
+     console.log(data);
  
 
 }
@@ -53,7 +52,12 @@ const register = async(data)=>{
 const logout = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("expire_at");
+    console.log("logout !")
 }
 
 
-export {login, register , logout }
+
+
+  
+
+export {login, registro , logout,SERVER_URL ,AUTH_TOKEN}
