@@ -12,7 +12,6 @@ import (
 
 //DownloadPaymentFile busca salario no site do governo
 func DownloadPaymentFile(year int, month int) (string, error) {
-
 	month = month - 1
 
 	var months [12]string
@@ -71,7 +70,6 @@ func DownloadPaymentFile(year int, month int) (string, error) {
 
 // ExtractRarFile funcao para descompactar arquivos do tipo RAR
 func ExtractRarFile(filepath string, outpath string) error {
-
 	err := archiver.Unarchive(filepath, outpath)
 	if err != nil {
 		fmt.Println("Error->ExtractRarFile->", filepath, "Error: ", err)
@@ -79,5 +77,4 @@ func ExtractRarFile(filepath string, outpath string) error {
 	}
 
 	return nil
-
 }

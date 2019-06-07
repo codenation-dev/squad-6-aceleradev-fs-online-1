@@ -34,7 +34,6 @@ func GetCustomer(c *gin.Context) {
 	} else {
 		c.AbortWithStatus(http.StatusNotFound)
 	}
-
 }
 
 // PutCustomer atualiza informacoes do usuario
@@ -44,7 +43,6 @@ func PutCustomer(c *gin.Context) {
 	c.Bind(&customer)
 
 	if id, err := strconv.Atoi(c.Params.ByName("id")); err == nil {
-
 		CustomerUpdated := db.UpdateCustomerByID(id, customer)
 
 		if CustomerUpdated.ID > 0 {
@@ -56,7 +54,6 @@ func PutCustomer(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusNotFound, gin.H{"code": "ERROR", "message": "Invalid param"})
 	}
-
 }
 
 // NewCustomer cria novo usuario
@@ -74,7 +71,6 @@ func NewCustomer(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusInternalServerError, gin.H{"code": "ERROR", "message": "Internal Server Error"})
 	}
-
 }
 
 // DeleteCustomer deleta usuario
@@ -82,7 +78,6 @@ func DeleteCustomer(c *gin.Context) {
 	c.Header("Content-Type", "application/json")
 
 	if id, err := strconv.Atoi(c.Params.ByName("id")); err == nil {
-
 		apagou := db.DeleteCustomerByID(id)
 
 		if apagou {
@@ -94,12 +89,10 @@ func DeleteCustomer(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusInternalServerError, gin.H{"code": "ERROR", "message": "Internal Server Error"})
 	}
-
 }
 
 // UploadCustomersWithCSV atualiza informacoes do usuario
 func UploadCustomersWithCSV(c *gin.Context) {
-
 	file, _ := c.FormFile("file")
 	log.Println(file.Filename)
 
@@ -109,7 +102,6 @@ func UploadCustomersWithCSV(c *gin.Context) {
 	go registerCustomersFromCSV(fileTemp)
 
 	c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
-
 }
 
 func registerCustomersFromCSV(file string) {
@@ -125,7 +117,6 @@ func registerCustomersFromCSV(file string) {
 	}
 
 	for _, line := range lines {
-
 		nomeCliente := line[0]
 		fmt.Println(nomeCliente)
 

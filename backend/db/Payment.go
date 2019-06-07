@@ -23,7 +23,6 @@ var (
 
 //FindAllPayments retorna todos os pagamentos
 func FindAllPayments(returnEmployees bool) []models.Payment {
-
 	var listUsers []models.Payment
 
 	db := ConnectDataBase()
@@ -35,7 +34,6 @@ func FindAllPayments(returnEmployees bool) []models.Payment {
 	}
 
 	for rows.Next() {
-
 		err := rows.Scan(&paymentID, &paymentFileName, &paymentYear, &paymentMonth)
 		if err != nil {
 			log.Fatal("db.FindAllPayments()->Erro ao executar consulta. Error:", err)
@@ -56,7 +54,6 @@ func FindAllPayments(returnEmployees bool) []models.Payment {
 
 //FindPaymentByID retorna pagamento por id
 func FindPaymentByID(returnEmployees bool, ID int) models.Payment {
-
 	var payment models.Payment
 
 	db := ConnectDataBase()
@@ -84,7 +81,6 @@ func FindPaymentByID(returnEmployees bool, ID int) models.Payment {
 
 //FindPaymentByYearAndMonth retorna pagamento por ano e mes
 func FindPaymentByYearAndMonth(returnEmployees bool, year int, month int) models.Payment {
-
 	var payment models.Payment
 
 	db := ConnectDataBase()
@@ -112,7 +108,6 @@ func FindPaymentByYearAndMonth(returnEmployees bool, year int, month int) models
 
 //InsertPayment cadastra pagamento
 func InsertPayment(returnEmployees bool, payment models.Payment) models.Payment {
-
 	var paymentInserted models.Payment
 
 	db := ConnectDataBase()
@@ -146,13 +141,12 @@ func InsertPayment(returnEmployees bool, payment models.Payment) models.Payment 
 
 //InsertPaymentEmployee cadastra pagamento
 func insertPaymentEmployee(db *sql.DB, payment models.Payment, paymentEmployee models.PaymentEmployee) models.PaymentEmployee {
-
 	var paymentEmployeeInserted models.PaymentEmployee
 
 	insert :=
 		`INSERT INTO public.pagamento_funcionario
 		(pagame_id, pagfun_nome, pagfun_cargo, pagfun_orgao, pagfun_remuneracao)
-		VALUES ($1, $2, $3, $4, $5) 
+		VALUES ($1, $2, $3, $4, $5)
 		returning pagfun_id, pagame_id, pagfun_nome, pagfun_cargo, pagfun_orgao, pagfun_remuneracao;`
 
 	var occupationFix string
@@ -177,5 +171,4 @@ func insertPaymentEmployee(db *sql.DB, payment models.Payment, paymentEmployee m
 			Salary:     paymentEmployeeSalary}
 	}
 	return paymentEmployeeInserted
-
 }

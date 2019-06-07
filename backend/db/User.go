@@ -16,7 +16,6 @@ var userReceiveAlert bool
 
 //FindAllUsers retorna todos os usuarios
 func FindAllUsers() []models.User {
-
 	var listUsers []models.User
 
 	db := ConnectDataBase()
@@ -28,7 +27,6 @@ func FindAllUsers() []models.User {
 	}
 
 	for rows.Next() {
-
 		err := rows.Scan(&userID, &userEmail, &userPassword, &userName, &userReceiveAlert)
 		if err != nil {
 			log.Fatal("db.FindAllUsers()->Erro ao executar consulta. Error:", err)
@@ -50,7 +48,6 @@ func FindAllUsers() []models.User {
 
 //FindUserByID retona usuario pelo seu id
 func FindUserByID(id int) models.User {
-
 	var user models.User
 
 	db := ConnectDataBase()
@@ -71,12 +68,10 @@ func FindUserByID(id int) models.User {
 		}
 	}
 	return user
-
 }
 
 //FindUserByEmail retona usuario pelo seu email
 func FindUserByEmail(email string) models.User {
-
 	var user models.User
 
 	db := ConnectDataBase()
@@ -97,12 +92,10 @@ func FindUserByEmail(email string) models.User {
 		}
 	}
 	return user
-
 }
 
 //InsertUser retona usuario pelo seu email
 func InsertUser(user models.User) models.User {
-
 	var userUpdated models.User
 
 	db := ConnectDataBase()
@@ -128,12 +121,10 @@ func InsertUser(user models.User) models.User {
 		}
 	}
 	return userUpdated
-
 }
 
 //UpdateUserByID retona usuario pelo seu email
 func UpdateUserByID(id int, user models.User) models.User {
-
 	var userUpdated models.User
 
 	db := ConnectDataBase()
@@ -164,12 +155,10 @@ func UpdateUserByID(id int, user models.User) models.User {
 		}
 	}
 	return userUpdated
-
 }
 
 //DeleteUserByID retona usuario pelo seu email
 func DeleteUserByID(id int) bool {
-
 	db := ConnectDataBase()
 	defer CloseDataBase(db)
 
@@ -183,5 +172,4 @@ func DeleteUserByID(id int) bool {
 		return true
 	}
 	return false
-
 }

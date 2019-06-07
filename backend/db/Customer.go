@@ -13,7 +13,6 @@ var customerName string
 
 //FindAllCustomers retorna todos os usuarios
 func FindAllCustomers() []models.Customer {
-
 	var listCustomers []models.Customer
 
 	db := ConnectDataBase()
@@ -25,7 +24,6 @@ func FindAllCustomers() []models.Customer {
 	}
 
 	for rows.Next() {
-
 		err := rows.Scan(&customerID, &customerName)
 		if err != nil {
 			log.Fatal("db.FindAllCustomers()->Erro ao executar consulta. Error:", err)
@@ -43,7 +41,6 @@ func FindAllCustomers() []models.Customer {
 
 //FindCustomerByID retona usuario pelo seu id
 func FindCustomerByID(id int) models.Customer {
-
 	var customer models.Customer
 
 	db := ConnectDataBase()
@@ -60,12 +57,10 @@ func FindCustomerByID(id int) models.Customer {
 			Name: customerName}
 	}
 	return customer
-
 }
 
 //FindCustomerByName retona usuaclienterio pelo seu email
 func FindCustomerByName(name string) models.Customer {
-
 	var customer models.Customer
 
 	db := ConnectDataBase()
@@ -83,12 +78,10 @@ func FindCustomerByName(name string) models.Customer {
 		}
 	}
 	return customer
-
 }
 
 //InsertCustomer retona usuario pelo seu email
 func InsertCustomer(customer models.Customer) models.Customer {
-
 	var customerUpdated models.Customer
 
 	db := ConnectDataBase()
@@ -110,12 +103,10 @@ func InsertCustomer(customer models.Customer) models.Customer {
 			Name: customerName}
 	}
 	return customerUpdated
-
 }
 
 //UpdateCustomerByID retona usuario pelo seu email
 func UpdateCustomerByID(id int, customer models.Customer) models.Customer {
-
 	var customerUpdated models.Customer
 
 	db := ConnectDataBase()
@@ -140,12 +131,10 @@ func UpdateCustomerByID(id int, customer models.Customer) models.Customer {
 			Name: customerName}
 	}
 	return customerUpdated
-
 }
 
 //DeleteCustomerByID retona usuario pelo seu email
 func DeleteCustomerByID(id int) bool {
-
 	db := ConnectDataBase()
 	defer CloseDataBase(db)
 
@@ -159,5 +148,4 @@ func DeleteCustomerByID(id int) bool {
 		return true
 	}
 	return false
-
 }

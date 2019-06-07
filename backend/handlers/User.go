@@ -33,7 +33,6 @@ func GetUser(c *gin.Context) {
 	} else {
 		c.AbortWithStatus(http.StatusNotFound)
 	}
-
 }
 
 // PutUser atualiza informacoes do usuario
@@ -43,7 +42,6 @@ func PutUser(c *gin.Context) {
 	c.Bind(&user)
 
 	if id, err := strconv.Atoi(c.Params.ByName("id")); err == nil {
-
 		userUpdated := db.UpdateUserByID(id, user)
 
 		if userUpdated.ID > 0 {
@@ -55,7 +53,6 @@ func PutUser(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusBadRequest, gin.H{"code": "ERROR", "message": "Invalid param"})
 	}
-
 }
 
 // NewUser cria novo usuario
@@ -73,7 +70,6 @@ func NewUser(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusBadRequest, gin.H{"code": "ERROR", "message": "Internal Server Error"})
 	}
-
 }
 
 // DeleteUser deleta usuario
@@ -81,7 +77,6 @@ func DeleteUser(c *gin.Context) {
 	c.Header("Content-Type", "application/json")
 
 	if id, err := strconv.Atoi(c.Params.ByName("id")); err == nil {
-
 		apagou := db.DeleteUserByID(id)
 
 		if apagou {
@@ -93,5 +88,4 @@ func DeleteUser(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusBadRequest, gin.H{"code": "ERROR", "message": "Invalid param"})
 	}
-
 }

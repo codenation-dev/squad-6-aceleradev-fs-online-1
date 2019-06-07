@@ -32,7 +32,6 @@ func GetPayment(c *gin.Context) {
 	var payment models.Payment
 
 	if id, err := strconv.Atoi(c.Params.ByName("id")); err == nil {
-
 		payment = db.FindPaymentByID(true, id)
 
 		if payment.ID > 0 {
@@ -44,12 +43,10 @@ func GetPayment(c *gin.Context) {
 	} else {
 		c.AbortWithStatus(http.StatusBadRequest)
 	}
-
 }
 
 // CheckPayments verifica se existe pagamentos para baixar e processar
 func CheckPayments() {
-
 	currentTime := time.Now()
 
 	run := true
@@ -95,7 +92,6 @@ func CheckPayments() {
 			}
 		}
 	}
-
 }
 
 func iso88591toUtf8(fileNameIso88591 string, fileNameOutUtf8 string) {
@@ -117,7 +113,6 @@ func iso88591toUtf8(fileNameIso88591 string, fileNameOutUtf8 string) {
 }
 
 func registerPaymentsFromCSV(fileName string, year int, month int) {
-
 	payment := models.Payment{
 		FileName: fileName,
 		Year:     year,
@@ -140,7 +135,6 @@ func registerPaymentsFromCSV(fileName string, year int, month int) {
 
 	var employeeList []models.PaymentEmployee
 	for _, line := range lines {
-
 		var salary float64
 		if salary, err = strconv.ParseFloat(strings.ReplaceAll(line[3], ",", "."), 64); err != nil {
 			salary = 0.0
@@ -159,5 +153,4 @@ func registerPaymentsFromCSV(fileName string, year int, month int) {
 	fmt.Println("inicia cadastro pagamento")
 	db.InsertPayment(false, payment)
 	fmt.Println("fim")
-
 }

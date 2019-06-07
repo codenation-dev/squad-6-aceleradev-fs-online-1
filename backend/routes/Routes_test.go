@@ -12,7 +12,6 @@ import (
 )
 
 func performRequestLogin(r http.Handler, method, path string, t *testing.T) *httptest.ResponseRecorder {
-
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest(method, path, strings.NewReader("{\"email\": \"ruiblaese@gmail.com\",\"password\": \"1234\"}"))
 	req.Header.Set("Content-Type", "application/json")
@@ -34,12 +33,11 @@ func performRequestWithToken(r http.Handler, method, path string, t *testing.T) 
 }
 
 func TestStartRouter(t *testing.T) {
-
 	/*
 		os.Setenv("DB_HOST", "172.17.0.2")
 		os.Setenv("DB_USER", "postgres")
 		os.Setenv("DB_PASSWORD", "12345")
-		os.Setenv("DB_BANCO", "codenation")
+		os.Setenv("DB_DATABASE", "codenation")
 		os.Setenv("DB_PORT", "5432")
 		os.Setenv("JWT_SECRET", "SecretJWTKeyCodeNation")
 
@@ -65,5 +63,4 @@ func TestStartRouter(t *testing.T) {
 		w = performRequest(router, "GET", "/customer/id", t)
 		assert.Equal(t, http.StatusOK, w.Code)
 	*/
-
 }

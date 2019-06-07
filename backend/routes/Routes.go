@@ -79,5 +79,4 @@ func StartRouter(router *gin.Engine) *gin.Engine {
 	//inicia servidor
 	//router.Run(":3000")
 	return router
-
 }

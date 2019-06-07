@@ -10,12 +10,6 @@ import (
 )
 
 var (
-	DB_HOST     = os.Getenv("DB_HOST")
-	DB_USER     = os.Getenv("DB_USER")
-	DB_PASSWORD = os.Getenv("DB_PASSWORD")
-	DB_BANCO    = os.Getenv("DB_BANCO")
-	DB_PORT     = os.Getenv("DB_PORT")
-
 	DB_SSL   = "disable"
 	DB_SORCE = "postgres"
 
@@ -24,13 +18,19 @@ var (
 
 // ConnectDataBase abrir conneccao com banco de dados
 func ConnectDataBase() *sql.DB {
-
 	//DBConnection conecao publica para acessar em outros arquivos
 	var db *sql.DB
 	var err error
 
-	DBINFO := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
-		DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_BANCO, DB_SSL)
+	DBINFO := fmt.Sprintf(
+		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
+		os.Getenv("DB_HOST"),
+		os.Getenv("DB_PORT"),
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB_DATABASE"),
+		DB_SSL,
+	)
 
 	if SHOW_INFO {
 		println(DBINFO)
@@ -52,7 +52,6 @@ func ConnectDataBase() *sql.DB {
 		println("PostgreSQL.Open()")
 	}
 	return db
-
 }
 
 // CloseDataBase fechar conneccao com banco de dados

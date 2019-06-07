@@ -40,7 +40,7 @@
             Token:
             <input type="text" class="token" id="token" name="token"  />
             <br />
-            <br />            
+            <br />
             <div>
                 <input type="file" id="file" name="file" />
                 <input type="button" class="button" value="Upload" id="but_upload">
@@ -50,9 +50,7 @@
 
     <script>
         $(document).ready(function () {
-
             $("#but_upload").click(function () {
-
                 var fd = new FormData();
                 var files = $('#file')[0].files[0];
                 fd.append('file', files);
@@ -66,7 +64,7 @@
                     processData: false,
                     success: function (response) {
                         if (response != 0) {
-                            $("#img").attr("file", response);                            
+                            $("#img").attr("file", response);
                         } else {
                             alert('file not uploaded');
                         }
@@ -76,7 +74,7 @@
 
                 $.ajax(req);
             });
-        });    
+        });
     </script>
 </body>
 
