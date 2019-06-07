@@ -8,8 +8,8 @@ import (
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 
-	handlers "github.com/codenation-dev/squad-6-aceleradev-fs-online-1/handlers"
-	middleware "github.com/codenation-dev/squad-6-aceleradev-fs-online-1/middleware"
+	handlers "github.com/codenation-dev/squad-6-aceleradev-fs-online-1/backend/handlers"
+	middleware "github.com/codenation-dev/squad-6-aceleradev-fs-online-1/backend/middleware"
 )
 
 //StartRouter inicia servidor e estabelece rotas

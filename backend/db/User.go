@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/models"
+	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/backend/models"
 )
 
 var userID int
