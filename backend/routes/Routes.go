@@ -4,6 +4,7 @@ import (
 	"log"
 
 	jwt "github.com/appleboy/gin-jwt"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 
@@ -12,17 +13,11 @@ import (
 )
 
 //StartRouter inicia servidor e estabelece rotas
-func StartRouter(a *gin.Engine) *gin.Engine {
-	router := gin.Default()
-	router.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-	router.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-	router.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
-	router.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE")
-
+func StartRouter(router *gin.Engine) *gin.Engine {
 
 	authMiddleware := middleware.GetAuthMiddleware()
 
-	// Serve frontend static files
+	router.Use(cors.Default())
 	router.Use(static.Serve("/", static.LocalFile("./views", true)))
 
 	router.POST("/api/v1/signin", authMiddleware.LoginHandler)

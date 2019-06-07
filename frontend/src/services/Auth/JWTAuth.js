@@ -29,16 +29,20 @@ const register = async(data)=>{
   const SIGNUP_ENDEPOINT = `${SERVER_URL}/api/v1/signup`;
   
     try{
+      
         let response = await axios({
-          method :'post',
-          responseType: 'json',
+          method :'POST',
+          headers: {            
+            'Content-Type': 'application/json'
+          },
+          json: true,
           url : SIGNUP_ENDEPOINT,
           data: data
         });
-
+        console.log(response);
      }catch(e){
-    console.log(e);
 
+        console.log(e);
      }
 
 
