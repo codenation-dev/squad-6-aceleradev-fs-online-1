@@ -1,6 +1,6 @@
 import {SERVER_URL,AUTH_TOKEN} from '../../Auth/JWTAuth' ;
 import  React,{Component} from 'react';
-//import axios from 'axios';
+import axios from 'axios';
 
 class AcessUserData extends Component {
 
@@ -8,23 +8,24 @@ class AcessUserData extends Component {
         users: []
         
       }
-      
-      
-      getUser() {
-        const axios = require('axios');
-        axios.defaults.baseURL = SERVER_URL
-        const completePath = `${SERVER_URL}/api/v1/user`;
-        console.log("caminho_completo",completePath);
-
-        axios.defaults.headers.common = {'Authorization': `bearer ${AUTH_TOKEN}`}
-        const url = ''
-        axios.get(url).then(response => response.data)
+      async getUser(data) {
+       
+        const GET_USER = `${SERVER_URL}/api/v1/user`;  
+        //let response = await axios.post(GET_USER, data);
+       const TOKEN =localStorage.getItem("acess_token");
+       console.log(TOKEN)
+       axios.defaults.headers.common = {'authorization': `bearer ${TOKEN}`}
+        axios.get(GET_USER).then(response => response.data)
         .then((data) => {
           this.setState({ users: data })
           console.log("get users !")
          })
-      }
 
+
+}
+      
+
+      
       render(){
 return(
     <div className="div-UserData">

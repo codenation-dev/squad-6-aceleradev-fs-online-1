@@ -25,7 +25,7 @@ catch(e){
 }
 
 const registro = async(data)=>{
-  const SIGNUP_ENDEPOINT = `${SERVER_URL}/api/v1/signup`;
+  const SIGNUP_ENDPOINT = `${SERVER_URL}/api/v1/signup`;
   
     try{
       
@@ -35,7 +35,7 @@ const registro = async(data)=>{
             'Content-Type': 'application/json'
           },
           json: true,
-          url : SIGNUP_ENDEPOINT,
+          url : SIGNUP_ENDPOINT,
           data: data
         });
        
