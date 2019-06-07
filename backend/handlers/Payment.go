@@ -10,10 +10,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/backend/services"
+	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/services"
 
-	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/backend/db"
-	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/backend/models"
+	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/db"
+	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/models"
 	"github.com/gin-gonic/gin"
 
 	"golang.org/x/text/encoding/charmap"

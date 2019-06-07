@@ -6,17 +6,16 @@ import (
 	"os"
 	"time"
 
-	jwt "github.com/appleboy/gin-jwt"
+	jwt "github.com/appleboy/gin-jwt/v2"
+	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/db"
+	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/models"
 	"github.com/gin-gonic/gin"
-	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/backend/db"
-	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/backend/models"
 )
 
 var identityKey = "email"
 
 //GetAuthMiddleware retorna middleware de autenticacao
 func GetAuthMiddleware() *jwt.GinJWTMiddleware {
-
 	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
 		Realm:       "test zone",
 		Key:         []byte(os.Getenv("JWT_SECRET")),
@@ -24,7 +23,6 @@ func GetAuthMiddleware() *jwt.GinJWTMiddleware {
 		MaxRefresh:  time.Hour,
 		IdentityKey: identityKey,
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
-
 			if v, ok := data.(*models.User); ok {
 				fmt.Println("alert 1-> ", v.ID)
 				return jwt.MapClaims{
@@ -62,7 +60,6 @@ func GetAuthMiddleware() *jwt.GinJWTMiddleware {
 		},
 
 		Unauthorized: func(c *gin.Context, code int, message string) {
-
 			c.JSON(code, gin.H{
 				"code":    code,
 				"message": message,
