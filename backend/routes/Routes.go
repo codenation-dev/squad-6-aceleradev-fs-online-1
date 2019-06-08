@@ -2,6 +2,7 @@ package routes
 
 import (
 	"log"
+	"time"
 
 	jwt "github.com/appleboy/gin-jwt"
 	"github.com/gin-contrib/cors"
@@ -15,10 +16,16 @@ import (
 //StartRouter inicia servidor e estabelece rotas
 func StartRouter(router *gin.Engine) *gin.Engine {
 
-	authMiddleware := middleware.GetAuthMiddleware()
-
-	router.Use(cors.Default())
 	router.Use(static.Serve("/", static.LocalFile("./views", true)))
+
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"*"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
+
+	authMiddleware := middleware.GetAuthMiddleware()
 
 	router.POST("/api/v1/signin", authMiddleware.LoginHandler)
 	router.POST("/api/v1/signup", authMiddleware.LoginHandler)
