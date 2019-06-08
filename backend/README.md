@@ -2,46 +2,44 @@
 
 ## Instruções
 
- - entrar na pasta "go/src", no meu caso "/home/rui/go/src/"   
+ - entrar na pasta "go/src/github/", no meu caso "/home/rui/go/src/github/"   
    `git clone https://github.com/codenation-dev/squad-6-aceleradev-fs-online-1/`   
    `cd squad-6-aceleradev-fs-online-1`   
    `cd backend`   
    
 - baixar dependencias   
-   `go get github.com/gin-gonic/gin`   
-   `go get github.com/gin-gonic/contrib/static`   
-   `go get github.com/appleboy/gin-jwt`
-   `go get github.com/lib/pq`
+   `go get`   
+   `go get ./...`       
 
  - criar sua versao do Makefile.exemple    
-   `cp Makefile.example Makefile`
+   `cp .env.example .env`
 
  - criar\iniciar docker(postgresql) ou proprio postgresql
  - criar banco de dados no postgres: codenation
- - executar script com estrutura basica do banco (.\\assets\\estrutura.sql)
+ - executar script com estrutura basica do banco (.\\db\\migrations\\)
 
  - executar projeto
 `make run`
 
- - acessar: http://localhost:3000
+ - acessar: http://localhost:4000
 
 ## Rotas
- - Login: http://localhost:3000/api/v1/signin `retorno do login deve ser usado header\token nas proximas rotas`
+ - Login: http://localhost:4000/api/v1/signin `retorno do login deve ser usado header\token nas proximas rotas`
 ##### Usuario
- - GET: http://localhost:3000/api/v1/user/
- - GET (Id ou Email): http://localhost:3000/api/v1/user/:idOuEmail
- - PUT: http://localhost:3000/api/v1/user/:id
- - POST: http://localhost:3000/api/v1/user/  
- - DELETE: http://localhost:3000/api/v1/user/:id   
+ - GET: http://localhost:4000/api/v1/user/
+ - GET (Id ou Email): http://localhost:4000/api/v1/user/:idOuEmail
+ - PUT: http://localhost:4000/api/v1/user/:id
+ - POST: http://localhost:4000/api/v1/user/  
+ - DELETE: http://localhost:4000/api/v1/user/:id   
 
 ##### Cliente
- - GET: http://localhost:3000/api/v1/customer/
- - GET (Id ou Email): http://localhost:3000/api/v1/customer/:id
- - PUT: http://localhost:3000/api/v1/customer/:id
- - POST: http://localhost:3000/api/v1/customer/  
- - DELETE: http://localhost:3000/api/v1/customer/:id   
+ - GET: http://localhost:4000/api/v1/customer/
+ - GET (Id ou Email): http://localhost:4000/api/v1/customer/:id
+ - PUT: http://localhost:4000/api/v1/customer/:id
+ - POST: http://localhost:4000/api/v1/customer/  
+ - DELETE: http://localhost:4000/api/v1/customer/:id   
 
- - POST: http://localhost:3000/api/v1/customer/upload `formulario de testes: http://localhost:3000/upload.html`   
+ - POST: http://localhost:4000/api/v1/customer/upload `formulario de testes: http://localhost:4000/upload.html`   
 
 ## Docker
 #### Subindo com Docker
@@ -60,11 +58,6 @@ retorno parecido com esse:
 
 ### Iniciando docker pela segunda vez
 `docker start postgres`
-
-## Recomendações
-  - [Microsoft Visual Studio Code](https://code.visualstudio.com/download)
-  - [Insomnia](https://insomnia.rest/download/)
-  - [Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
 
 ## Links
   - [Projeto](https://github.com/codenation-dev/squad-6-aceleradev-fs-online-1/backend)
