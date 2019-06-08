@@ -24,7 +24,6 @@ func GetAuthMiddleware() *jwt.GinJWTMiddleware {
 		IdentityKey: identityKey,
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
 			if v, ok := data.(*models.User); ok {
-				fmt.Println("alert 1-> ", v.ID)
 				return jwt.MapClaims{
 					identityKey: v.Email,
 				}

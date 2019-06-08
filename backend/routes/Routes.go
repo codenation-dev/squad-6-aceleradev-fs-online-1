@@ -2,10 +2,8 @@ package routes
 
 import (
 	"log"
-	"time"
 
 	jwt "github.com/appleboy/gin-jwt"
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 
@@ -17,13 +15,7 @@ import (
 func StartRouter(router *gin.Engine) *gin.Engine {
 
 	router.Use(static.Serve("/", static.LocalFile("./views", true)))
-
-	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"*"},
-		AllowCredentials: true,
-		MaxAge:           12 * time.Hour,
-	}))
+	router.Use(middleware.CorsMiddleware())
 
 	authMiddleware := middleware.GetAuthMiddleware()
 
