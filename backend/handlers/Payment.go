@@ -60,7 +60,7 @@ func CheckPayments() {
 		if payment.ID <= 0 {
 			fileRarPayment, errDownload := services.DownloadPaymentFile(year, int(month))
 			if errDownload == nil {
-				fmt.Println("arquivo compactado:" + fileRarPayment)
+				fmt.Println("CheckPayments()-> file downloaded", fileRarPayment)
 				pathFolderCSV := fileRarPayment[0 : len(fileRarPayment)-4]
 
 				if _, err := os.Stat(pathFolderCSV); !os.IsNotExist(err) {
@@ -69,32 +69,38 @@ func CheckPayments() {
 
 				errExtract := services.ExtractRarFile(fileRarPayment, pathFolderCSV)
 				if errExtract == nil {
-					fmt.Println("pasta extraida:" + pathFolderCSV)
+					fmt.Println("CheckPayments()-> folder extracted:" + pathFolderCSV)
 					pathCSV :=
 						pathFolderCSV +
 							strings.Replace(
 								fileRarPayment[6:len(fileRarPayment)-4], "remuneracao", "Remuneracao", -1) +
 							".txt"
 
-					fmt.Println("arquivo csv:" + pathCSV)
+					fmt.Println("CheckPayments()-> CSV file:" + pathCSV)
 					if _, err := os.Stat(pathCSV); err == nil {
-						fmt.Println("arquivo csv ok")
+						fmt.Println("CheckPayments()-> CSV file check: ok")
 					}
 					registerPaymentsFromCSV(pathCSV, year, int(month))
 				} else {
-					fmt.Println("CheckPayments()-> erro ao descompactar ->", fileRarPayment)
+					fmt.Println("CheckPayments()-> error to extract ->", fileRarPayment)
 				}
 			} else {
-				fmt.Println("CheckPayments()-> erro ao fazer download ->", year, "-", int(month))
+				fmt.Println("CheckPayments()-> error on download ->", year, "-", int(month))
 				//processa novamente procurando no mes anterior a ultima busca
 				run = true
 				currentTime = currentTime.AddDate(0, -1, 0)
 			}
+		} else {
+			fmt.Println("CheckPayments()-> not found new payment")
+			fmt.Println("CheckPayments()-> last payment register ->", year, "-", int(month))
 		}
 	}
 }
 
 func iso88591toUtf8(fileNameIso88591 string, fileNameOutUtf8 string) {
+
+	fmt.Println("iso88591toUtf8()-> file decode:", fileNameIso88591, "to", fileNameOutUtf8)
+
 	f, err := os.Open(fileNameIso88591)
 	if err != nil {
 		// handle file open error
@@ -105,14 +111,18 @@ func iso88591toUtf8(fileNameIso88591 string, fileNameOutUtf8 string) {
 	}
 
 	r := charmap.ISO8859_1.NewDecoder().Reader(f)
-
 	io.Copy(out, r)
-
 	out.Close()
 	f.Close()
 }
 
 func registerPaymentsFromCSV(fileName string, year int, month int) {
+
+	minSalaryForRegisterPayment, err := strconv.ParseFloat(os.Getenv("CONFIG_MIN_SALARY_REGISTER_PAYMENT"), 64)
+	if err != nil {
+		minSalaryForRegisterPayment = 20000
+	}
+
 	payment := models.Payment{
 		FileName: fileName,
 		Year:     year,
@@ -121,7 +131,6 @@ func registerPaymentsFromCSV(fileName string, year int, month int) {
 	fileNameCsvUtf8 := strings.Replace(fileName, ".txt", ".csv", -1)
 	iso88591toUtf8(fileName, fileNameCsvUtf8)
 
-	// Open CSV file
 	f, err := os.Open(fileNameCsvUtf8)
 	if err != nil {
 		panic(err)
@@ -133,24 +142,34 @@ func registerPaymentsFromCSV(fileName string, year int, month int) {
 	reader.FieldsPerRecord = -1
 	lines, err := reader.ReadAll()
 
+	salaryCount := 0
+	SalaryAcceptCount := 0
+
 	var employeeList []models.PaymentEmployee
 	for _, line := range lines {
 		var salary float64
 		if salary, err = strconv.ParseFloat(strings.ReplaceAll(line[3], ",", "."), 64); err != nil {
 			salary = 0.0
 		}
-		paymentEmployee := models.PaymentEmployee{
-			ID:         0,
-			Name:       line[0],
-			Occupation: line[1],
-			Department: line[2],
-			Salary:     salary,
+		if salary >= minSalaryForRegisterPayment {
+			paymentEmployee := models.PaymentEmployee{
+				ID:         0,
+				Name:       line[0],
+				Occupation: line[1],
+				Department: line[2],
+				Salary:     salary,
+			}
+			employeeList = append(employeeList, paymentEmployee)
+			SalaryAcceptCount = SalaryAcceptCount + 1
 		}
-		employeeList = append(employeeList, paymentEmployee)
+		salaryCount = salaryCount + 1
 	}
 	payment.EmployeePayments = employeeList
 
-	fmt.Println("inicia cadastro pagamento")
+	fmt.Println("registerPaymentsFromCSV()-> Salary Count:", salaryCount)
+	fmt.Println("registerPaymentsFromCSV()-> Salary Accept:", SalaryAcceptCount)
+
+	fmt.Println("registerPaymentsFromCSV()-> register payments in db begin")
 	db.InsertPayment(false, payment)
-	fmt.Println("fim")
+	fmt.Println("registerPaymentsFromCSV()-> register payments in db end")
 }
