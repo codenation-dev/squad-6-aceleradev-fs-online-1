@@ -11,7 +11,7 @@ import (
 func main() {
 	db.ConnectDataBase()
 
-	go handlers.CheckPayments()
+	go handlers.MonitorPayments()
 
 	ginRouter := gin.Default()
 	ginRouter = routes.StartRouter(ginRouter)
