@@ -7,23 +7,15 @@ import (
 	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/backend/models"
 )
 
-var (
-	paymentID       int
-	paymentFileName string
-	paymentYear     int
-	paymentMonth    int
-)
-var (
-	paymentEmployeeID         int
-	paymentEmployeeName       string
-	paymentEmployeeOccupation string
-	paymentEmployeeDepartment string
-	paymentEmployeeSalary     float64
-)
-
 //FindAllPayments retorna todos os pagamentos
 func FindAllPayments(returnEmployees bool) []models.Payment {
-	var listUsers []models.Payment
+	var (
+		paymentID       int
+		paymentFileName string
+		paymentYear     int
+		paymentMonth    int
+		listUsers       []models.Payment
+	)
 
 	db := ConnectDataBase()
 	defer CloseDataBase(db)
@@ -39,7 +31,7 @@ func FindAllPayments(returnEmployees bool) []models.Payment {
 			log.Fatal("db.FindAllPayments()->Erro ao executar consulta. Error:", err)
 		} else {
 			var user = models.Payment{
-				ID:       userID,
+				ID:       paymentID,
 				FileName: paymentFileName,
 				Month:    paymentMonth,
 				Year:     paymentYear}
@@ -54,7 +46,13 @@ func FindAllPayments(returnEmployees bool) []models.Payment {
 
 //FindPaymentByID retorna pagamento por id
 func FindPaymentByID(returnEmployees bool, ID int) models.Payment {
-	var payment models.Payment
+	var (
+		paymentID       int
+		paymentFileName string
+		paymentYear     int
+		paymentMonth    int
+		payment         models.Payment
+	)
 
 	db := ConnectDataBase()
 	defer CloseDataBase(db)
@@ -66,7 +64,7 @@ func FindPaymentByID(returnEmployees bool, ID int) models.Payment {
 
 	if paymentID > 0 {
 		payment = models.Payment{
-			ID:       userID,
+			ID:       paymentID,
 			FileName: paymentFileName,
 			Month:    paymentMonth,
 			Year:     paymentYear}
@@ -81,7 +79,13 @@ func FindPaymentByID(returnEmployees bool, ID int) models.Payment {
 
 //FindPaymentByYearAndMonth retorna pagamento por ano e mes
 func FindPaymentByYearAndMonth(returnEmployees bool, year int, month int) models.Payment {
-	var payment models.Payment
+	var (
+		paymentID       int
+		paymentFileName string
+		paymentYear     int
+		paymentMonth    int
+		payment         models.Payment
+	)
 
 	db := ConnectDataBase()
 	defer CloseDataBase(db)
@@ -108,7 +112,13 @@ func FindPaymentByYearAndMonth(returnEmployees bool, year int, month int) models
 
 //InsertPayment cadastra pagamento
 func InsertPayment(returnEmployees bool, payment models.Payment) models.Payment {
-	var paymentInserted models.Payment
+	var (
+		paymentID       int
+		paymentFileName string
+		paymentYear     int
+		paymentMonth    int
+		paymentInserted models.Payment
+	)
 
 	db := ConnectDataBase()
 	defer CloseDataBase(db)
@@ -141,7 +151,15 @@ func InsertPayment(returnEmployees bool, payment models.Payment) models.Payment 
 
 //InsertPaymentEmployee cadastra pagamento
 func insertPaymentEmployee(db *sql.DB, payment models.Payment, paymentEmployee models.PaymentEmployee) models.PaymentEmployee {
-	var paymentEmployeeInserted models.PaymentEmployee
+	var (
+		paymentID                 int
+		paymentEmployeeInserted   models.PaymentEmployee
+		paymentEmployeeID         int
+		paymentEmployeeName       string
+		paymentEmployeeOccupation string
+		paymentEmployeeDepartment string
+		paymentEmployeeSalary     float64
+	)
 
 	insert :=
 		`INSERT INTO public.pagamento_funcionario

@@ -8,15 +8,16 @@ import (
 	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/backend/models"
 )
 
-var userID int
-var userEmail string
-var userPassword string
-var userName string
-var userReceiveAlert bool
-
 //FindAllUsers retorna todos os usuarios
 func FindAllUsers() []models.User {
-	var listUsers []models.User
+	var (
+		userID           int
+		userEmail        string
+		userPassword     string
+		userName         string
+		userReceiveAlert bool
+		listUsers        []models.User
+	)
 
 	db := ConnectDataBase()
 	defer CloseDataBase(db)
@@ -48,7 +49,14 @@ func FindAllUsers() []models.User {
 
 //FindUserByID retona usuario pelo seu id
 func FindUserByID(id int) models.User {
-	var user models.User
+	var (
+		userID           int
+		userEmail        string
+		userPassword     string
+		userName         string
+		userReceiveAlert bool
+		user             models.User
+	)
 
 	db := ConnectDataBase()
 	defer CloseDataBase(db)
@@ -72,7 +80,14 @@ func FindUserByID(id int) models.User {
 
 //FindUserByEmail retona usuario pelo seu email
 func FindUserByEmail(email string) models.User {
-	var user models.User
+	var (
+		userID           int
+		userEmail        string
+		userPassword     string
+		userName         string
+		userReceiveAlert bool
+		user             models.User
+	)
 
 	db := ConnectDataBase()
 	defer CloseDataBase(db)
@@ -96,7 +111,14 @@ func FindUserByEmail(email string) models.User {
 
 //InsertUser retona usuario pelo seu email
 func InsertUser(user models.User) models.User {
-	var userUpdated models.User
+	var (
+		userID           int
+		userEmail        string
+		userPassword     string
+		userName         string
+		userReceiveAlert bool
+		userUpdated      models.User
+	)
 
 	db := ConnectDataBase()
 	defer CloseDataBase(db)
@@ -125,7 +147,14 @@ func InsertUser(user models.User) models.User {
 
 //UpdateUserByID retona usuario pelo seu email
 func UpdateUserByID(id int, user models.User) models.User {
-	var userUpdated models.User
+	var (
+		userID           int
+		userEmail        string
+		userPassword     string
+		userName         string
+		userReceiveAlert bool
+		userUpdated      models.User
+	)
 
 	db := ConnectDataBase()
 	defer CloseDataBase(db)

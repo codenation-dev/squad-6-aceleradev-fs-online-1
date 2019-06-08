@@ -8,12 +8,13 @@ import (
 	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/backend/models"
 )
 
-var customerID int
-var customerName string
-
 //FindAllCustomers retorna todos os usuarios
 func FindAllCustomers() []models.Customer {
-	var listCustomers []models.Customer
+	var (
+		customerID    int
+		customerName  string
+		listCustomers []models.Customer
+	)
 
 	db := ConnectDataBase()
 	defer CloseDataBase(db)
@@ -41,7 +42,11 @@ func FindAllCustomers() []models.Customer {
 
 //FindCustomerByID retona usuario pelo seu id
 func FindCustomerByID(id int) models.Customer {
-	var customer models.Customer
+	var (
+		customerID   int
+		customerName string
+		customer     models.Customer
+	)
 
 	db := ConnectDataBase()
 	defer CloseDataBase(db)
@@ -61,7 +66,11 @@ func FindCustomerByID(id int) models.Customer {
 
 //FindCustomerByName retona usuaclienterio pelo seu email
 func FindCustomerByName(name string) models.Customer {
-	var customer models.Customer
+	var (
+		customerID   int
+		customerName string
+		customer     models.Customer
+	)
 
 	db := ConnectDataBase()
 	defer CloseDataBase(db)
@@ -82,7 +91,11 @@ func FindCustomerByName(name string) models.Customer {
 
 //InsertCustomer retona usuario pelo seu email
 func InsertCustomer(customer models.Customer) models.Customer {
-	var customerUpdated models.Customer
+	var (
+		customerID       int
+		customerName     string
+		customerInserted models.Customer
+	)
 
 	db := ConnectDataBase()
 	defer CloseDataBase(db)
@@ -98,16 +111,20 @@ func InsertCustomer(customer models.Customer) models.Customer {
 	if (errUpdate != nil) && (errUpdate != sql.ErrNoRows) {
 		log.Println("db.UpdateCustomerByID->Erro ao executar insert. Error:", errUpdate)
 	} else {
-		customerUpdated = models.Customer{
+		customerInserted = models.Customer{
 			ID:   customerID,
 			Name: customerName}
 	}
-	return customerUpdated
+	return customerInserted
 }
 
 //UpdateCustomerByID retona usuario pelo seu email
 func UpdateCustomerByID(id int, customer models.Customer) models.Customer {
-	var customerUpdated models.Customer
+	var (
+		customerID      int
+		customerName    string
+		customerUpdated models.Customer
+	)
 
 	db := ConnectDataBase()
 	defer CloseDataBase(db)
