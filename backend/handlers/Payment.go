@@ -47,6 +47,7 @@ func GetPayment(c *gin.Context) {
 
 // CheckPayments verifica se existe pagamentos para baixar e processar
 func CheckPayments() {
+
 	currentTime := time.Now()
 
 	run := true
@@ -172,4 +173,20 @@ func registerPaymentsFromCSV(fileName string, year int, month int) {
 	fmt.Println("registerPaymentsFromCSV()-> register payments in db begin")
 	db.InsertPayment(false, payment)
 	fmt.Println("registerPaymentsFromCSV()-> register payments in db end")
+}
+
+//MonitorPayments monitora pagamentos a cada 10 horas
+func MonitorPayments() {
+
+	go CheckPayments()
+
+	nextTime := time.Now()
+	//teste 2 seconds
+	//nextTime = nextTime.Add(time.Second * 2)
+
+	nextTime = nextTime.AddDate(0, 0, 1)
+	fmt.Println("MonitorPayments()-> next search", nextTime)
+	time.Sleep(time.Until(nextTime))
+
+	go MonitorPayments()
 }
