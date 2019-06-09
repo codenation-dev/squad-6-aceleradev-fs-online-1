@@ -109,9 +109,9 @@ func SendEmailAlertEmployeeSalary(listUser []models.User, listAlert []models.Ale
 		h := hermes.Hermes{
 			Theme: new(hermes.Flat),
 			Product: hermes.Product{
-				Name:      "Banco Uati",
-				Link:      "https://www.codenation.dev/acceleration/full-stack-go-react-remote-1/challenge/banco-uati",
-				Logo:      "https://www.codenation.dev/_nuxt/img/9bd98ba.svg",
+				Name: "Banco Uati",
+				Link: "https://www.codenation.dev/acceleration/full-stack-go-react-remote-1/challenge/banco-uati",
+				//Logo:      "https://www.codenation.dev/_nuxt/img/9bd98ba.svg",
 				Copyright: "Copyright © 2019 CodeNation AceleraDev-Squad 6. Todos os direitos reservados.",
 			},
 		}
@@ -127,16 +127,16 @@ func SendEmailAlertEmployeeSalary(listUser []models.User, listAlert []models.Ale
 					{
 						Instructions: "Clique no botao abaixo para visualizar no sistema do banco:",
 						Button: hermes.Button{
-							Color: "#22BC66", // Optional action button color
+							Color: "#22BC66",
 							Text:  "Analisar Clientes",
-							Link:  "https://hermes-example.com/confirm?token=d9729feb74992cc3482b350163a1a010",
+							//mudar link aqui
+							Link: "https://hermes-example.com/confirm?token=d9729feb74992cc3482b350163a1a010",
 						},
 					},
 				},
 				Table: hermes.Table{
 					Data: customersTable,
 					Columns: hermes.Columns{
-						// Custom style for each rows
 						CustomWidth: map[string]string{
 							"Cliente": "65%",
 							"Salario": "35%",
