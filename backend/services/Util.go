@@ -107,7 +107,7 @@ func SendEmailAlertEmployeeSalary(listUser []models.User, listAlert []models.Ale
 	if (len(listEmailUsers)) > 0 {
 
 		h := hermes.Hermes{
-			Theme: new(hermes.Flat),
+			//Theme: new(hermes.Flat),
 			Product: hermes.Product{
 				Name: "Banco Uati",
 				Link: "https://www.codenation.dev/acceleration/full-stack-go-react-remote-1/challenge/banco-uati",
