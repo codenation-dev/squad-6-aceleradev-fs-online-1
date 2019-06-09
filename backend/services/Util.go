@@ -118,7 +118,7 @@ func SendEmailAlertEmployeeSalary(listUser []models.User, listAlert []models.Ale
 
 		mail := hermes.Email{
 			Body: hermes.Body{
-				Title:     "Olá,",
+				Title:     "Alerta",
 				Signature: "att",
 				Intros: []string{
 					"Novo pagamento processado, abaixo clientes do governo com salarios acima de R$ 20.000,00:",
