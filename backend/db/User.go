@@ -47,6 +47,45 @@ func FindAllUsers() []models.User {
 	return listUsers
 }
 
+//FindAllUsersReceiveAlert retorna todos os usuarios
+func FindAllUsersReceiveAlert() []models.User {
+	var (
+		userID           int
+		userEmail        string
+		userPassword     string
+		userName         string
+		userReceiveAlert bool
+		listUsers        []models.User
+	)
+
+	db := ConnectDataBase()
+	defer CloseDataBase(db)
+
+	rows, errQuery := db.Query("select usuario.* from usuario where usuari_recebe_alerta = true")
+	if errQuery != nil {
+		log.Println("db.FindAllUsers()->Erro ao executar consulta. Error:", errQuery)
+	}
+
+	for rows.Next() {
+		err := rows.Scan(&userID, &userEmail, &userPassword, &userName, &userReceiveAlert)
+		if err != nil {
+			log.Fatal("db.FindAllUsers()->Erro ao executar consulta. Error:", err)
+		} else {
+			var user = models.User{
+				ID:           userID,
+				Email:        userEmail,
+				Password:     userPassword,
+				Name:         userName,
+				ReceiveAlert: userReceiveAlert,
+			}
+			listUsers = append(listUsers, user)
+		}
+
+	}
+
+	return listUsers
+}
+
 //FindUserByID retona usuario pelo seu id
 func FindUserByID(id int) models.User {
 	var (

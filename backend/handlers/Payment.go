@@ -45,6 +45,15 @@ func GetPayment(c *gin.Context) {
 	}
 }
 
+// GetCheckPayments inicia busca e processamento de novos pagamentos
+func GetCheckPayments(c *gin.Context) {
+	c.Header("Content-Type", "application/json")
+	go CheckPayments()
+	c.JSON(http.StatusProcessing, gin.H{
+		"message": "start checking"})
+
+}
+
 // CheckPayments verifica se existe pagamentos para baixar e processar
 func CheckPayments() {
 
@@ -119,11 +128,6 @@ func iso88591toUtf8(fileNameIso88591 string, fileNameOutUtf8 string) {
 
 func registerPaymentsFromCSV(fileName string, year int, month int) {
 
-	minSalaryForRegisterPayment, err := strconv.ParseFloat(os.Getenv("CONFIG_MIN_SALARY_REGISTER_PAYMENT"), 64)
-	if err != nil {
-		minSalaryForRegisterPayment = 20000
-	}
-
 	payment := models.Payment{
 		FileName: fileName,
 		Year:     year,
@@ -143,8 +147,13 @@ func registerPaymentsFromCSV(fileName string, year int, month int) {
 	reader.FieldsPerRecord = -1
 	lines, err := reader.ReadAll()
 
-	salaryCount := 0
-	SalaryAcceptCount := 0
+	minSalaryForRegisterPayment, err := strconv.ParseFloat(os.Getenv("CONFIG_MIN_SALARY_REGISTER_PAYMENT"), 64)
+	if err != nil {
+		minSalaryForRegisterPayment = 20000
+	}
+
+	count := 0
+	acceptPayment := 0
 
 	var employeeList []models.PaymentEmployee
 	for _, line := range lines {
@@ -152,27 +161,44 @@ func registerPaymentsFromCSV(fileName string, year int, month int) {
 		if salary, err = strconv.ParseFloat(strings.ReplaceAll(line[3], ",", "."), 64); err != nil {
 			salary = 0.0
 		}
-		if salary >= minSalaryForRegisterPayment {
-			paymentEmployee := models.PaymentEmployee{
-				ID:         0,
-				Name:       line[0],
-				Occupation: line[1],
-				Department: line[2],
-				Salary:     salary,
+
+		//busca para ver se eh clietne do banco
+		//customer := db.FindCustomerByName(line[0])
+
+		//busca desativada porque eh muito lento, se sobrar tempo melhorar isso
+		customer := models.Customer{}
+
+		if (salary >= minSalaryForRegisterPayment) || (customer.ID > 0) {
+
+			//busca ativada apenas para quem ja ganha acima de x valor
+			customer := db.FindCustomerByName(line[0])
+			if customer.ID > 0 {
+				paymentEmployee := models.PaymentEmployee{
+					ID:         0,
+					Name:       line[0],
+					Occupation: line[1],
+					Department: line[2],
+					Salary:     salary,
+					Customer:   customer,
+				}
+				employeeList = append(employeeList, paymentEmployee)
+				acceptPayment = acceptPayment + 1
 			}
-			employeeList = append(employeeList, paymentEmployee)
-			SalaryAcceptCount = SalaryAcceptCount + 1
 		}
-		salaryCount = salaryCount + 1
+		count = count + 1
 	}
 	payment.EmployeePayments = employeeList
 
-	fmt.Println("registerPaymentsFromCSV()-> Salary Count:", salaryCount)
-	fmt.Println("registerPaymentsFromCSV()-> Salary Accept:", SalaryAcceptCount)
+	fmt.Println("registerPaymentsFromCSV()-> payment Count:", count)
+	fmt.Println("registerPaymentsFromCSV()-> payment Accept:", acceptPayment)
 
 	fmt.Println("registerPaymentsFromCSV()-> register payments in db begin")
-	db.InsertPayment(false, payment)
+	paymentInserted := db.InsertPayment(false, payment)
 	fmt.Println("registerPaymentsFromCSV()-> register payments in db end")
+
+	if paymentInserted.ID > 0 {
+		RegisterAndNotifyAlerts(paymentInserted.ID)
+	}
 }
 
 //MonitorPayments monitora pagamentos a cada 10 horas

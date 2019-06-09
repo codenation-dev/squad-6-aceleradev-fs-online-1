@@ -60,16 +60,26 @@ func StartRouter(router *gin.Engine) *gin.Engine {
 		payment := v1.Group("/payment")
 		{
 			payment.GET("", handlers.GetPayments)
-			payment.GET(":id", handlers.GetCustomer)
-			payment.PUT(":id", handlers.PutCustomer)
-			payment.POST("", handlers.NewCustomer)
-			payment.DELETE(":id", handlers.DeleteCustomer)
+			payment.GET(":id", handlers.GetPayments)    //deve ser programado-> handler e db
+			payment.PUT(":id", handlers.GetPayments)    //deve ser programado-> handler e db
+			payment.POST("", handlers.GetPayments)      //deve ser programado-> handler e db
+			payment.DELETE(":id", handlers.GetPayments) //deve ser programado-> handler e db
+		}
+
+		//rotas para alertas
+		alert := v1.Group("/alert")
+		{
+			alert.GET("", handlers.GetPayments)        //deve ser programado-> handler e db
+			alert.GET("/:id", handlers.GetPayments)    //deve ser programado-> handler e db
+			alert.PUT("/:id", handlers.GetPayments)    //deve ser programado-> handler e db
+			alert.POST("", handlers.GetPayments)       //deve ser programado-> handler e db
+			alert.DELETE("/:id", handlers.GetPayments) //deve ser programado-> handler e db
 		}
 
 		//rotas para servicos
 		services := v1.Group("/services")
 		{
-			services.GET("checkPayments", handlers.GetPayments)
+			services.GET("checkPayments", handlers.GetCheckPayments) //dispara checagem
 
 		}
 

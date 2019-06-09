@@ -47,19 +47,20 @@ func FindCustomerByID(id int) models.Customer {
 		customerName string
 		customer     models.Customer
 	)
+	if id > 0 {
+		db := ConnectDataBase()
+		defer CloseDataBase(db)
 
-	db := ConnectDataBase()
-	defer CloseDataBase(db)
+		row := db.QueryRow("select cliente.* from cliente where client_id = $1", id)
 
-	row := db.QueryRow("select cliente.* from cliente where usuari_id = $1", id)
-
-	err := row.Scan(&customerID, &customerName)
-	if (err != nil) && (err != sql.ErrNoRows) {
-		log.Println("db.FindCustomerByID->Erro ao executar consulta. Error:", err)
-	} else {
-		customer = models.Customer{
-			ID:   customerID,
-			Name: customerName}
+		err := row.Scan(&customerID, &customerName)
+		if (err != nil) && (err != sql.ErrNoRows) {
+			log.Println("db.FindCustomerByID->Erro ao executar consulta. Error:", err)
+		} else {
+			customer = models.Customer{
+				ID:   customerID,
+				Name: customerName}
+		}
 	}
 	return customer
 }

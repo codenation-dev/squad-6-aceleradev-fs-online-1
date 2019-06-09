@@ -3,11 +3,13 @@ package services
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
+	"net/smtp"
 	"os"
 	"strconv"
 
+	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/backend/models"
+	"github.com/jordan-wright/email"
 	"github.com/matcornic/hermes"
 	"github.com/mholt/archiver"
 )
@@ -81,111 +83,101 @@ func ExtractRarFile(filepath string, outpath string) error {
 	return nil
 }
 
-//SendEmailNotificationNewsEmployee funcao que enviar notificacao para usuarios
-func SendEmailNotificationNewsEmployee() {
+//SendEmailAlertEmployeeSalary funcao que enviar notificacao para usuarios
+func SendEmailAlertEmployeeSalary(listUser []models.User, listAlert []models.AlertHistory) {
 
-	h := hermes.Hermes{
-		// Optional Theme
-		Theme: new(hermes.Flat),
-		Product: hermes.Product{
-			// Appears in header & footer of e-mails
-			Name:      "Banco Uati",
-			Link:      "https://www.codenation.dev/acceleration/full-stack-go-react-remote-1/challenge/banco-uati",
-			Logo:      "https://www.codenation.dev/_nuxt/img/9bd98ba.svg",
-			Copyright: "Copyright © 2019 CodeNation AceleraDev-Squad 6. Todos os direitos reservados.",
-		},
+	var listEmailUsers []string
+	for _, user := range listUser {
+		listEmailUsers = append(listEmailUsers, user.Email)
+	}
+	fmt.Println(listEmailUsers)
+
+	var customersTable [][]hermes.Entry
+
+	for _, alert := range listAlert {
+
+		line := []hermes.Entry{
+			{Key: "Cliente", Value: alert.Customer.Name},
+			{Key: "Salario", Value: fmt.Sprintf("%.2f", alert.PaymentEmployee.Salary)},
+		}
+		customersTable = append(customersTable, line)
+
 	}
 
-	mail := hermes.Email{
-		Body: hermes.Body{
-			Title:     "Olá,",
-			Signature: "att",
-			Intros: []string{
-				"Novo pagamento processado, abaixo clientes do governo com salarios acima de 20 mil:",
+	if (len(listEmailUsers)) > 0 {
+
+		h := hermes.Hermes{
+			Theme: new(hermes.Flat),
+			Product: hermes.Product{
+				Name:      "Banco Uati",
+				Link:      "https://www.codenation.dev/acceleration/full-stack-go-react-remote-1/challenge/banco-uati",
+				Logo:      "https://www.codenation.dev/_nuxt/img/9bd98ba.svg",
+				Copyright: "Copyright © 2019 CodeNation AceleraDev-Squad 6. Todos os direitos reservados.",
 			},
-			Actions: []hermes.Action{
-				{
-					Instructions: "Clique no botao abaixo para visualizar no sistema do banco:",
-					Button: hermes.Button{
-						Color: "#22BC66", // Optional action button color
-						Text:  "Confirm your account",
-						Link:  "https://hermes-example.com/confirm?token=d9729feb74992cc3482b350163a1a010",
-					},
+		}
+
+		mail := hermes.Email{
+			Body: hermes.Body{
+				Title:     "Olá,",
+				Signature: "att",
+				Intros: []string{
+					"Novo pagamento processado, abaixo clientes do governo com salarios acima de R$ 20.000,00:",
 				},
-			},
-			Table: hermes.Table{
-				Data: [][]hermes.Entry{
-					// List of rows
+				Actions: []hermes.Action{
 					{
-						{Key: "Cliente", Value: "Open source programming language "},
-						{Key: "Salario", Value: "$10.99"},
-					},
-					{
-
-						{Key: "Cliente", Value: "Programmatically "},
-						{Key: "Salario", Value: "$1.99"},
-					},
-				},
-				Columns: hermes.Columns{
-					// Custom style for each rows
-					CustomWidth: map[string]string{
-						"Cliente": "65%",
-						"Salario": "35%",
-					},
-					CustomAlignment: map[string]string{
-						"Salario": "right",
+						Instructions: "Clique no botao abaixo para visualizar no sistema do banco:",
+						Button: hermes.Button{
+							Color: "#22BC66", // Optional action button color
+							Text:  "Analisar Clientes",
+							Link:  "https://hermes-example.com/confirm?token=d9729feb74992cc3482b350163a1a010",
+						},
 					},
 				},
+				Table: hermes.Table{
+					Data: customersTable,
+					Columns: hermes.Columns{
+						// Custom style for each rows
+						CustomWidth: map[string]string{
+							"Cliente": "65%",
+							"Salario": "35%",
+						},
+						CustomAlignment: map[string]string{
+							"Salario": "right",
+						},
+					},
+				},
+				Outros: []string{
+					"Precisa de ajuda, tem alguma duvida? Responda esse email, vamos adorar ajudar voce",
+				},
 			},
-			Outros: []string{
-				"Precisa de ajuda, tem alguma duvida? Responda esse email, vamos adorar ajudar voce",
-			},
-		},
-	}
+		}
 
-	// Generate an HTML email with the provided contents (for modern clients)
-	emailBody, err := h.GenerateHTML(mail)
-	if err != nil {
-		panic(err) // Tip: Handle error with something else than a panic ;)
-	}
+		emailBody, err := h.GenerateHTML(mail)
+		if err != nil {
+			panic(err) // Tip: Handle error with something else than a panic ;)
+		}
 
-	// Generate the plaintext version of the e-mail (for clients that do not support xHTML)
-	emailText, err := h.GeneratePlainText(mail)
-	if err != nil {
-		panic(err) // Tip: Handle error with something else than a panic ;)
-	}
+		emailText, err := h.GeneratePlainText(mail)
+		if err != nil {
+			panic(err) // Tip: Handle error with something else than a panic ;)
+		}
 
-	// Optionally, preview the generated HTML e-mail by writing it to a local file
-	err = ioutil.WriteFile("./temp/preview.html", []byte(emailBody), 0644)
-	if err != nil {
-		panic(err) // Tip: Handle error with something else than a panic ;)
-	}
-	// Optionally, preview the generated HTML e-mail by writing it to a local file
-	err = ioutil.WriteFile("./temp/preview.text", []byte(emailText), 0644)
-	if err != nil {
-		panic(err) // Tip: Handle error with something else than a panic ;)
-	}
-	/*
 		e := email.NewEmail()
 		e.From = os.Getenv("EMAIL_SENDER_IDENTITY") + " <" + os.Getenv("EMAIL_SENDER_EMAIL") + ">"
-		e.To = []string{"ruiblaese@gmail.com"}
-		e.Subject = "Awesome Subject"
+		e.To = listEmailUsers
+		e.Subject = "Alertas gerados com Pagamento do Governo SP"
 		e.Text = []byte(emailText)
 		e.HTML = []byte(emailBody)
-		errE := e.Send(os.Getenv("EMAIL_SMTP_SERVER")+":"+os.Getenv("EMAIL_SMTP_PORT"),
+
+		errSendMail := e.Send(os.Getenv("EMAIL_SMTP_SERVER")+":"+os.Getenv("EMAIL_SMTP_PORT"),
 			smtp.PlainAuth(os.Getenv("EMAIL_SENDER_IDENTITY"),
 				os.Getenv("EMAIL_SMTP_USER"),
 				os.Getenv("EMAIL_SMTP_PASSWORD"),
 				os.Getenv("EMAIL_SMTP_SERVER")))
 
-		fmt.Println(errE)
-		fmt.Println("-")
+		if errSendMail != nil {
+			fmt.Println("Erro ao enviar email:", errSendMail)
+		}
 
-		fmt.Println(os.Getenv("EMAIL_SMTP_SERVER"))
-		fmt.Println(os.Getenv("EMAIL_SMTP_PORT"))
-		fmt.Println(os.Getenv("EMAIL_SMTP_USER"))
-		fmt.Println(os.Getenv("EMAIL_SMTP_PASSWORD"))
-		fmt.Println(os.Getenv("EMAIL_SENDER_EMAIL"))
-		fmt.Println(os.Getenv("EMAIL_SENDER_IDENTITY"))
-	*/
+	}
 }
