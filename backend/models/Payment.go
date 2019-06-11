@@ -11,9 +11,10 @@ type Payment struct {
 
 // PaymentEmployee modelo para historico de pagamentos
 type PaymentEmployee struct {
-	ID         int     `form:"id" json:"id" binding:"required"`
-	Name       string  `form:"name" json:"name" binding:"required"`
-	Occupation string  `form:"occupation" json:"occupation" binding:"required"`
-	Department string  `form:"department" json:"department" binding:"required"`
-	Salary     float64 `form:"salary" json:"salary" binding:"required"`
+	ID         int      `form:"id" json:"id" binding:"required"`
+	Name       string   `form:"name" json:"name" binding:"required"`
+	Occupation string   `form:"occupation" json:"occupation" binding:"required"`
+	Department string   `form:"department" json:"department" binding:"required"`
+	Salary     float64  `form:"salary" json:"salary" binding:"required"`
+	Customer   Customer `form:"customer" json:"customer" binding:"required"`
 }

@@ -41,6 +41,22 @@
 
  - POST: http://localhost:4000/api/v1/customer/upload `formulario de testes: http://localhost:4000/upload.html`   
 
+##### Pagamento
+ - GET: http://localhost:4000/api/v1/payment/
+ - GET (Id ou Email): http://localhost:4000/api/v1/payment/:id
+ - PUT: http://localhost:4000/api/v1/payment/:id
+ - POST: http://localhost:4000/api/v1/payment/  
+ - DELETE: http://localhost:4000/api/v1/payment/:id   
+
+
+##### Alerta
+ - GET: http://localhost:4000/api/v1/alert/
+ - GET (Id ou Email): http://localhost:4000/api/v1/alert/:id
+ - PUT: http://localhost:4000/api/v1/alert/:id
+ - POST: http://localhost:4000/api/v1/alert/  
+ - DELETE: http://localhost:4000/api/v1/alert/:id   
+
+
 ## Docker
 #### Subindo com Docker
 `$ docker pull postgres`   

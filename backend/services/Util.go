@@ -4,9 +4,13 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/smtp"
 	"os"
 	"strconv"
 
+	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/backend/models"
+	"github.com/jordan-wright/email"
+	"github.com/matcornic/hermes"
 	"github.com/mholt/archiver"
 )
 
@@ -77,4 +81,103 @@ func ExtractRarFile(filepath string, outpath string) error {
 	}
 
 	return nil
+}
+
+//SendEmailAlertEmployeeSalary funcao que enviar notificacao para usuarios
+func SendEmailAlertEmployeeSalary(listUser []models.User, listAlert []models.AlertHistory) {
+
+	var listEmailUsers []string
+	for _, user := range listUser {
+		listEmailUsers = append(listEmailUsers, user.Email)
+	}
+	fmt.Println(listEmailUsers)
+
+	var customersTable [][]hermes.Entry
+
+	for _, alert := range listAlert {
+
+		line := []hermes.Entry{
+			{Key: "Cliente", Value: alert.Customer.Name},
+			{Key: "Salario", Value: fmt.Sprintf("%.2f", alert.PaymentEmployee.Salary)},
+		}
+		customersTable = append(customersTable, line)
+
+	}
+
+	if (len(listEmailUsers)) > 0 {
+
+		h := hermes.Hermes{
+			//Theme: new(hermes.Flat),
+			Product: hermes.Product{
+				Name: "Banco Uati",
+				Link: "https://www.codenation.dev/acceleration/full-stack-go-react-remote-1/challenge/banco-uati",
+				//Logo:      "https://www.codenation.dev/_nuxt/img/9bd98ba.svg",
+				Copyright: "Copyright © 2019 CodeNation AceleraDev-Squad 6. Todos os direitos reservados.",
+			},
+		}
+
+		mail := hermes.Email{
+			Body: hermes.Body{
+				Title:     "Alerta",
+				Signature: "att",
+				Intros: []string{
+					"Novo pagamento processado, abaixo clientes do governo com salarios acima de R$ 20.000,00:",
+				},
+				Actions: []hermes.Action{
+					{
+						Instructions: "Clique no botao abaixo para visualizar no sistema do banco:",
+						Button: hermes.Button{
+							Color: "#22BC66",
+							Text:  "Analisar Clientes",
+							//mudar link aqui
+							Link: "https://hermes-example.com/confirm?token=d9729feb74992cc3482b350163a1a010",
+						},
+					},
+				},
+				Table: hermes.Table{
+					Data: customersTable,
+					Columns: hermes.Columns{
+						CustomWidth: map[string]string{
+							"Cliente": "65%",
+							"Salario": "35%",
+						},
+						CustomAlignment: map[string]string{
+							"Salario": "right",
+						},
+					},
+				},
+				Outros: []string{
+					"Precisa de ajuda, tem alguma duvida? Responda esse email, vamos adorar ajudar voce",
+				},
+			},
+		}
+
+		emailBody, err := h.GenerateHTML(mail)
+		if err != nil {
+			panic(err) // Tip: Handle error with something else than a panic ;)
+		}
+
+		emailText, err := h.GeneratePlainText(mail)
+		if err != nil {
+			panic(err) // Tip: Handle error with something else than a panic ;)
+		}
+
+		e := email.NewEmail()
+		e.From = os.Getenv("EMAIL_SENDER_IDENTITY") + " <" + os.Getenv("EMAIL_SENDER_EMAIL") + ">"
+		e.To = listEmailUsers
+		e.Subject = "Alertas gerados com Pagamento do Governo SP"
+		e.Text = []byte(emailText)
+		e.HTML = []byte(emailBody)
+
+		errSendMail := e.Send(os.Getenv("EMAIL_SMTP_SERVER")+":"+os.Getenv("EMAIL_SMTP_PORT"),
+			smtp.PlainAuth(os.Getenv("EMAIL_SENDER_IDENTITY"),
+				os.Getenv("EMAIL_SMTP_USER"),
+				os.Getenv("EMAIL_SMTP_PASSWORD"),
+				os.Getenv("EMAIL_SMTP_SERVER")))
+
+		if errSendMail != nil {
+			fmt.Println("Erro ao enviar email:", errSendMail)
+		}
+
+	}
 }
