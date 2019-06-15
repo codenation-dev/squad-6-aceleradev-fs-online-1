@@ -3,6 +3,8 @@ import React, {Component} from "react";
 import {withRouter} from 'react-router';
 import axios from 'axios'
 import {CSV_FILE_UPLOAD} from '../services/configApi'
+import loginService from "../services/loginService";
+
 
 
 class UploadCSV extends Component {
@@ -32,28 +34,36 @@ console.log(e.target.files[0]) */
       let formdata = new FormData()
       formdata.append('image', file)
       formdata.append('name', 'clayton pereira')
-
-
      console.log(this.state.file,"handler upload")
-     axios({
-      url: CSV_FILE_UPLOAD,
+ /*     axios({     
       method: 'POST',
       headers:{
-        authorization:''
+        Authorization: "Bearer " + loginService.userLogged().token
      }, 
-    
+     url: CSV_FILE_UPLOAD,
     data:formdata
-    }).then((res)=>{
-   
+    }).then((res)=>{     
    
      },(err) => {
 
       console.log(err, "erro ao fazer upload")
-
-
      })
-   
-   
+    */
+     const configRequest = {
+      method: "POST",     
+      headers: {
+        Authorization: "Bearer " + loginService.userLogged().token,
+        'Content-Type': 'multipart/form-data'
+      },
+      url: CSV_FILE_UPLOAD,
+      data:formdata
+  };
+    //efetua requisicao em si
+    const response =  axios(configRequest);
+    if (response) {
+      return response.data;
+    }
+    return null;
 
      }
     render = () => (
@@ -68,9 +78,6 @@ console.log(e.target.files[0]) */
          onClick={(e)=>this.handleUpload(e)}
         >Upload </button>
          </div>
-    
-
-
         </form>
        
                    
