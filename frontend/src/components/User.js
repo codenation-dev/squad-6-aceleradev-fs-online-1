@@ -55,7 +55,7 @@ class User extends Component {
     }
 
     if (!msg) {
-      let retorno;
+      let retorno = null;
       if (this.state.userForm.id) {
         retorno = await usersService.putUser(this.state.userForm);
         this.props.history.push('/users');
