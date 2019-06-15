@@ -10,6 +10,7 @@ import Home from "./components/Home";
 import Login from "./components/Login";
 import Menu from "./components/Menu";
 import Users from "./components/Users";
+import UploadCSV from "./components/UploadCSV"
 
 import "./App.css";
 
@@ -37,6 +38,13 @@ const LoginRoute = props => {
   return <Login {...props} />;
 };
 
+const UploadCSVRoute = props => {
+  if (!login.isLogged()) {
+    props.history.push("/uploadcsv");
+    return null;
+  }
+  return <UploadCSV />;
+};
 class App extends Component {
   constructor(props) {
     super(props);
@@ -63,6 +71,7 @@ class App extends Component {
         <Route path="/login" component={LoginRoute} />
         <Route exact path="/" component={HomeRoute} />
         <Route exact path="/Users" component={UserRoute} />
+        <Route exact path="/uploadcsv" component={UploadCSVRoute} />
       </div>
     );
   }
