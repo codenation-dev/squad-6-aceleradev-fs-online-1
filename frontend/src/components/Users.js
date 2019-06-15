@@ -27,7 +27,7 @@ class Users extends Component {
               <th scope="col">#</th>
               <th scope="col">Email</th>
               <th scope="col">Nome</th>
-              <th scope="col">Recebe Aleras?</th>
+              <th scope="col">Recebe Alertas?</th>
             </tr>
           </thead>
           <tbody>

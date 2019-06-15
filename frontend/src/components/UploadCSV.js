@@ -1,6 +1,9 @@
 import 'filepond/dist/filepond.min.css';
 import React, {Component} from "react";
 import {withRouter} from 'react-router';
+import axios from 'axios'
+import {CSV_FILE_UPLOAD} from '../services/configApi'
+
 
 class UploadCSV extends Component {
     constructor(props) {
@@ -12,20 +15,45 @@ class UploadCSV extends Component {
     }
   
     handleFIle(e){
-      let file
+      let file = e.target.files[0]
       this.setState({file:file})
 /* 
 console.log(e.target.files)
 console.log(e.target.files[0]) */
 
-
+ 
     }
    
 
      handleUpload(e){
+ 
 
-     console.log()
+      let file = this.state.file
+      let formdata = new FormData()
+      formdata.append('image', file)
+      formdata.append('name', 'clayton pereira')
 
+
+     console.log(this.state.file,"handler upload")
+     axios({
+      url: CSV_FILE_UPLOAD,
+      method: 'POST',
+      headers:{
+        authorization:''
+     }, 
+    
+    data:formdata
+    }).then((res)=>{
+   
+   
+     },(err) => {
+
+      console.log(err, "erro ao fazer upload")
+
+
+     })
+   
+   
 
      }
     render = () => (
