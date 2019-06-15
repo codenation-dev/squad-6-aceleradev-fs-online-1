@@ -29,6 +29,7 @@ const UsersRoute = props => {
   }
   return <Users />;
 };
+
 const UserRoute = props => {
   if (!login.isLogged()) {
     props.history.push('/login');
@@ -56,7 +57,6 @@ class App extends Component {
     return (
       <div className="App">
         {/* mostra o menu sempre q tiver logado */}
-
         {login.isLogged() ? (
           <React.Fragment>
             <Menu />
@@ -75,6 +75,7 @@ class App extends Component {
 
         {/* Usuario */}
         <Route exact path="/Users" component={UsersRoute} />
+        <Route exact path="/User" component={UserRoute} />
         <Route exact path="/User/:id" component={UserRoute} />
       </div>
     );

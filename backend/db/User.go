@@ -2,7 +2,6 @@ package db
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 
 	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/backend/models"
@@ -22,7 +21,7 @@ func FindAllUsers() []models.User {
 	db := ConnectDataBase()
 	defer CloseDataBase(db)
 
-	rows, errQuery := db.Query("select usuario.* from usuario")
+	rows, errQuery := db.Query("select usuario.* from usuario order by usuari_id")
 	if errQuery != nil {
 		log.Println("db.FindAllUsers()->Erro ao executar consulta. Error:", errQuery)
 	}
@@ -198,16 +197,14 @@ func UpdateUserByID(id int, user models.User) models.User {
 	db := ConnectDataBase()
 	defer CloseDataBase(db)
 
-	fmt.Println(id)
-
 	errUpdate := db.QueryRow(
 		"update usuario set "+
-			" email = $2 ,"+
-			" password = $3 ,"+
-			" nome = $4 ,"+
-			" recebe_alerta = $5"+
+			" usuari_email = $2 ,"+
+			" usuari_password = $3 ,"+
+			" usuari_nome = $4 ,"+
+			" usuari_recebe_alerta = $5"+
 			" where usuari_id = $1"+
-			" returning usuari_id, email, password, nome, recebe_alerta;",
+			" returning usuari_id, usuari_email, usuari_password, usuari_nome, usuari_recebe_alerta;",
 
 		id, user.Email, user.Password, user.Name, user.ReceiveAlert).Scan(&userID, &userEmail, &userPassword, &userName, &userReceiveAlert)
 
@@ -229,8 +226,6 @@ func UpdateUserByID(id int, user models.User) models.User {
 func DeleteUserByID(id int) bool {
 	db := ConnectDataBase()
 	defer CloseDataBase(db)
-
-	fmt.Println(id)
 
 	_, err := db.Exec("delete from usuario where usuari_id = $1", id)
 

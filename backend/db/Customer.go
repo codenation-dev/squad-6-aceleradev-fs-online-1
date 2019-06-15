@@ -19,7 +19,7 @@ func FindAllCustomers() []models.Customer {
 	db := ConnectDataBase()
 	defer CloseDataBase(db)
 
-	rows, errQuery := db.Query("select cliente.* from cliente")
+	rows, errQuery := db.Query("select cliente.* from cliente order by client_id")
 	if errQuery != nil {
 		log.Println("db.FindAllCustomers()->Erro ao executar consulta. Error:", errQuery)
 	}
