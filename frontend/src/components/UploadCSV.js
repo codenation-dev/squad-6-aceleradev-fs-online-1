@@ -32,7 +32,7 @@ console.log(e.target.files[0]) */
 
       let file = this.state.file
       let formdata = new FormData()
-      formdata.append('image', file)
+      formdata.append('multipart/form-data', file)
       formdata.append('name', 'clayton pereira')
      console.log(this.state.file,"handler upload")
  /*     axios({     
@@ -74,7 +74,7 @@ console.log(e.target.files[0]) */
            <input type="file" name="file" onChange={(e) => 
             this.handleFIle(e)}/>
 
-        <button type="button" 
+        <button type="submit" 
          onClick={(e)=>this.handleUpload(e)}
         >Upload </button>
          </div>
