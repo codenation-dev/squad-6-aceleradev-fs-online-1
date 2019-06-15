@@ -16,7 +16,7 @@ const getClassNameForActivePage = (props, pageName) => {
       return 'nav-item active';
     } else if (
       pageName === 'Users' &&
-      String(props.location.pathname).indexOf('/users') === 0
+      String(props.location.pathname).indexOf('/user') === 0
     ) {
       return 'nav-item active';
     }
