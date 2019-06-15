@@ -34,10 +34,10 @@ async function login(username, password) {
   return false;
 }
 
-const isLogged = () => !!localStorageWrapper.get(NS_LOGGED_USER);
+export const isLogged = () => !!localStorageWrapper.get(NS_LOGGED_USER);
 
-const userLogged = () => localStorageWrapper.get(NS_LOGGED_USER);
+export const userLogged = () => localStorageWrapper.get(NS_LOGGED_USER);
 
-const logout = () => localStorageWrapper.set(NS_LOGGED_USER, null);
+export const logout = () => localStorageWrapper.set(NS_LOGGED_USER, null);
 
 export default {login, logout, isLogged, userLogged};
