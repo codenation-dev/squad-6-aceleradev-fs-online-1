@@ -7,29 +7,29 @@ import customersService from './../services/customersService';
 class Customers extends Component {
   constructor(props) {
     super(props);
-    this.state = {listUsers: []};
+    this.state = {listCustomers: []};
   }
 
   async componentDidMount() {
-    const retorno = await customersService.getUsers();
+    const retorno = await customersService.getCustomers();
     this.setState({
-      listUsers: retorno,
+      listCustomers: retorno,
     });
   }
 
   btnNewClick(event) {
-    this.props.history.push('/user/');
+    this.props.history.push('/Customer/');
   }
 
   btnEditClick(event, item) {
-    this.props.history.push('/user/' + item.id);
+    this.props.history.push('/Customer/' + item.id);
   }
 
   async btnDeleteClick(event, item) {
-    await customersService.deleteUser(item.id);
-    const retorno = await customersService.getUsers();
+    await customersService.deleteCustomer(item.id);
+    const retorno = await customersService.getCustomers();
     this.setState({
-      listUsers: retorno,
+      listCustomers: retorno,
     });
     //alert('excluindo' + JSON.stringify(item));
   }
@@ -60,8 +60,8 @@ class Customers extends Component {
               </tr>
             </thead>
             <tbody>
-              {this.state.listUsers
-                ? this.state.listUsers.map((item, index) => (
+              {this.state.listCustomers
+                ? this.state.listCustomers.map((item, index) => (
                     <tr key={item.id}>
                       <th scope="row">{item.id}</th>
                       <td>{item.name}</td>

@@ -3,24 +3,30 @@ import apiService from './apiService';
 const {GET_CUSTOMERS_ENDPOINT} = require('./configApi');
 const endpoint = GET_CUSTOMERS_ENDPOINT;
 
-async function getUsers() {
+async function getCustomers() {
   return await apiService.getApi(endpoint);
 }
 
-async function getUserById(id) {
+async function getCustomerById(id) {
   return apiService.getByIdApi(endpoint, id);
 }
 
-async function putUser(user) {
-  return apiService.putApi(endpoint, user);
+async function putCustomer(Customer) {
+  return apiService.putApi(endpoint, Customer);
 }
 
-async function postUser(user) {
-  return apiService.postApi(endpoint, user);
+async function postCustomer(Customer) {
+  return apiService.postApi(endpoint, Customer);
 }
 
-async function deleteUser(id) {
+async function deleteCustomer(id) {
   return apiService.deleteApi(endpoint, id);
 }
 
-export default {getUsers, getUserById, putUser, postUser, deleteUser};
+export default {
+  getCustomers,
+  getCustomerById,
+  putCustomer,
+  postCustomer,
+  deleteCustomer,
+};

@@ -2,7 +2,7 @@ import loginService from './loginService';
 
 const axios = require('axios');
 
-async function getApi(endpoint) {
+const getApi = async function(endpoint) {
   const configRequest = {
     method: 'GET',
     json: true,
@@ -18,7 +18,7 @@ async function getApi(endpoint) {
     return response.data;
   }
   return null;
-}
+};
 
 async function getByIdApi(endpoint, id) {
   const configRequest = {
