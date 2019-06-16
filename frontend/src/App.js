@@ -9,8 +9,14 @@ import login from './services/loginService';
 import Home from './components/Home';
 import Login from './components/Login';
 import Menu from './components/Menu';
+
+//usuarios
 import Users from './components/Users';
 import User from './components/User';
+
+//clientes
+import Customers from './components/Customers';
+import Customer from './components/Customers';
 
 import './App.css';
 
@@ -36,6 +42,22 @@ const UserRoute = props => {
     return null;
   }
   return <User />;
+};
+
+const CustomersRoute = props => {
+  if (!login.isLogged()) {
+    props.history.push('/login');
+    return null;
+  }
+  return <Customers />;
+};
+
+const CustomerRoute = props => {
+  if (!login.isLogged()) {
+    props.history.push('/login');
+    return null;
+  }
+  return <Customer />;
 };
 
 const LoginRoute = props => {
@@ -74,9 +96,14 @@ class App extends Component {
         <Route exact path="/" component={HomeRoute} />
 
         {/* Usuario */}
-        <Route exact path="/Users" component={UsersRoute} />
-        <Route exact path="/User" component={UserRoute} />
-        <Route exact path="/User/:id" component={UserRoute} />
+        <Route exact path="/users" component={UsersRoute} />
+        <Route exact path="/user" component={UserRoute} />
+        <Route exact path="/user/:id" component={UserRoute} />
+
+        {/* Cliente */}
+        <Route exact path="/customers" component={CustomersRoute} />
+        <Route exact path="/customer" component={CustomerRoute} />
+        <Route exact path="/customer/:id" component={CustomerRoute} />
       </div>
     );
   }

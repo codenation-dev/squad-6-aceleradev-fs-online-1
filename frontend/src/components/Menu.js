@@ -19,6 +19,11 @@ const getClassNameForActivePage = (props, pageName) => {
       String(props.location.pathname).indexOf('/user') === 0
     ) {
       return 'nav-item active';
+    } else if (
+      pageName === 'Customers' &&
+      String(props.location.pathname).indexOf('/customer') === 0
+    ) {
+      return 'nav-item active';
     }
   }
   return 'nav-item';
@@ -53,8 +58,8 @@ const Menu = props => (
             Usuarios
           </a>
         </li>
-        <li className="nav-item">
-          <a className="nav-link disabled" href="/">
+        <li className={getClassNameForActivePage(props, 'Customers')}>
+          <a className="nav-link" href="/customers">
             Clientes
           </a>
         </li>
