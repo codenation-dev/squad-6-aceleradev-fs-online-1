@@ -15,15 +15,16 @@ async function getCustomerById(id) {
 }
 
 async function putCustomer(customer) {
-  const {data} = await http.put(`${GET_CUSTOMERS_ENDPOINT}/${customer.id}`, {
-    customer,
-  });
+  const {data} = await http.put(
+    `${GET_CUSTOMERS_ENDPOINT}/${customer.id}`,
+    customer
+  );
 
   return data;
 }
 
 async function postCustomer(customer) {
-  const {data} = await http.post(GET_CUSTOMERS_ENDPOINT, {customer});
+  const {data} = await http.post(GET_CUSTOMERS_ENDPOINT, customer);
 
   return data;
 }

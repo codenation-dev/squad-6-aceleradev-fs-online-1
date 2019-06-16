@@ -15,13 +15,13 @@ async function getUserById(id) {
 }
 
 async function putUser(user) {
-  const {data} = await http.put(`${GET_USERS_ENDPOINT}/${user.id}`, {user});
+  const {data} = await http.put(`${GET_USERS_ENDPOINT}/${user.id}`, user);
 
   return data;
 }
 
 async function postUser(user) {
-  const {data} = await http.post(GET_USERS_ENDPOINT, {user});
+  const {data} = await http.post(GET_USERS_ENDPOINT, user);
 
   return data;
 }

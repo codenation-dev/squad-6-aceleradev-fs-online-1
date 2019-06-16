@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { withRouter } from 'react-router';
+import React, {Component} from 'react';
+import {withRouter} from 'react-router';
 import PropTypes from 'prop-types';
 
 import usersService from './../services/usersService';
@@ -35,7 +35,7 @@ class User extends Component {
           userForm: user,
         });
       } else {
-        this.setState({ userInvalid: true });
+        this.setState({userInvalid: true});
       }
     }
   }
@@ -55,12 +55,11 @@ class User extends Component {
     }
 
     if (!msg) {
-      let retorno = null;
       if (this.state.userForm.id) {
-        retorno = await usersService.putUser(this.state.userForm);
+        await usersService.putUser(this.state.userForm);
         this.props.history.push('/users');
       } else {
-        retorno = await usersService.postUser(this.state.userForm);
+        await usersService.postUser(this.state.userForm);
         this.props.history.push('/users');
       }
     } else {

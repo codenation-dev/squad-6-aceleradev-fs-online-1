@@ -5,7 +5,7 @@ const http = axios.create({
   baseURL: process.env.REACT_APP_API_BASE_URL,
   timeout: 3000,
   headers: {
-    'Accept': 'application/json',
+    Accept: 'application/json',
     'Content-Type': 'application/json',
   },
 });
@@ -25,7 +25,7 @@ http.interceptors.request.use(
   error => {
     return Promise.reject(error);
   }
-)
+);
 
 http.interceptors.response.use(
   response => response,
@@ -41,6 +41,6 @@ http.interceptors.response.use(
 
     return Promise.reject(error);
   }
-)
+);
 
 export default http;
