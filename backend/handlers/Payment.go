@@ -45,6 +45,24 @@ func GetPayment(c *gin.Context) {
 	}
 }
 
+// DeletePayment deleta pagamento
+func DeletePayment(c *gin.Context) {
+	c.Header("Content-Type", "application/json")
+
+	if id, err := strconv.Atoi(c.Params.ByName("id")); err == nil {
+		apagou := db.DeletePaymentByID(id)
+
+		if apagou {
+			c.JSON(http.StatusOK, gin.H{"code": "OK", "message": ""})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"code": "ERROR", "message": "Internal Server Error"})
+		}
+
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"code": "ERROR", "message": "Invalid param"})
+	}
+}
+
 // GetCheckPayments inicia busca e processamento de novos pagamentos
 func GetCheckPayments(c *gin.Context) {
 	c.Header("Content-Type", "application/json")

@@ -276,3 +276,32 @@ func findPaymentsEmployeeByPaymentID(paymentID int) []models.PaymentEmployee {
 	}
 	return listEmployee
 }
+
+//DeletePaymentByID retona usuario pelo seu email
+func DeletePaymentByID(id int) bool {
+	db := ConnectDataBase()
+	defer CloseDataBase(db)
+
+	_, err1 := db.Exec(
+		`update historico_alerta set pagfun_id = null 
+		where pagfun_id in (select pagfun_id from pagamento_funcionario where pagame_id = $1 );`, id)
+
+	if err1 == nil {
+		_, err2 := db.Exec(`delete from pagamento_funcionario where pagame_id = $1;`, id)
+		if err2 == nil {
+			_, err3 := db.Exec(`delete from pagamento where pagame_id = $1;`, id)
+			if err3 == nil {
+				return true
+			} else {
+				log.Fatal("db.DeletePaymentByID()-> Error:", err3)
+			}
+		} else {
+			log.Fatal("db.DeletePaymentByID()-> Error:", err2)
+		}
+
+	} else {
+		log.Fatal("db.DeletePaymentByID()->  Error:", err1)
+	}
+
+	return false
+}

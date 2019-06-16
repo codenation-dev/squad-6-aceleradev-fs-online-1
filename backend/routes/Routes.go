@@ -60,26 +60,26 @@ func StartRouter(router *gin.Engine) *gin.Engine {
 		payment := v1.Group("/payment")
 		{
 			payment.GET("", handlers.GetPayments)
-			payment.GET(":id", handlers.GetPayments)    //deve ser programado-> handler e db
-			payment.PUT(":id", handlers.GetPayments)    //deve ser programado-> handler e db
-			payment.POST("", handlers.GetPayments)      //deve ser programado-> handler e db
-			payment.DELETE(":id", handlers.GetPayments) //deve ser programado-> handler e db
+			payment.GET(":id", handlers.GetPayment)
+			//payment.PUT(":id", handlers.GetPayments)    //pagamento cadastrados automaticamente com arquivo do governo
+			//payment.POST("", handlers.GetPayments)      //pagamento cadastrados automaticamente com arquivo do governo
+			payment.DELETE(":id", handlers.GetPayments)
 		}
 
 		//rotas para alertas
 		alert := v1.Group("/alert")
 		{
-			alert.GET("", handlers.GetPayments)        //deve ser programado-> handler e db
-			alert.GET("/:id", handlers.GetPayments)    //deve ser programado-> handler e db
-			alert.PUT("/:id", handlers.GetPayments)    //deve ser programado-> handler e db
-			alert.POST("", handlers.GetPayments)       //deve ser programado-> handler e db
-			alert.DELETE("/:id", handlers.GetPayments) //deve ser programado-> handler e db
+			alert.GET("", handlers.GetPayments)
+			alert.GET("/:id", handlers.GetPayments)
+			//alert.PUT("/:id", handlers.GetPayments)    //cadastrado automaticamente
+			//alert.POST("", handlers.GetPayments)       //cadastrado automaticamente
+			//alert.DELETE("/:id", handlers.GetPayments) //nao tem porque apagar alertas
 		}
 
 		//rotas para servicos
 		services := v1.Group("/services")
 		{
-			services.GET("checkPayments", handlers.GetCheckPayments) //dispara checagem
+			services.GET("checkPayments", handlers.GetCheckPayments) //inicia checagem
 
 		}
 
