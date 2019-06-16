@@ -1,9 +1,8 @@
 import 'filepond/dist/filepond.min.css';
 import React, {Component} from "react";
 import {withRouter} from 'react-router';
-import axios from 'axios'
-import {CSV_FILE_UPLOAD} from '../services/configApi'
-import loginService from "../services/loginService";
+
+import fileUploadCSV from "./../services/UploadFileService";
 
 
 
@@ -16,55 +15,16 @@ class UploadCSV extends Component {
       };
     }
   
-    handleFIle(e){
+     handleFIle(e){
       let file = e.target.files[0]
       this.setState({file:file})
-/* 
-console.log(e.target.files)
-console.log(e.target.files[0]) */
-
  
     }
    
 
-     handleUpload(e){
- 
-
-      let file = this.state.file
-      let formdata = new FormData()
-      formdata.append('multipart/form-data', file)
-      formdata.append('name', 'clayton pereira')
-     console.log(this.state.file,"handler upload")
- /*     axios({     
-      method: 'POST',
-      headers:{
-        Authorization: "Bearer " + loginService.userLogged().token
-     }, 
-     url: CSV_FILE_UPLOAD,
-    data:formdata
-    }).then((res)=>{     
-   
-     },(err) => {
-
-      console.log(err, "erro ao fazer upload")
-     })
-    */
-     const configRequest = {
-      method: "POST",     
-      headers: {
-        Authorization: "Bearer " + loginService.userLogged().token,
-        'Content-Type': 'multipart/form-data'
-      },
-      url: CSV_FILE_UPLOAD,
-      data:formdata
-  };
-    //efetua requisicao em si
-    const response =  axios(configRequest);
-    if (response) {
-      return response.data;
-    }
-    return null;
-
+    async handleUpload(e){
+      e.preventDefault()
+      fileUploadCSV.uploadFile(this.state.file)
      }
     render = () => (
         <div className="container">

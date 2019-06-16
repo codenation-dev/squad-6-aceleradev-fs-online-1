@@ -53,11 +53,7 @@ const Menu = props => (
             Historico Alertas
           </a>
         </li>
-        <li className="nav-item">
-          <a className="nav-link" href="/uploadcsv">
-            Carregar arquivo CSV
-          </a>
-        </li>
+       
       </ul>
 
       <button
