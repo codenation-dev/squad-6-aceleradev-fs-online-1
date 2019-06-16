@@ -1,8 +1,8 @@
 //login
-export const SIGNUP_ENDPOINT = 'http://localhost:4000/api/v1/signin';
+export const SIGNUP_ENDPOINT = 'signin';
 
 //usuario
-export const GET_USERS_ENDPOINT = 'http://localhost:4000/api/v1/user';
+export const GET_USERS_ENDPOINT = 'user';
 
 export default {
   SIGNUP_ENDPOINT,

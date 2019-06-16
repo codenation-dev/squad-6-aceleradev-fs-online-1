@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {withRouter} from 'react-router';
+import React, { Component } from 'react';
+import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 
 import usersService from './../services/usersService';
@@ -35,7 +35,7 @@ class User extends Component {
           userForm: user,
         });
       } else {
-        this.setState({userInvalid: true});
+        this.setState({ userInvalid: true });
       }
     }
   }

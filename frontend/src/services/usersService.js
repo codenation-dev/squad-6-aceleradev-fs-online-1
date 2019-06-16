@@ -1,103 +1,35 @@
-import loginService from './loginService';
+import http from './http';
 
-const {GET_USERS_ENDPOINT} = require('./configApi');
-
-const axios = require('axios');
+const { GET_USERS_ENDPOINT } = require('./configApi');
 
 async function getUsers() {
-  const configRequest = {
-    method: 'GET',
-    json: true,
-    headers: {
-      Authorization: 'Bearer ' + loginService.userLogged().token,
-    },
-    url: GET_USERS_ENDPOINT,
-  };
-  //efetua requisicao em si
-  const response = await axios(configRequest);
+  const { data } = await http.get(GET_USERS_ENDPOINT);
 
-  if (response) {
-    return response.data;
-  }
-  return null;
+  return data;
 }
 
 async function getUserById(id) {
-  const configRequest = {
-    method: 'GET',
-    json: true,
-    headers: {
-      Authorization: 'Bearer ' + loginService.userLogged().token,
-    },
-    url: GET_USERS_ENDPOINT + '/' + id,
-  };
-  //efetua requisicao em si
-  const response = await axios(configRequest);
+  const { data } = await http.get(`${GET_USERS_ENDPOINT}/${id}`);
 
-  if (response) {
-    return response.data;
-  }
-  return null;
+  return data;
 }
 
 async function putUser(user) {
-  const configRequest = {
-    method: 'PUT',
-    json: true,
-    headers: {
-      Authorization: 'Bearer ' + loginService.userLogged().token,
-    },
-    url: GET_USERS_ENDPOINT + '/' + user.id,
-    //data: {...user, receiveAlert: String(user.receiveAlert)},
-    data: user,
-  };
-  //efetua requisicao em si
-  const response = await axios(configRequest);
+  const { data } = await http.put(`${GET_USERS_ENDPOINT}/${user.id}`, { user });
 
-  if (response) {
-    return response.data;
-  }
-  return null;
+  return data;
 }
 
 async function postUser(user) {
-  const configRequest = {
-    method: 'POST',
-    json: true,
-    headers: {
-      Accept: 'application/json',
-      Authorization: 'Bearer ' + loginService.userLogged().token,
-    },
-    url: GET_USERS_ENDPOINT,
-    data: user,
-  };
-  console.log(configRequest);
-  //efetua requisicao em si
-  const response = await axios(configRequest);
+  const { data } = await http.post(GET_USERS_ENDPOINT, { user });
 
-  if (response) {
-    console.log(response);
-    return response.data;
-  }
-  return null;
+  return data;
 }
 
 async function deleteUser(id) {
-  const configRequest = {
-    method: 'DELETE',
-    json: true,
-    headers: {
-      Authorization: 'Bearer ' + loginService.userLogged().token,
-    },
-    url: GET_USERS_ENDPOINT + '/' + id,
-  };
-  //efetua requisicao em si
-  const response = await axios(configRequest);
+  const { data } = await http.delete(`${GET_USERS_ENDPOINT}/${id}`);
 
-  if (response) {
-    return response.data;
-  }
-  return null;
+  return data;
 }
 
-export default {getUsers, getUserById, putUser, postUser, deleteUser};
+export default { getUsers, getUserById, putUser, postUser, deleteUser };
