@@ -90,6 +90,27 @@ func FindCustomerByName(name string) models.Customer {
 	return customer
 }
 
+//FindCustomerByName2 retona usuaclienterio pelo seu nome
+func FindCustomerByName2(db *sql.DB, name string) models.Customer {
+	var (
+		customerID   int
+		customerName string
+		customer     models.Customer
+	)
+	row := db.QueryRow("select cliente.* from cliente where client_nome = $1", name)
+
+	err := row.Scan(&customerID, &customerName)
+	if (err != nil) && (err != sql.ErrNoRows) {
+		log.Println("db.FindCustomerByName->Erro ao executar consulta. Error:", err)
+	} else {
+		customer = models.Customer{
+			ID:   customerID,
+			Name: customerName,
+		}
+	}
+	return customer
+}
+
 //InsertCustomer retona usuario pelo seu email
 func InsertCustomer(customer models.Customer) models.Customer {
 	var (

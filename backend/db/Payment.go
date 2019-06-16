@@ -207,8 +207,8 @@ func insertPaymentEmployee(db *sql.DB, payment models.Payment, paymentEmployee m
 	insert :=
 		`INSERT INTO public.pagamento_funcionario
 		(pagame_id, pagfun_nome, pagfun_cargo, pagfun_orgao, pagfun_remuneracao, client_id)
-		VALUES ($1, $2, $3, $4, $5, $6)
-		returning pagfun_id, pagame_id, pagfun_nome, pagfun_cargo, pagfun_orgao, pagfun_remuneracao, client_id;`
+		VALUES ($1, $2, $3, $4, $5, NULLIF($6,0))
+		returning pagfun_id, pagame_id, pagfun_nome, pagfun_cargo, pagfun_orgao, pagfun_remuneracao, coalesce(client_id,0);`
 
 	var occupationFix string
 	if len(paymentEmployee.Occupation) > 3 {
@@ -322,6 +322,34 @@ func DeletePaymentByID(id int) bool {
 		_, err2 := db.Exec(`delete from pagamento_funcionario where pagame_id = $1;`, id)
 		if err2 == nil {
 			_, err3 := db.Exec(`delete from pagamento where pagame_id = $1;`, id)
+			if err3 == nil {
+				return true
+			} else {
+				log.Fatal("db.DeletePaymentByID()-> Error:", err3)
+			}
+		} else {
+			log.Fatal("db.DeletePaymentByID()-> Error:", err2)
+		}
+
+	} else {
+		log.Fatal("db.DeletePaymentByID()->  Error:", err1)
+	}
+
+	return false
+}
+
+//DeleteAllPayment deleta todos pagamentos para poder fazer testes
+func DeleteAllPayment() bool {
+	db := ConnectDataBase()
+	defer CloseDataBase(db)
+
+	_, err1 := db.Exec(
+		`delete from historico_alerta;`)
+
+	if err1 == nil {
+		_, err2 := db.Exec(`delete from pagamento_funcionario;`)
+		if err2 == nil {
+			_, err3 := db.Exec(`delete from pagamento;`)
 			if err3 == nil {
 				return true
 			} else {

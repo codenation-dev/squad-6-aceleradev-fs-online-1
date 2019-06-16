@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"database/sql"
 	"encoding/csv"
 	"fmt"
 	"io"
@@ -18,6 +19,8 @@ import (
 
 	"golang.org/x/text/encoding/charmap"
 )
+
+var dbConsulta *sql.DB
 
 // GetPayments retorna todos os pagamentos
 func GetPayments(c *gin.Context) {
@@ -181,38 +184,59 @@ func registerPaymentsFromCSV(fileName string, year int, month int) {
 	acceptPayment := 0
 
 	var employeeList []models.PaymentEmployee
+
 	for _, line := range lines {
 		var salary float64
 		if salary, err = strconv.ParseFloat(strings.ReplaceAll(line[3], ",", "."), 64); err != nil {
 			salary = 0.0
 		}
 
-		//busca para ver se eh clietne do banco
-		//customer := db.FindCustomerByName(line[0])
-
-		//busca desativada porque eh muito lento, se sobrar tempo melhorar isso
-		customer := models.Customer{}
-
-		if (salary >= minSalaryForRegisterPayment) || (customer.ID > 0) {
-
-			//busca ativada apenas para quem ja ganha acima de x valor
-			customer := db.FindCustomerByName(line[0])
-			if customer.ID > 0 {
-				paymentEmployee := models.PaymentEmployee{
-					ID:         0,
-					Name:       line[0],
-					Occupation: line[1],
-					Department: line[2],
-					Salary:     salary,
-					Customer:   customer,
-				}
-				employeeList = append(employeeList, paymentEmployee)
-				acceptPayment = acceptPayment + 1
-			}
+		paymentEmployee := models.PaymentEmployee{
+			ID:         0,
+			Name:       line[0],
+			Occupation: line[1],
+			Department: line[2],
+			Salary:     salary,
 		}
+		employeeList = append(employeeList, paymentEmployee)
+		acceptPayment = acceptPayment + 1
+
 		count = count + 1
 	}
 	payment.EmployeePayments = employeeList
+
+	dbConsulta = db.ConnectDataBase()
+	horaInicial := time.Now()
+
+	jobs := make(chan models.PaymentEmployee, len(employeeList))
+	results := make(chan models.PaymentEmployee, len(employeeList))
+
+	// This starts up 3 workers, initially blocked
+	// because there are no jobs yet.
+	for w := 1; w <= 5; w++ {
+		go worker(w, jobs, results)
+	}
+
+	// Here we send len(employeeList) `jobs` and then `close` that
+	// channel to indicate that's all the work we have.
+	for _, employee := range employeeList {
+		jobs <- employee
+	}
+	close(jobs)
+
+	var listEmployeeForRegister []models.PaymentEmployee
+	// Finally we collect all the results of the work.
+	for a := 1; a <= len(employeeList); a++ {
+		employeeRetorno := <-results
+		if (employeeRetorno.Salary >= minSalaryForRegisterPayment) || (employeeRetorno.Customer.ID > 0) {
+			listEmployeeForRegister = append(listEmployeeForRegister, employeeRetorno)
+		}
+	}
+	fmt.Println("listEmployeeForRegister", len(listEmployeeForRegister))
+	fmt.Println(horaInicial)
+	fmt.Println(time.Now())
+
+	db.CloseDataBase(dbConsulta)
 
 	fmt.Println("registerPaymentsFromCSV()-> payment Count:", count)
 	fmt.Println("registerPaymentsFromCSV()-> payment Accept:", acceptPayment)
@@ -223,6 +247,22 @@ func registerPaymentsFromCSV(fileName string, year int, month int) {
 
 	if paymentInserted.ID > 0 {
 		RegisterAndNotifyAlerts(paymentInserted.ID)
+	}
+	fmt.Println(time.Now())
+
+}
+
+func worker(id int, jobs <-chan models.PaymentEmployee, results chan<- models.PaymentEmployee) {
+	for j := range jobs {
+		//fmt.Println("worker", id, "started  job", j)
+		employee := j
+		customerFound := db.FindCustomerByName2(dbConsulta, j.Name)
+		if customerFound.ID > 0 {
+			employee.Customer = customerFound
+			fmt.Println("worker", id, "finished job", employee.Customer.ID)
+		}
+		//fmt.Println("worker", id, "finished job", employee.Customer.ID)
+		results <- employee
 	}
 }
 
