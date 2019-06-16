@@ -8,17 +8,22 @@ class UploadCSV extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      file: null,
+      file: [{ name: 'selecione o arquivo',
+      lastModified:"1996",
+      lastModifiedDate:"c:/"
+    
+    }]
     };
   }
 
   handleFIle(e) {
     let file = e.target.files[0];
     this.setState({file: file});
+    console.log(this.state.file)
   }
 
   async handleUpload(e) {
-    e.preventDefault();
+    //e.preventDefault();
     fileUploadCSV.uploadFile(this.state.file);
   }
 
@@ -32,16 +37,17 @@ class UploadCSV extends Component {
  
  
             <div className="row">
-<div class="input-group mb-3">
+<div className="input-group mb-3">
 
-<div class="custom-file">
- <input type="file" class='custom-file-input'
- id='inputGroupFile03'   onChange={e => this.handleFIle(e)}
+<div className="custom-file">
+ <input type="file" className='custom-file-input'
+ id='inputGroupFile03'    onChange={e => this.handleFIle(e)}
 />
-  <label class="custom-file-label" 
-  for="inputGroupFile03"  value={this.state.file} 
+  <label className="custom-file-label" 
+  htmlfor="inputGroupFile03"   > {this.state.file[0].name}
+{console.log(this.state.file[0].name)}
 
-  >Escolha um arquivo</label>
+  </label>
   
 </div>
 <div className="input-group-append">
