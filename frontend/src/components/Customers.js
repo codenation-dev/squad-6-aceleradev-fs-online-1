@@ -18,11 +18,11 @@ class Customers extends Component {
   }
 
   btnNewClick(event) {
-    this.props.history.push('/Customer/');
+    this.props.history.push('/customer/');
   }
 
   btnEditClick(event, item) {
-    this.props.history.push('/Customer/' + item.id);
+    this.props.history.push('/customer/' + item.id);
   }
 
   async btnDeleteClick(event, item) {
@@ -32,6 +32,10 @@ class Customers extends Component {
       listCustomers: retorno,
     });
     //alert('excluindo' + JSON.stringify(item));
+  }
+
+  btnUploadCsv(event) {
+    this.props.history.push('/uploadcsv/');
   }
 
   render = () => (
@@ -48,6 +52,17 @@ class Customers extends Component {
             name="btnNew"
           >
             Novo Cliente
+          </button>
+          <button
+            onClick={e => {
+              this.btnUploadCsv(e);
+            }}
+            type="button"
+            className="btn btn-info"
+            id="btnNew"
+            name="btnNew"
+          >
+            Upload Clientes por CSV
           </button>
         </div>
         <br />
