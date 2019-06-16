@@ -1,7 +1,11 @@
 # ASDF
 .tool-versions
 
-# Build files
-squad-6-aceleradev-fs-online-1
+# Binary files
+backend
 
+# Environment variables file
 .env
+
+# Project dependencies directory
+/vendor
