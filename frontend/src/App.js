@@ -17,7 +17,7 @@ import User from './components/User';
 //clientes
 import Customers from './components/Customers';
 import Customer from './components/Customers';
-import UploadCSV from "./components/UploadCSV"
+import UploadCSV from './components/UploadCSV';
 
 import './App.css';
 
@@ -71,7 +71,7 @@ const LoginRoute = props => {
 
 const UploadCSVRoute = props => {
   if (!login.isLogged()) {
-    props.history.push("/uploadcsv");
+    props.history.push('/uploadcsv');
     return null;
   }
   return <UploadCSV />;
@@ -102,7 +102,6 @@ class App extends Component {
 
         {/* Home */}
         <Route exact path="/" component={HomeRoute} />
-        <Route exact path="/Users" component={UserRoute} />
 
         {/* Usuario */}
         <Route exact path="/users" component={UsersRoute} />
@@ -112,9 +111,8 @@ class App extends Component {
         {/* Cliente */}
         <Route exact path="/customers" component={CustomersRoute} />
         <Route exact path="/customer" component={CustomerRoute} />
-        <Route exact path="/customer/:id" component={CustomerRoute} />          
+        <Route exact path="/customer/:id" component={CustomerRoute} />
         <Route exact path="/uploadcsv" component={UploadCSVRoute} />
-          
       </div>
     );
   }
