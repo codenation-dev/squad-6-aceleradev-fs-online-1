@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"time"
@@ -34,7 +33,7 @@ func GetAuthMiddleware() *jwt.GinJWTMiddleware {
 		IdentityHandler: func(c *gin.Context) interface{} {
 			claims := jwt.ExtractClaims(c)
 			var user = db.FindUserByEmail(claims["email"].(string))
-			fmt.Println(user)
+			//fmt.Println(user)
 			return user
 		},
 

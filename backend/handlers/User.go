@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -41,11 +42,13 @@ func PutUser(c *gin.Context) {
 	var user models.User
 	c.Bind(&user)
 
+	fmt.Println(user)
+
 	if id, err := strconv.Atoi(c.Params.ByName("id")); err == nil {
 		userUpdated := db.UpdateUserByID(id, user)
 
 		if userUpdated.ID > 0 {
-			c.JSON(http.StatusOK, userUpdated)
+			c.JSON(http.StatusCreated, userUpdated)
 		} else {
 			c.JSON(http.StatusInternalServerError, gin.H{"code": "ERROR", "message": "Internal Server Error"})
 		}
@@ -57,7 +60,7 @@ func PutUser(c *gin.Context) {
 
 // NewUser cria novo usuario
 func NewUser(c *gin.Context) {
-	c.Header("Content-Type", "application/json")
+	//c.Header("Content-Type", "application/json")
 
 	var user models.User
 	c.Bind(&user)

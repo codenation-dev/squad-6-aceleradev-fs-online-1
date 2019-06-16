@@ -1,12 +1,32 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { withRouter } from "react-router";
+import React from 'react';
+import PropTypes from 'prop-types';
+import {withRouter} from 'react-router';
 
-import loginService from "./../services/loginService";
+import loginService from './../services/loginService';
 
 const logoff = (e, p) => {
   loginService.logout();
-  p.history.push("/login");
+  p.history.push('/login');
+};
+
+const getClassNameForActivePage = (props, pageName) => {
+  //alert(props.location.pathname.indexOf('/users'));
+  if (props && props.location) {
+    if (pageName === 'Home' && props.location.pathname === '/') {
+      return 'nav-item active';
+    } else if (
+      pageName === 'Users' &&
+      String(props.location.pathname).indexOf('/user') === 0
+    ) {
+      return 'nav-item active';
+    } else if (
+      pageName === 'Customers' &&
+      String(props.location.pathname).indexOf('/customer') === 0
+    ) {
+      return 'nav-item active';
+    }
+  }
+  return 'nav-item';
 };
 
 const Menu = props => (
@@ -28,18 +48,18 @@ const Menu = props => (
 
     <div className="collapse navbar-collapse" id="navbarSupportedContent">
       <ul className="navbar-nav mr-auto">
-        <li className="nav-item active">
+        <li className={getClassNameForActivePage(props, 'Home')}>
           <a className="nav-link" href="/">
-            Home <span className="sr-only">(current)</span>
+            Home
           </a>
         </li>
-        <li className="nav-item">
+        <li className={getClassNameForActivePage(props, 'Users')}>
           <a className="nav-link" href="/users">
             Usuarios
           </a>
         </li>
-        <li className="nav-item">
-          <a className="nav-link disabled" href="/">
+        <li className={getClassNameForActivePage(props, 'Customers')}>
+          <a className="nav-link" href="/customers">
             Clientes
           </a>
         </li>
@@ -70,7 +90,7 @@ const Menu = props => (
 
 Menu.propTypes = {
   searchString: PropTypes.string,
-  recipes: PropTypes.array
+  recipes: PropTypes.array,
 };
 
 export default withRouter(Menu);
