@@ -3,12 +3,13 @@ package db
 import (
 	"database/sql"
 	"log"
+	"strconv"
 
 	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/backend/models"
 )
 
 //FindAllPayments retorna todos os pagamentos
-func FindAllPayments(returnEmployees bool) []models.Payment {
+func FindAllPayments(returnEmployees bool, customerID int) []models.Payment {
 	var (
 		paymentID       int
 		paymentFileName string
@@ -20,7 +21,17 @@ func FindAllPayments(returnEmployees bool) []models.Payment {
 	db := ConnectDataBase()
 	defer CloseDataBase(db)
 
-	rows, errQuery := db.Query("select pagamento.* from pagamento")
+	sql := "select pagamento.* from pagamento "
+
+	if customerID > 0 {
+		sql = sql + " " +
+			`inner join pagamento_funcionario on 
+				pagamento_funcionario.pagame_id = pagamento.pagame_id
+			where
+				pagamento_funcionario.client_id = ` + strconv.Itoa(customerID)
+	}
+
+	rows, errQuery := db.Query(sql)
 	if errQuery != nil {
 		log.Println("db.FindAllPayments()->Erro ao executar consulta. Error:", errQuery)
 	}
@@ -36,7 +47,7 @@ func FindAllPayments(returnEmployees bool) []models.Payment {
 				Month:    paymentMonth,
 				Year:     paymentYear}
 			if returnEmployees {
-				payment.EmployeePayments = findPaymentsEmployeeByPaymentID(paymentID)
+				payment.EmployeePayments = findPaymentsEmployeeByPaymentID(paymentID, customerID)
 			}
 
 			listEmployee = append(listEmployee, payment)
@@ -77,7 +88,7 @@ func FindPaymentByID(returnEmployees bool, ID int) models.Payment {
 			Year:     paymentYear}
 
 		if returnEmployees {
-			payment.EmployeePayments = findPaymentsEmployeeByPaymentID(paymentID)
+			payment.EmployeePayments = findPaymentsEmployeeByPaymentID(paymentID, 0)
 		}
 
 	}
@@ -114,7 +125,7 @@ func FindPaymentByYearAndMonth(returnEmployees bool, year int, month int) models
 			Month:    paymentMonth,
 			Year:     paymentYear}
 		if returnEmployees {
-			payment.EmployeePayments = findPaymentsEmployeeByPaymentID(paymentID)
+			payment.EmployeePayments = findPaymentsEmployeeByPaymentID(paymentID, 0)
 		}
 	}
 
@@ -174,7 +185,7 @@ func insertPaymentEmployee(db *sql.DB, payment models.Payment, paymentEmployee m
 		paymentEmployeeOccupation string
 		paymentEmployeeDepartment string
 		paymentEmployeeSalary     float64
-		paymentEmployeeCustumerID int
+		paymentEmployeeCustomerID int
 	)
 
 	insert :=
@@ -200,7 +211,7 @@ func insertPaymentEmployee(db *sql.DB, payment models.Payment, paymentEmployee m
 		&paymentEmployeeOccupation,
 		&paymentEmployeeDepartment,
 		&paymentEmployeeSalary,
-		&paymentEmployeeCustumerID)
+		&paymentEmployeeCustomerID)
 
 	if (errInsert != nil) && (errInsert != sql.ErrNoRows) {
 		log.Println("db.InsertPaymentEmployee->Erro ao executar insert. Error:",
@@ -213,20 +224,20 @@ func insertPaymentEmployee(db *sql.DB, payment models.Payment, paymentEmployee m
 			Occupation: paymentEmployeeOccupation,
 			Department: paymentEmployeeDepartment,
 			Salary:     paymentEmployeeSalary,
-			Customer:   FindCustomerByID(paymentEmployeeCustumerID),
+			Customer:   FindCustomerByID(paymentEmployeeCustomerID),
 		}
 	}
 	return paymentEmployeeInserted
 }
 
-func findPaymentsEmployeeByPaymentID(paymentID int) []models.PaymentEmployee {
+func findPaymentsEmployeeByPaymentID(paymentID int, customerID int) []models.PaymentEmployee {
 	var (
 		paymentEmployeeID         int
 		paymentEmployeeName       string
 		paymentEmployeeOccupation string
 		paymentEmployeeDepartment string
 		paymentEmployeeSalary     float64
-		paymentEmployeeCustumerID int
+		paymentEmployeeCustomerID int
 
 		listEmployee []models.PaymentEmployee
 	)
@@ -234,17 +245,22 @@ func findPaymentsEmployeeByPaymentID(paymentID int) []models.PaymentEmployee {
 	db := ConnectDataBase()
 	defer CloseDataBase(db)
 
-	rows, errQuery := db.Query(
-		`select 
-			pagamento_funcionario.pagfun_id,
-			pagamento_funcionario.pagfun_nome,
-			pagamento_funcionario.pagfun_cargo,
-			pagamento_funcionario.pagfun_orgao,
-			pagamento_funcionario.pagfun_remuneracao,
-			pagamento_funcionario.client_id
-		from pagamento_funcionario
-		where
-			pagamento_funcionario.pagame_id = $1 `, paymentID)
+	sql := `select 
+				pagamento_funcionario.pagfun_id,
+				pagamento_funcionario.pagfun_nome,
+				pagamento_funcionario.pagfun_cargo,
+				pagamento_funcionario.pagfun_orgao,
+				pagamento_funcionario.pagfun_remuneracao,
+				pagamento_funcionario.client_id
+			from pagamento_funcionario
+			where
+				pagamento_funcionario.pagame_id = $1 `
+
+	if customerID > 0 {
+		sql = sql + " and " +
+			`pagamento_funcionario.client_id = ` + strconv.Itoa(customerID)
+	}
+	rows, errQuery := db.Query(sql, paymentID)
 
 	if errQuery != nil {
 		log.Println("db.findPaymentsEmployeeByPaymentID()->Erro ao executar consulta. Error:", errQuery)
@@ -257,7 +273,7 @@ func findPaymentsEmployeeByPaymentID(paymentID int) []models.PaymentEmployee {
 			&paymentEmployeeOccupation,
 			&paymentEmployeeDepartment,
 			&paymentEmployeeSalary,
-			&paymentEmployeeCustumerID,
+			&paymentEmployeeCustomerID,
 		)
 		if err != nil {
 			log.Fatal("db.findPaymentsEmployeeByPaymentID()->Erro ao executar consulta. Error:", err)
@@ -268,7 +284,7 @@ func findPaymentsEmployeeByPaymentID(paymentID int) []models.PaymentEmployee {
 				Occupation: paymentEmployeeOccupation,
 				Department: paymentEmployeeDepartment,
 				Salary:     paymentEmployeeSalary,
-				Customer:   FindCustomerByID(paymentEmployeeCustumerID),
+				Customer:   FindCustomerByID(paymentEmployeeCustomerID),
 			}
 
 			listEmployee = append(listEmployee, employee)

@@ -22,7 +22,14 @@ import (
 // GetPayments retorna todos os pagamentos
 func GetPayments(c *gin.Context) {
 	c.Header("Content-Type", "application/json")
-	c.JSON(http.StatusOK, db.FindAllPayments(true))
+
+	if customerID, err := strconv.Atoi(c.Query("customerId")); err == nil {
+		c.JSON(http.StatusOK, db.FindAllPayments(true, customerID))
+
+	} else {
+		c.JSON(http.StatusOK, db.FindAllPayments(true, 0))
+	}
+
 }
 
 // GetPayment retornoa um pagamento
