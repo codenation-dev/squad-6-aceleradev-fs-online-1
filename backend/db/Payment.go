@@ -21,7 +21,12 @@ func FindAllPayments(returnEmployees bool, customerID int) []models.Payment {
 	db := ConnectDataBase()
 	defer CloseDataBase(db)
 
-	sql := "select pagamento.* from pagamento "
+	sql := `select 
+				pagamento.pagame_id,
+				pagamento.pagame_arquivo,
+				pagamento.pagame_ano,
+				pagamento.pagame_mes
+			from pagamento `
 
 	if customerID > 0 {
 		sql = sql + " " +
@@ -72,8 +77,14 @@ func FindPaymentByID(returnEmployees bool, ID int) models.Payment {
 	defer CloseDataBase(db)
 
 	errQuery := db.QueryRow(
-		"select pagamento.* from pagamento "+
-			" where (pagame_id = $1)",
+		`select 
+			pagamento.pagame_id,
+			pagamento.pagame_arquivo,
+			pagamento.pagame_ano,
+			pagamento.pagame_mes
+		from pagamento 
+		where (pagame_id = $1)`,
+
 		ID).Scan(&paymentID, &paymentFileName, &paymentYear, &paymentMonth)
 
 	if (errQuery != nil) && (errQuery != sql.ErrNoRows) {
@@ -110,8 +121,13 @@ func FindPaymentByYearAndMonth(returnEmployees bool, year int, month int) models
 	defer CloseDataBase(db)
 
 	errQuery := db.QueryRow(
-		"select pagamento.* from pagamento "+
-			" where (pagame_ano = $1) and (pagame_mes = $2)",
+		`select 
+			pagamento.pagame_id,
+			pagamento.pagame_arquivo,
+			pagamento.pagame_ano,
+			pagamento.pagame_mes
+		from pagamento 
+		where (pagame_ano = $1) and (pagame_mes = $2)`,
 		year, month).Scan(&paymentID, &paymentFileName, &paymentYear, &paymentMonth)
 
 	if (errQuery != nil) && (errQuery != sql.ErrNoRows) {
