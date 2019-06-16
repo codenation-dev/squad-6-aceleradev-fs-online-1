@@ -73,6 +73,7 @@ const Menu = props => (
             Historico Alertas
           </a>
         </li>
+       
       </ul>
 
       <button
