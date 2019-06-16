@@ -71,7 +71,7 @@ const LoginRoute = props => {
 
 const UploadCSVRoute = props => {
   if (!login.isLogged()) {
-    props.history.push('/uploadcsv');
+    props.history.push('/');
     return null;
   }
   return <UploadCSV />;
