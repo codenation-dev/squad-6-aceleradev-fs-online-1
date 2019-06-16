@@ -33,16 +33,15 @@ class UploadCSV extends Component {
  
             <div className="row">
 <div class="input-group mb-3">
-<div class="input-group-prepend">
-<button class="btn btn-outline-secondary"
- type="button">Escolher Arquivo</button>
-</div>
+
 <div class="custom-file">
  <input type="file" class='custom-file-input'
- id='inputGroupFile03' onChange={e => this.handleFIle(e)}
+ id='inputGroupFile03'   onChange={e => this.handleFIle(e)}
 />
   <label class="custom-file-label" 
-  for="inputGroupFile03"  value={this.setState.file} >Choose file</label>
+  for="inputGroupFile03"  value={this.state.file} 
+
+  >Escolha um arquivo</label>
   
 </div>
 <div className="input-group-append">
