@@ -32,7 +32,7 @@ func GetCustomer(c *gin.Context) {
 	if customer.ID > 0 {
 		c.JSON(http.StatusOK, customer)
 	} else {
-		c.AbortWithStatus(http.StatusNotFound)
+		c.AbortWithStatus(http.StatusNoContent)
 	}
 }
 
@@ -52,7 +52,7 @@ func PutCustomer(c *gin.Context) {
 		}
 
 	} else {
-		c.JSON(http.StatusNotFound, gin.H{"code": "ERROR", "message": "Invalid param"})
+		c.JSON(http.StatusNoContent, gin.H{"code": "ERROR", "message": "Invalid param"})
 	}
 }
 

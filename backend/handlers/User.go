@@ -32,7 +32,7 @@ func GetUser(c *gin.Context) {
 	if user.ID > 0 {
 		c.JSON(http.StatusOK, user)
 	} else {
-		c.AbortWithStatus(http.StatusNotFound)
+		c.AbortWithStatus(http.StatusNoContent)
 	}
 }
 

@@ -69,8 +69,8 @@ func StartRouter(router *gin.Engine) *gin.Engine {
 		//rotas para alertas
 		alert := v1.Group("/alert")
 		{
-			alert.GET("", handlers.GetPayments)
-			alert.GET("/:id", handlers.GetPayments)
+			alert.GET("", handlers.GetAlerts)
+			alert.GET("/:id", handlers.GetAlert)
 			//alert.PUT("/:id", handlers.GetPayments)    //cadastrado automaticamente
 			//alert.POST("", handlers.GetPayments)       //cadastrado automaticamente
 			//alert.DELETE("/:id", handlers.GetPayments) //nao tem porque apagar alertas

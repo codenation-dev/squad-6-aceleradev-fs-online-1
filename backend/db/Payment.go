@@ -8,8 +8,8 @@ import (
 	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/backend/models"
 )
 
-//FindAllPayments retorna todos os pagamentos
-func FindAllPayments(returnEmployees bool, customerID int) []models.Payment {
+//FindPayments retorna todos os pagamentos
+func FindPayments(returnEmployees bool, customerID int) []models.Payment {
 	var (
 		paymentID       int
 		paymentFileName string

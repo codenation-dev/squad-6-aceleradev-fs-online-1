@@ -24,10 +24,10 @@ func GetPayments(c *gin.Context) {
 	c.Header("Content-Type", "application/json")
 
 	if customerID, err := strconv.Atoi(c.Query("customerId")); err == nil {
-		c.JSON(http.StatusOK, db.FindAllPayments(true, customerID))
+		c.JSON(http.StatusOK, db.FindPayments(true, customerID))
 
 	} else {
-		c.JSON(http.StatusOK, db.FindAllPayments(true, 0))
+		c.JSON(http.StatusOK, db.FindPayments(true, 0))
 	}
 
 }
@@ -44,7 +44,7 @@ func GetPayment(c *gin.Context) {
 		if payment.ID > 0 {
 			c.JSON(http.StatusOK, payment)
 		} else {
-			c.AbortWithStatus(http.StatusNotFound)
+			c.AbortWithStatus(http.StatusNoContent)
 		}
 
 	} else {
