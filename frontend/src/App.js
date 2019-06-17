@@ -71,7 +71,7 @@ const LoginRoute = props => {
 
 const UploadCSVRoute = props => {
   if (!login.isLogged()) {
-    props.history.push('/uploadcsv');
+    props.history.push('/');
     return null;
   }
   return <UploadCSV />;
@@ -112,6 +112,10 @@ class App extends Component {
         <Route exact path="/customers" component={CustomersRoute} />
         <Route exact path="/customer" component={CustomerRoute} />
         <Route exact path="/customer/:id" component={CustomerRoute} />
+      
+
+
+        {/* Cliente */}
         <Route exact path="/uploadcsv" component={UploadCSVRoute} />
       </div>
     );

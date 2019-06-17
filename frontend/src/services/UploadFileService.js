@@ -21,22 +21,14 @@ async function uploadFile(file) {
   };
 
   //efetua requisicao em si
-  console.log(formdata, 'arquivo formdata');
-  console.log(
-    'Bearer ' + loginService.userLogged().token,
-    'token from login !'
-  );
-  console.log(
-    'Bearer ' + localStorageWrapper.get('logged_user').token,
-    'token from storage !'
-  );
-  console.log(configRequest, 'here request');
-
   const response = await axios(configRequest);
 
   if (response) {
+    alert("Arquivo CSV carregado com sucesso !")
     return response.data;
-  }
+    
+  }else{alert("Arquivo Não Carregado !")}
+
   return null;
 }
 

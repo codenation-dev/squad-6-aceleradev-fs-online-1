@@ -19,6 +19,7 @@ class Customers extends Component {
 
   btnNewClick(event) {
     this.props.history.push('/customer/');
+    
   }
 
   btnEditClick(event, item) {
@@ -51,6 +52,7 @@ class Customers extends Component {
             id="btnNew"
             name="btnNew"
           >
+            
             Novo Cliente
           </button>
           <button
