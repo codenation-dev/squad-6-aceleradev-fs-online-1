@@ -112,6 +112,10 @@ class App extends Component {
         <Route exact path="/customers" component={CustomersRoute} />
         <Route exact path="/customer" component={CustomerRoute} />
         <Route exact path="/customer/:id" component={CustomerRoute} />
+      
+
+
+        {/* Cliente */}
         <Route exact path="/uploadcsv" component={UploadCSVRoute} />
       </div>
     );

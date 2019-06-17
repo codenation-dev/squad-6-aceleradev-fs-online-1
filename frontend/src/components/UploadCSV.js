@@ -20,7 +20,7 @@ class UploadCSV extends Component {
   }
 
   handleFIle(e) {
-     this.state.arquivo = e.target.files[0];
+     this.setState({arquivo: e.target.files[0]}) 
     this.setState({file: [{name: e.target.files[0].name,
     
     lastModified:e.target.files[0].lastModified,
