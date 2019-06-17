@@ -16,7 +16,7 @@ import User from './components/User';
 
 //clientes
 import Customers from './components/Customers';
-import Customer from './components/Customers';
+import Customer from './components/Customer';
 import UploadCSV from './components/UploadCSV';
 
 import './App.css';
