@@ -10,22 +10,43 @@ class UploadCSV extends Component {
     this.state = {
       file: [{ name: 'selecione o arquivo',
       lastModified:"1996",
-      lastModifiedDate:"c:/"
+      lastModifiedDate:"c:/",
+      type: "text/csv"
     
-    }]
+    }],
+    arquivo :''
     };
+   
   }
 
   handleFIle(e) {
-    let file = e.target.files[0];
-    this.setState({file: file});
-    console.log(this.state.file)
+     this.state.arquivo = e.target.files[0];
+    this.setState({file: [{name: e.target.files[0].name,
+    
+    lastModified:e.target.files[0].lastModified,
+    lastModifiedDate:e.target.files[0].lastModifiedDate,
+    type: e.target.files[0].type
+    }]});
+      console.log(e.target.files[0],"daqui handlefile")
   }
 
   async handleUpload(e) {
     //e.preventDefault();
-    fileUploadCSV.uploadFile(this.state.file);
+    fileUploadCSV.uploadFile(this.state.arquivo);
   }
+
+
+  async handleDelete(e) {
+     //e.preventDefault();
+    this.setState({file: [{name: 'selecione o arquivo',
+    lastModified:"1996",
+    lastModifiedDate:"c:/",
+    type: "text/csv"
+      }]});
+        console.log(this.state.file,"daqui do delete")
+    }
+  
+
 
   render = () => (
     <div className="container">
@@ -41,20 +62,27 @@ class UploadCSV extends Component {
 
 <div className="custom-file">
  <input type="file" className='custom-file-input'
- id='inputGroupFile03'    onChange={e => this.handleFIle(e)}
+ id='inputGroupFile03' accept=".csv"   onChange={e => this.handleFIle(e)}
 />
   <label className="custom-file-label" 
-  htmlfor="inputGroupFile03"   > {this.state.file[0].name}
-{console.log(this.state.file[0].name)}
+  htmlfor="inputGroupFile03"  > {this.state.file[0].name}
+{console.log(this.state.file)}
 
   </label>
   
 </div>
 <div className="input-group-append">
-            <button className="btn btn-outline-secondary" type="button">
+            <button className="btn btn-outline-secondary" type="button" 
+            onClick={e => this.handleDelete(e)}
+            
+            disabled={this.state.file[0].name==="selecione o arquivo"}
+            >
               Limpar
             </button>
-            <button className="btn btn-outline-primary" type="button" onClick={e => this.handleUpload(e)}>
+            <button className="btn btn-outline-primary" type="button"
+             onClick={e => this.handleUpload(e)}
+             disabled={this.state.file[0].name==="selecione o arquivo"}
+             >
               Fazer Upload
             </button>
           </div>
