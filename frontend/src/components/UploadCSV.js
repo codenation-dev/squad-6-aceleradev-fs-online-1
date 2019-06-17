@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import {withRouter} from 'react-router';
 
 import fileUploadCSV from './../services/UploadFileService';
-
+import '../components/UploadCSV.css'
 class UploadCSV extends Component {
   constructor(props) {
     super(props);
