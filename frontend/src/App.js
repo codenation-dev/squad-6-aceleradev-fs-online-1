@@ -139,6 +139,7 @@ class App extends Component {
         <Route exact path="/uploadcsv" component={UploadCSVRoute} />
         <Route exact path="/Alerts" component={AlertsRoute} />
         <Route exact path="/Alert" component={AlertRoute} />
+        <Route exact path="/customer/:id" component={AlertRoute} />
       </div>
     );
   }

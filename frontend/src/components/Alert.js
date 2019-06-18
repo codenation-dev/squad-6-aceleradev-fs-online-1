@@ -13,9 +13,9 @@ class Alert extends Component {
       alertId: 0,
       alertForm: {
         id: 0,
-        Data: '',
-        Id_Usuario: '',
-        Id_cliente:'',
+        Arquivo: '',
+        Mes: '',
+        Ano:'',
         Id_pagamento:''
         },
     };
