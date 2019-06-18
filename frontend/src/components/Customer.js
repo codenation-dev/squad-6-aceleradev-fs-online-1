@@ -18,7 +18,7 @@ class Customer extends Component {
         },
     };
   }
-
+ 
   async componentDidMount() {
     if (this.props.match.params.id) {
       let customer;
@@ -49,10 +49,10 @@ class Customer extends Component {
 
     if (!msg) {
       if (this.state.customerForm.id) {
-        await customersService.putUser(this.state.customerForm);
+        await customersService.putCustomer(this.state.customerForm);
         this.props.history.push('/customers');
       } else {
-        await customersService.postUser(this.state.customerForm);
+        await customersService.postCustomer(this.state.customerForm);
         this.props.history.push('/customers');
       }
     } else {
