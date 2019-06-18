@@ -2,38 +2,40 @@ import React, {Component} from 'react';
 import {withRouter} from 'react-router';
 import PropTypes from 'prop-types';
 
-import customersService from './../services/customerService';
+import alertService from './../services/alertService';
 import loginService from '../services/loginService';
 
 class Alert extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      customerInvalid: false,
-      customerId: 0,
-      customerForm: {
+      alertInvalid: false,
+      alertId: 0,
+      alertForm: {
         id: 0,
-        email: '',
-        name: '',
+        Data: '',
+        Id_Usuario: '',
+        Id_cliente:'',
+        Id_pagamento:''
         },
     };
   }
  
   async componentDidMount() {
     if (this.props.match.params.id) {
-      let customer;
+      let alert;
       try {
-        customer = await customersService.getCustomerById(this.props.match.params.id);
+        alert = await alertService.getAlertById(this.props.match.params.id);
       } catch (error) {
         console.log(error);
       }
-      if (customer) {
+      if (alert) {
         this.setState({
-            customerId: this.props.match.params.id,
-            customerForm: customer,
+            alertId: this.props.match.params.id,
+            alertForm: alert,
         });
       } else {
-        this.setState({customerInvalid: true});
+        this.setState({alertInvalid: true});
       }
     }
   }
@@ -43,17 +45,17 @@ class Alert extends Component {
 
     let msg = '';
    
-    if (!this.state.customerForm.name) {
-      msg += 'Preencha o campo Nome\n';
+    if (!this.state.alertForm.id) {
+      msg += 'Preencha o id do alerta\n';
     }
 
     if (!msg) {
-      if (this.state.customerForm.id) {
-        await customersService.putCustomer(this.state.customerForm);
-        this.props.history.push('/customers');
+      if (this.state.alertForm.id) {
+        await alertService.putAlert(this.state.alertForm);
+        this.props.history.push('/alerts');
       } else {
-        await customersService.postCustomer(this.state.customerForm);
-        this.props.history.push('/customers');
+        await alertService.postAlert(this.state.alertForm);
+        this.props.history.push('/alerts');
       }
     } else {
       alert(msg);
@@ -62,23 +64,23 @@ class Alert extends Component {
 
   btnCancelarClick = event => {
     event.preventDefault();
-    this.props.history.push('/customers');
+    this.props.history.push('/alerts');
   };
 
   handleOnChange(event) {
     if (event.target.name !== 'receiveAlert') {
       this.setState({
         ...this.state,
-        customerForm: {
-          ...this.state.customerForm,
+        alertForm: {
+          ...this.state.alertForm,
           [event.target.name]: event.target.value ? event.target.value : '',
         },
       });
     } else {
       this.setState({
         ...this.state,
-        customerForm: {
-          ...this.state.customerForm,
+        alertForm: {
+          ...this.state.alertForm,
           [event.target.name]: event.target.checked,
         },
       });
@@ -97,7 +99,9 @@ class Alert extends Component {
         </div>
         <form>
           <div className="form-row">
-            <div className="form-group col-md-2">
+
+
+            <div className="form-group col-md-1">
               <label htmlFor="inputId">ID</label>
               <input
                 type="text"
@@ -105,29 +109,67 @@ class Alert extends Component {
                 placeholder="0"
                 id="inputId"
                 name="userId"
-                value={this.state.customerId}
+                value={this.state.alertId}
                 disabled
               />
             </div>
-            <div className="form-group col-md-7">
-              <label htmlFor="inputEmail">Email</label>
+
+
+            <div className="form-group col-md-3">
+              <label htmlFor="inputEmail"> Data </label>
               <input
                 type="text"
                 className="form-control"
                 placeholder="Email"
                 id="inputEmail"
                 name="email"
-                value={this.state.customerForm.email}
+                value={this.state.alertForm.email}
                 onChange={e => {
                   this.handleOnChange(e);
                 }}
                 required
               />
-            
-            </div>
-          </div>
-          <div className="form-group">
-            <label htmlFor="inputName">Nome</label>
+             </div>  
+
+
+
+          
+          <div className="form-group col-md-1">
+              <label htmlFor="inputEmail"> Id Usuario</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Email"
+                id="inputEmail"
+                name="email"
+                value={this.state.alertForm.email}
+                onChange={e => {
+                  this.handleOnChange(e);
+                }}
+                required
+              />
+             </div>
+         
+           
+             <div className="form-group col-md-3">
+              <label htmlFor="inputEmail">Id cliente</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Email"
+                id="inputEmail"
+                name="email"
+                value={this.state.alertForm.email}
+                onChange={e => {
+                  this.handleOnChange(e);
+                }}
+                required
+              />
+             </div>
+          
+
+          <div className="form-group col-md-7">
+            <label htmlFor="inputName">Id pagamento</label>
             <input
               type="text"
               className="form-control"
@@ -137,11 +179,11 @@ class Alert extends Component {
               }}
               id="inputName"
               name="name"
-              value={this.state.customerForm.name}
+              value={this.state.alertForm.name}
             />
           </div>
 
-         
+          </div>
           <div className="form-group">
             <button
               

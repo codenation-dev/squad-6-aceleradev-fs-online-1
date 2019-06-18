@@ -5,12 +5,12 @@ export const SIGNUP_ENDPOINT = 'http://localhost:4000/api/v1/signin';
 export const GET_USERS_ENDPOINT = 'http://localhost:4000/api/v1/user';
 
 //cliente
-export const GET_CUSTOMERS_ENDPOINT = 'http://localhost:4000//api/v1/alert';
+export const GET_CUSTOMERS_ENDPOINT = 'http://localhost:4000/api/v1/customer' ;
 
 //cliente upload csv
 export const CSV_FILE_UPLOAD = "http://localhost:4000/api/v1/customer/upload"
 
-export const GET_ALERTS_ENDPOINT = "http://localhost:4000/api/v1/customer/upload"
+export const GET_ALERTS_ENDPOINT = "http://localhost:4000/api/v1/alert "
 
 
 export default {

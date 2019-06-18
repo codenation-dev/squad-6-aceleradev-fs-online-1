@@ -12,6 +12,7 @@ class Alerts extends Component {
 
   async componentDidMount() {
     const retorno = await alertService.getAlerts();
+    console.log(retorno,"Alert retorno")
     this.setState({
       listAlerts: retorno,
     });
@@ -57,15 +58,23 @@ class Alerts extends Component {
             <thead>
               <tr>
                 <th scope="col">#</th>
-                <th scope="col">Nome</th>
+                <th scope="col">Arquivo</th>
+                <th scope="col">Mês</th>
+                <th scope="col">Ano</th>
+                <th scope="col">Pagamento Nº</th>
               </tr>
             </thead>
             <tbody>
               {this.state.listAlerts
                 ? this.state.listAlerts.map((item, index) => (
+
                     <tr key={item.id}>
                       <th scope="row">{item.id}</th>
-                      <td>{item.name}</td>
+                      <td>{item.filename}</td>
+                      <td>{item.month}</td>
+                      <td>{item.year}</td>
+                      <td>{item.EmployeePayments}</td>
+                      
                       <td>
                         <input
                           onClick={e => {

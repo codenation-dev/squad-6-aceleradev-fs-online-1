@@ -12,6 +12,7 @@ class Users extends Component {
 
   async componentDidMount() {
     const retorno = await usersService.getUsers();
+    console.log(retorno,"Alert retorno")
     this.setState({
       listUsers: retorno,
     });
