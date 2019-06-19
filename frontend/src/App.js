@@ -19,6 +19,9 @@ import Customers from './components/Customers';
 import Customer from './components/Customer';
 import UploadCSV from './components/UploadCSV';
 
+import Alerts from './components/Alerts'
+import Alert from './components/Alert'
+
 import './App.css';
 
 const HomeRoute = props => {
@@ -76,6 +79,23 @@ const UploadCSVRoute = props => {
   }
   return <UploadCSV />;
 };
+
+const AlertsRoute = props => {
+  if (!login.isLogged()) {
+    props.history.push('/');
+    return null;
+  }
+  return <Alerts />;
+};
+
+
+const AlertRoute = props => {
+  if (!login.isLogged()) {
+    props.history.push('/');
+    return null;
+  }
+  return <Alert />;
+};
 class App extends Component {
   constructor(props) {
     super(props);
@@ -115,8 +135,11 @@ class App extends Component {
       
 
 
-        {/* Cliente */}
+        {/* Upload Cliente */}
         <Route exact path="/uploadcsv" component={UploadCSVRoute} />
+        <Route exact path="/Alerts" component={AlertsRoute} />
+        <Route exact path="/Alert" component={AlertRoute} />
+        <Route exact path="/Alert/:id" component={AlertRoute} />
       </div>
     );
   }

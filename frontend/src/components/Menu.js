@@ -64,13 +64,8 @@ const Menu = props => (
           </a>
         </li>
         <li className="nav-item">
-          <a className="nav-link disabled" href="/">
-            Pagamentos
-          </a>
-        </li>
-        <li className="nav-item">
-          <a className="nav-link disabled" href="/">
-            Historico Alertas
+          <a className="nav-link" href="/alerts">
+            Historico de Alertas
           </a>
         </li>
        
