@@ -13,7 +13,7 @@ class Alert extends Component {
       alertId: 0,
       alertForm: {
         id: 0,
-        Arquivo: '',
+        filename: '',
         Mes: '',
         Ano:'',
         Id_pagamento:''
@@ -26,13 +26,14 @@ class Alert extends Component {
       let alert;
       try {
         alert = await alertService.getAlertById(this.props.match.params.id);
+        console.log(alert,"aqui nos alertas")
       } catch (error) {
         console.log(error);
       }
       if (alert) {
         this.setState({
             alertId: this.props.match.params.id,
-            alertForm: alert,
+            alertForm:  alert[0]
         });
       } else {
         this.setState({alertInvalid: true});
@@ -44,11 +45,19 @@ class Alert extends Component {
     event.preventDefault();
 
     let msg = '';
-   
-    if (!this.state.alertForm.id) {
-      msg += 'Preencha o id do alerta\n';
+    if (!this.state.alertForm.filename) {
+      msg += 'Preencha o campo Arquivo\n';
+    }
+    if (!this.state.alertForm.Mes) {
+      msg += 'Preencha o campo Mês\n';
     }
 
+    if (!this.state.alertForm.Ano) {
+      msg += 'Preencha o campo Ano\n';
+    }
+    if (!this.state.alertForm.Id_pagamento) {
+      msg += 'Preencha o campo detalhes dos salarios \n';
+    }
     if (!msg) {
       if (this.state.alertForm.id) {
         await alertService.putAlert(this.state.alertForm);
@@ -90,7 +99,7 @@ class Alert extends Component {
   render = () => (
     <React.Fragment>
       <script>
-        console.log({JSON.stringify(loginService.userLogged(), null, 4)});
+       {/*  console.log({JSON.stringify(loginService.userLogged(), null, 4)}); */}
       </script>
 
       <div className="container">
@@ -104,45 +113,48 @@ class Alert extends Component {
             <div className="form-group col-md-1">
               <label htmlFor="inputId">ID</label>
               <input
+                 
                 type="text"
                 className="form-control"
                 placeholder="0"
                 id="inputId"
-                name="userId"
+                name="alertId"
                 value={this.state.alertId}
                 disabled
               />
             </div>
 
 
-            <div className="form-group col-md-3">
-              <label htmlFor="inputEmail"> Data </label>
+            <div className="form-group col-md-8">
+              <label htmlFor="inputEmail"> Arquivo </label>
               <input
                 type="text"
                 className="form-control"
-                placeholder="Email"
-                id="inputEmail"
+                placeholder="Arquivo"
+                id="inputarquivo"
                 name="email"
-                value={this.state.alertForm.email}
+                value={this.state.alertForm.filename}
+               
                 onChange={e => {
                   this.handleOnChange(e);
                 }}
                 required
               />
+              
              </div>  
 
 
 
           
           <div className="form-group col-md-1">
-              <label htmlFor="inputEmail"> Id Usuario</label>
+              <label htmlFor="inputEmail"> Mês</label>
               <input
                 type="text"
                 className="form-control"
-                placeholder="Email"
+                placeholder="Mês"
                 id="inputEmail"
                 name="email"
-                value={this.state.alertForm.email}
+                value={this.state.alertForm.month}
                 onChange={e => {
                   this.handleOnChange(e);
                 }}
@@ -151,15 +163,15 @@ class Alert extends Component {
              </div>
          
            
-             <div className="form-group col-md-3">
-              <label htmlFor="inputEmail">Id cliente</label>
+             <div className="form-group col-md-1">
+              <label htmlFor="inputEmail">Ano</label>
               <input
                 type="text"
                 className="form-control"
-                placeholder="Email"
+                placeholder="Ano"
                 id="inputEmail"
                 name="email"
-                value={this.state.alertForm.email}
+                value={this.state.alertForm.year}
                 onChange={e => {
                   this.handleOnChange(e);
                 }}
@@ -169,17 +181,17 @@ class Alert extends Component {
           
 
           <div className="form-group col-md-7">
-            <label htmlFor="inputName">Id pagamento</label>
+            <label htmlFor="inputName">Salário Cód. Nº</label>
             <input
               type="text"
               className="form-control"
-              placeholder="Nome"
+              placeholder="Salário Cód."
               onChange={e => {
                 this.handleOnChange(e);
               }}
               id="inputName"
               name="name"
-              value={this.state.alertForm.name}
+              value={this.state.alertForm.EmployeePayments}
             />
           </div>
 

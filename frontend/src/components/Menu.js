@@ -64,7 +64,7 @@ const Menu = props => (
           </a>
         </li>
         <li className="nav-item">
-          <a className="nav-link disabled" href="/">
+          <a className="nav-link" href="/alerts">
             Historico Alertas
           </a>
         </li>
