@@ -40,7 +40,7 @@ class Alerts extends Component {
     <React.Fragment>
       <div className="container">
         <div className="row">
-          <button
+        {/*   <button
             onClick={e => {
               this.btnNewClick(e);
             }}
@@ -49,7 +49,7 @@ class Alerts extends Component {
             id="btnNew"
             name="btnNew">            
             Novo Alerta
-          </button>
+          </button> */}
 
         </div>
         <br />
@@ -82,11 +82,11 @@ class Alerts extends Component {
                           }}
                           className="btn btn-primary btn-sm"
                           type="button"
-                          value="Editar"
+                          value="visualizar"
                           name="btnEdit"
                           id="btnEdit"
                         />
-                        <input
+                    {/*     <input
                           onClick={e => {
                             this.btnDeleteClick(e, item);
                           }}
@@ -95,7 +95,7 @@ class Alerts extends Component {
                           value="Excluir"
                           name="btnDelete"
                           id="btnDelete"
-                        />
+                        /> */}
                       </td>
                     </tr>
                   ))

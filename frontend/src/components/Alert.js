@@ -14,9 +14,9 @@ class Alert extends Component {
       alertForm: {
         id: 0,
         filename: '',
-        Mes: '',
-        Ano:'',
-        Id_pagamento:''
+        month: '',
+        year:'',
+        EmployeePayments:''
         },
     };
   }
@@ -77,7 +77,7 @@ class Alert extends Component {
   };
 
   handleOnChange(event) {
-    if (event.target.name !== 'receiveAlert') {
+  
       this.setState({
         ...this.state,
         alertForm: {
@@ -85,16 +85,9 @@ class Alert extends Component {
           [event.target.name]: event.target.value ? event.target.value : '',
         },
       });
-    } else {
-      this.setState({
-        ...this.state,
-        alertForm: {
-          ...this.state.alertForm,
-          [event.target.name]: event.target.checked,
-        },
-      });
+    
     }
-  }
+  
 
   render = () => (
     <React.Fragment>
@@ -138,7 +131,7 @@ class Alert extends Component {
                 onChange={e => {
                   this.handleOnChange(e);
                 }}
-                required
+                disabled
               />
               
              </div>  
@@ -158,7 +151,7 @@ class Alert extends Component {
                 onChange={e => {
                   this.handleOnChange(e);
                 }}
-                required
+                disabled
               />
              </div>
          
@@ -175,7 +168,7 @@ class Alert extends Component {
                 onChange={e => {
                   this.handleOnChange(e);
                 }}
-                required
+                disabled
               />
              </div>
           
@@ -192,12 +185,13 @@ class Alert extends Component {
               id="inputName"
               name="name"
               value={this.state.alertForm.EmployeePayments}
+              disabled
             />
           </div>
 
           </div>
           <div className="form-group">
-            <button
+           {/*  <button
               
               onClick={e => {
                 this.btnSalvarClick(e);
@@ -206,7 +200,7 @@ class Alert extends Component {
               className="btn btn-primary"
             >
               Salvar
-            </button>
+            </button> */}
             <button
               onClick={e => {
                 this.btnCancelarClick(e);
@@ -214,7 +208,7 @@ class Alert extends Component {
               type="submit"
               className="btn btn-secondary"
             >
-              Cancelar
+              Voltar
             </button>
           </div>
         </form>

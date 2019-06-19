@@ -26,6 +26,7 @@ class User extends Component {
       let user;
       try {
         user = await usersService.getUserById(this.props.match.params.id);
+        console.log(user, "usuários");
       } catch (error) {
         console.log(error);
       }
