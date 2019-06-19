@@ -7,14 +7,53 @@ import alertService from '../services/alertService';
 class Alerts extends Component {
   constructor(props) {
     super(props);
-    this.state = {listAlerts: []};
+    this.state = {listAlerts: [],
+      searchString: ''
+    };
+    this.mudar = this.mudar.bind(this);
   }
+
+  mudar(event) {
+    //this.props.history.push('/'+ event.target.value)
+
+    this.setState({'searchString': event.target.value}, () => {
+      this.setState({'listAlerts': this.procura()});
+    });
+    
+  }
+
+
+  procura() {
+    
+    let filtro = [];
+    const titulo = this.state.searchString;
+    const regex = new RegExp(titulo, "i");
+
+    filtro = this.state.listAlerts.filter(function(i) {
+
+      if(!titulo=== ''){
+      if (regex.test(i.filename) || regex.test(i.EmployeePayments)  ) return true;
+      return false;
+    
+     
+    }else{
+ 
+      this.props.history.push('/alerts/');
+      
+
+    }
+  });
+
+    return filtro;
+
+  }  
 
   async componentDidMount() {
     const retorno = await alertService.getAlerts();
     console.log(retorno,"Alert retorno")
     this.setState({
       listAlerts: retorno,
+      searchString: '',
     });
   }
 
@@ -40,16 +79,8 @@ class Alerts extends Component {
     <React.Fragment>
       <div className="container">
         <div className="row">
-        {/*   <button
-            onClick={e => {
-              this.btnNewClick(e);
-            }}
-            type="button"
-            className="btn btn-primary"
-            id="btnNew"
-            name="btnNew">            
-            Novo Alerta
-          </button> */}
+    <input type="text" name="pesquisa" value={this.state.searchString}  onChange={this.mudar}/>
+    <button>  pesquisar </button>
 
         </div>
         <br />
