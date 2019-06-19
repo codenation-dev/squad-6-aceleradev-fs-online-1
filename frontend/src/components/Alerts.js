@@ -10,7 +10,8 @@ class Alerts extends Component {
     this.state = {listAlerts: [],
       searchString: ''
     };
-   
+   this.pegaValor = this.pegaValor.bind(this)
+   this.testa_valor= this.testa_valor.bind(this)
   }
   async componentDidMount() {
     const retorno = await alertService.getAlerts();
@@ -21,8 +22,17 @@ class Alerts extends Component {
     });
   }
 
+ pegaValor(e){
+  console.log(this.state.searchString)
+  this.setState({searchString:e.target.value})
+  }
 
 
+  testa_valor(e){
+
+console.log(this.state.searchString,"testando a leitura dos valores !")
+
+  }
   btnNewClick(event) {
     this.props.history.push('/alert/');
     
@@ -45,8 +55,12 @@ class Alerts extends Component {
     <React.Fragment>
       <div className="container">
         <div className="row">
-    <input type="text" name="pesquisa" />
-    <button>  pesquisar </button>
+    <input type="text"
+     name="pesquisa"
+     onChange={(e)=>this.pegaValor(e)} />
+
+
+    <button onClick={(e)=>this.testa_valor(e)}>  pesquisar </button>
 
         </div>
         <br />
