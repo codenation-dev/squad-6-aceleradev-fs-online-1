@@ -159,7 +159,7 @@ class Alerts extends Component {
                 <th scope="col">Usuário Email</th>
                 <th scope="col">Cliente?</th>
                 <th scope="col">Pagamento</th>
-                <th scope="col">Funcionário</th>
+                <th scope="col">Funcionário Gov. SP</th>
                 <th scope="col">Salário</th>
               </tr>
             </thead>

@@ -66,8 +66,6 @@ func GetAlerts(c *gin.Context) {
 	paymentID, _ := strconv.Atoi(c.Query("paymentId"))
 	onlyCustomers, _ := strconv.Atoi(c.Query("onlyCustomers"))
 
-	fmt.Println(onlyCustomers)
-
 	list := db.FindAlerts(userID, customerID, paymentID, 0, onlyCustomers)
 
 	if len(list) > 0 {
