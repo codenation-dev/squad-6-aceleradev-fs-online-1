@@ -149,7 +149,7 @@ func FindPaymentByYearAndMonth(returnEmployees bool, year int, month int) models
 }
 
 //InsertPayment cadastra pagamento
-func InsertPayment(returnEmployees bool, payment models.Payment) models.Payment {
+func InsertPayment(optionalDB *sql.DB, returnEmployees bool, payment models.Payment) models.Payment {
 	var (
 		paymentID                   int
 		paymentFileName             string
@@ -159,8 +159,13 @@ func InsertPayment(returnEmployees bool, payment models.Payment) models.Payment 
 		listPaymentEmployeeInserted []models.PaymentEmployee
 	)
 
-	db := ConnectDataBase()
-	defer CloseDataBase(db)
+	var db *sql.DB
+	if optionalDB != nil {
+		db = optionalDB
+	} else {
+		db = ConnectDataBase()
+		defer CloseDataBase(db)
+	}
 
 	insert :=
 		`INSERT INTO public.pagamento
@@ -192,7 +197,7 @@ func InsertPayment(returnEmployees bool, payment models.Payment) models.Payment 
 }
 
 //InsertPaymentEmployee cadastra pagamento
-func insertPaymentEmployee(db *sql.DB, payment models.Payment, paymentEmployee models.PaymentEmployee) models.PaymentEmployee {
+func insertPaymentEmployee(optionalDB *sql.DB, payment models.Payment, paymentEmployee models.PaymentEmployee) models.PaymentEmployee {
 	var (
 		paymentID                 int
 		paymentEmployeeInserted   models.PaymentEmployee
@@ -203,6 +208,14 @@ func insertPaymentEmployee(db *sql.DB, payment models.Payment, paymentEmployee m
 		paymentEmployeeSalary     float64
 		paymentEmployeeCustomerID int
 	)
+
+	var db *sql.DB
+	if optionalDB != nil {
+		db = optionalDB
+	} else {
+		db = ConnectDataBase()
+		defer CloseDataBase(db)
+	}
 
 	insert :=
 		`INSERT INTO public.pagamento_funcionario
@@ -267,7 +280,7 @@ func findPaymentsEmployeeByPaymentID(paymentID int, customerID int) []models.Pay
 				pagamento_funcionario.pagfun_cargo,
 				pagamento_funcionario.pagfun_orgao,
 				pagamento_funcionario.pagfun_remuneracao,
-				pagamento_funcionario.client_id
+				coalesce(pagamento_funcionario.client_id,0) as client_id
 			from pagamento_funcionario
 			where
 				pagamento_funcionario.pagame_id = $1 `

@@ -5,6 +5,8 @@ import (
 	"encoding/csv"
 	"fmt"
 	"io"
+	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -99,26 +101,31 @@ func CheckPayments() {
 			fileRarPayment, errDownload := services.DownloadPaymentFile(year, int(month))
 			if errDownload == nil {
 				fmt.Println("CheckPayments()-> file downloaded", fileRarPayment)
-				pathFolderCSV := fileRarPayment[0 : len(fileRarPayment)-4]
+				pathFolderExtracted := fileRarPayment[0 : len(fileRarPayment)-4]
 
-				if _, err := os.Stat(pathFolderCSV); !os.IsNotExist(err) {
-					os.RemoveAll(pathFolderCSV)
+				if _, err := os.Stat(pathFolderExtracted); !os.IsNotExist(err) {
+					os.RemoveAll(pathFolderExtracted)
 				}
 
-				errExtract := services.ExtractRarFile(fileRarPayment, pathFolderCSV)
+				errExtract := services.ExtractRarFile(fileRarPayment, pathFolderExtracted)
 				if errExtract == nil {
-					fmt.Println("CheckPayments()-> folder extracted:" + pathFolderCSV)
-					pathCSV :=
-						pathFolderCSV +
-							strings.Replace(
-								fileRarPayment[6:len(fileRarPayment)-4], "remuneracao", "Remuneracao", -1) +
-							".txt"
+					fmt.Println("CheckPayments()-> folder extracted:" + pathFolderExtracted)
 
-					fmt.Println("CheckPayments()-> CSV file:" + pathCSV)
-					if _, err := os.Stat(pathCSV); err == nil {
-						fmt.Println("CheckPayments()-> CSV file check: ok")
+					files, err := ioutil.ReadDir(pathFolderExtracted)
+					if err != nil {
+						log.Fatal(err)
 					}
-					registerPaymentsFromCSV(pathCSV, year, int(month))
+					pathCSV := pathFolderExtracted + "/" + files[0].Name()
+
+					fmt.Println("CheckPayments()-> TXT file:" + pathCSV)
+					if _, err := os.Stat(pathCSV); err == nil {
+						fmt.Println("CheckPayments()-> TXT file check: ok")
+
+						registerPaymentsFromCSV(pathCSV, year, int(month))
+					} else {
+						fmt.Println("CheckPayments()-> TXT file not found! Error")
+					}
+
 				} else {
 					fmt.Println("CheckPayments()-> error to extract ->", fileRarPayment)
 				}
@@ -199,56 +206,48 @@ func registerPaymentsFromCSV(fileName string, year int, month int) {
 			Salary:     salary,
 		}
 		employeeList = append(employeeList, paymentEmployee)
-		acceptPayment = acceptPayment + 1
 
 		count = count + 1
 	}
-	payment.EmployeePayments = employeeList
 
 	dbConsulta = db.ConnectDataBase()
-	horaInicial := time.Now()
+	beginTime := time.Now()
 
 	jobs := make(chan models.PaymentEmployee, len(employeeList))
 	results := make(chan models.PaymentEmployee, len(employeeList))
 
-	// This starts up 3 workers, initially blocked
-	// because there are no jobs yet.
 	for w := 1; w <= 5; w++ {
 		go worker(w, jobs, results)
 	}
-
-	// Here we send len(employeeList) `jobs` and then `close` that
-	// channel to indicate that's all the work we have.
 	for _, employee := range employeeList {
 		jobs <- employee
 	}
 	close(jobs)
 
 	var listEmployeeForRegister []models.PaymentEmployee
-	// Finally we collect all the results of the work.
+
 	for a := 1; a <= len(employeeList); a++ {
 		employeeRetorno := <-results
 		if (employeeRetorno.Salary >= minSalaryForRegisterPayment) || (employeeRetorno.Customer.ID > 0) {
 			listEmployeeForRegister = append(listEmployeeForRegister, employeeRetorno)
+			acceptPayment = acceptPayment + 1
 		}
 	}
-	fmt.Println("listEmployeeForRegister", len(listEmployeeForRegister))
-	fmt.Println(horaInicial)
-	fmt.Println(time.Now())
-
+	fmt.Println("registerPaymentsFromCSV()-> listEmployeeForRegister", len(listEmployeeForRegister))
+	fmt.Println("registerPaymentsFromCSV()-> search customers->begin:", services.DateToStr(beginTime), "end", services.DateToStr(time.Now()))
 	db.CloseDataBase(dbConsulta)
+	payment.EmployeePayments = listEmployeeForRegister
 
 	fmt.Println("registerPaymentsFromCSV()-> payment Count:", count)
 	fmt.Println("registerPaymentsFromCSV()-> payment Accept:", acceptPayment)
 
 	fmt.Println("registerPaymentsFromCSV()-> register payments in db begin")
-	paymentInserted := db.InsertPayment(false, payment)
+	paymentInserted := db.InsertPayment(nil, false, payment)
 	fmt.Println("registerPaymentsFromCSV()-> register payments in db end")
 
 	if paymentInserted.ID > 0 {
 		RegisterAndNotifyAlerts(paymentInserted.ID)
 	}
-	fmt.Println(time.Now())
 
 }
 
@@ -256,10 +255,10 @@ func worker(id int, jobs <-chan models.PaymentEmployee, results chan<- models.Pa
 	for j := range jobs {
 		//fmt.Println("worker", id, "started  job", j)
 		employee := j
-		customerFound := db.FindCustomerByName2(dbConsulta, j.Name)
+		customerFound := db.FindCustomerByName(dbConsulta, j.Name)
 		if customerFound.ID > 0 {
 			employee.Customer = customerFound
-			fmt.Println("worker", id, "finished job", employee.Customer.ID)
+			//fmt.Println("worker", id, "finished job", employee.Customer.ID)
 		}
 		//fmt.Println("worker", id, "finished job", employee.Customer.ID)
 		results <- employee

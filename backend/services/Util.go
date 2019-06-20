@@ -6,7 +6,9 @@ import (
 	"net/http"
 	"net/smtp"
 	"os"
+	"sort"
 	"strconv"
+	"time"
 
 	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/backend/models"
 	"github.com/jordan-wright/email"
@@ -74,6 +76,7 @@ func DownloadPaymentFile(year int, month int) (string, error) {
 
 // ExtractRarFile funcao para descompactar arquivos do tipo RAR
 func ExtractRarFile(filepath string, outpath string) error {
+
 	err := archiver.Unarchive(filepath, outpath)
 	if err != nil {
 		fmt.Println("Error->ExtractRarFile->", filepath, "Error: ", err)
@@ -86,21 +89,42 @@ func ExtractRarFile(filepath string, outpath string) error {
 //SendEmailAlertEmployeeSalary funcao que enviar notificacao para usuarios
 func SendEmailAlertEmployeeSalary(listUser []models.User, listAlert []models.AlertHistory) {
 
+	fmt.Println("SendEmailAlertEmployeeSalary()-> begin", DateToStr(time.Now()))
+
+	APP_URL := os.Getenv("APP_URL")
+
+	minSalaryForRegisterPayment, err := strconv.ParseFloat(os.Getenv("CONFIG_MIN_SALARY_REGISTER_PAYMENT"), 64)
+	if err != nil {
+		minSalaryForRegisterPayment = 20000
+	}
+
 	var listEmailUsers []string
 	for _, user := range listUser {
 		listEmailUsers = append(listEmailUsers, user.Email)
 	}
-	fmt.Println(listEmailUsers)
+
+	sort.SliceStable(listAlert, func(i, j int) bool {
+		return listAlert[i].PaymentEmployee.Salary > listAlert[j].PaymentEmployee.Salary
+	})
 
 	var customersTable [][]hermes.Entry
 
+	count := 0
+	countProspect := 0
+
 	for _, alert := range listAlert {
 
-		line := []hermes.Entry{
-			{Key: "Cliente", Value: alert.Customer.Name},
-			{Key: "Salario", Value: fmt.Sprintf("%.2f", alert.PaymentEmployee.Salary)},
+		if alert.Customer.ID > 0 {
+			line := []hermes.Entry{
+				{Key: "Cliente", Value: alert.Customer.Name},
+				{Key: "Salario", Value: fmt.Sprintf("%.2f", alert.PaymentEmployee.Salary)},
+			}
+			customersTable = append(customersTable, line)
+
+		} else {
+			countProspect = countProspect + 1
 		}
-		customersTable = append(customersTable, line)
+		count = count + 1
 
 	}
 
@@ -121,16 +145,26 @@ func SendEmailAlertEmployeeSalary(listUser []models.User, listAlert []models.Ale
 				Title:     "Alerta",
 				Signature: "att",
 				Intros: []string{
-					"Novo pagamento processado, abaixo clientes do governo com salarios acima de R$ 20.000,00:",
+					"Novo pagamento processado, abaixo clientes do banco que sao funcionarios do governo:",
 				},
 				Actions: []hermes.Action{
 					{
 						Instructions: "Clique no botao abaixo para visualizar no sistema do banco:",
 						Button: hermes.Button{
 							Color: "#22BC66",
-							Text:  "Analisar Clientes",
-							//mudar link aqui
-							Link: "https://hermes-example.com/confirm?token=d9729feb74992cc3482b350163a1a010",
+							Text:  "Abrir Alertas",
+							Link:  APP_URL + "alerts/",
+						},
+					},
+					{
+						Instructions: "Encontramos " + strconv.Itoa(countProspect) +
+							" funcionarios do governo que ainda nao sao cliente do banco e tem salario acima de " + fmt.Sprintf("%.2f", minSalaryForRegisterPayment) +
+							", clique abaixo para visualizar no sistema",
+
+						Button: hermes.Button{
+							Color: "#22BC66",
+							Text:  "Abrir",
+							Link:  APP_URL + "alerts/",
 						},
 					},
 				},
@@ -179,5 +213,14 @@ func SendEmailAlertEmployeeSalary(listUser []models.User, listAlert []models.Ale
 			fmt.Println("Erro ao enviar email:", errSendMail)
 		}
 
+		fmt.Println("SendEmailAlertEmployeeSalary()-> end", DateToStr(time.Now()))
 	}
+
+}
+
+//DateToStr data para string
+func DateToStr(dateTime time.Time) string {
+
+	return dateTime.Format("2006-01-02 15:04:05")
+
 }

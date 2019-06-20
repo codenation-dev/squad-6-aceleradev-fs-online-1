@@ -1,6 +1,7 @@
 package db
 
 import (
+	"database/sql"
 	"log"
 	"strconv"
 	"time"
@@ -9,19 +10,24 @@ import (
 )
 
 //InsertAlertHistory cadastra historico de alerta e retorna registro inserido no banco
-func InsertAlertHistory(alertHistory models.AlertHistory) models.AlertHistory {
+func InsertAlertHistory(optionalDB *sql.DB, alertHistory models.AlertHistory) models.AlertHistory {
 	var (
 		ID                   int
 		alertHistoryInserted models.AlertHistory
 	)
 
-	db := ConnectDataBase()
-	defer CloseDataBase(db)
+	var db *sql.DB
+	if optionalDB != nil {
+		db = optionalDB
+	} else {
+		db = ConnectDataBase()
+		defer CloseDataBase(db)
+	}
 
 	insert :=
 		`INSERT INTO public.historico_alerta
 		(hisale_data, usuari_id, client_id, pagfun_id)
-		VALUES ($1, $2, $3, $4) 
+		VALUES ($1, $2, NULLIF($3,0), $4) 
 		returning hisale_id;`
 
 	errUpdate := db.QueryRow(insert,

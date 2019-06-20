@@ -120,7 +120,7 @@ func registerCustomersFromCSV(file string) {
 		nomeCliente := line[0]
 		fmt.Println(nomeCliente)
 
-		custumer := db.FindCustomerByName(nomeCliente)
+		custumer := db.FindCustomerByName(nil, nomeCliente)
 
 		if custumer.ID > 0 {
 			//talvez fazer update com data ultima atualizacao, talvez nome ultimo arquivo

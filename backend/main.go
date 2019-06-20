@@ -1,26 +1,22 @@
 package main
 
 import (
-	"fmt"
-	"time"
-
 	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/backend/db"
 	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/backend/handlers"
+	"github.com/codenation-dev/squad-6-aceleradev-fs-online-1/backend/routes"
+	"github.com/gin-gonic/gin"
 	_ "github.com/joho/godotenv/autoload"
 )
 
 func main() {
-	/*
-		db.ConnectDataBase()
 
-		go handlers.MonitorPayments()
+	db.ConnectDataBase()
 
-		ginRouter := gin.Default()
-		ginRouter = routes.StartRouter(ginRouter)
+	go handlers.MonitorPayments()
 
-		ginRouter.Run(":4000")
-	*/
-	fmt.Println(time.Now())
-	db.DeleteAllPayment()
-	handlers.CheckPayments()
+	ginRouter := gin.Default()
+	ginRouter = routes.StartRouter(ginRouter)
+
+	ginRouter.Run(":4000")
+
 }
