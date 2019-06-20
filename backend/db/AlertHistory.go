@@ -63,7 +63,7 @@ func FindAlerts(userID int, customerID int, paymentID int, ID int) []models.Aler
 				historico_alerta.hisale_id,
 				historico_alerta.hisale_data,
 				historico_alerta.usuari_id,
-				historico_alerta.client_id,
+				coalesce(historico_alerta.client_id, 0) as client_id,
 				historico_alerta.pagfun_id				
 			from historico_alerta `
 
@@ -99,7 +99,7 @@ func FindAlerts(userID int, customerID int, paymentID int, ID int) []models.Aler
 	for rows.Next() {
 		err := rows.Scan(&alertID, &alertDate, &alertUserID, &alertCustomerID, &alertPaymentEmployeeID)
 		if err != nil {
-			log.Fatal("db.FindAlerts()->Erro ao executar consulta. Error:", err)
+			log.Println("db.FindAlerts()->Erro ao executar consulta. Error:", err)
 		} else {
 			var payment = models.AlertHistory{
 				ID:                alertID,
