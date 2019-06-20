@@ -1,5 +1,4 @@
 import loginService from './loginService';
-import {localStorageWrapper} from '../helpers';
 const {CSV_FILE_UPLOAD} = require('./configApi');
 
 const axios = require('axios');
@@ -24,10 +23,11 @@ async function uploadFile(file) {
   const response = await axios(configRequest);
 
   if (response) {
-    alert("Arquivo CSV carregado com sucesso !")
+    alert('Arquivo CSV carregado com sucesso !');
     return response.data;
-    
-  }else{alert("Arquivo Não Carregado !")}
+  } else {
+    alert('Arquivo Não Carregado !');
+  }
 
   return null;
 }

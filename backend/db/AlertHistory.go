@@ -91,7 +91,7 @@ func FindAlerts(userID int, customerID int, paymentID int, ID int) []models.Aler
 			`where (hisale_id =` + strconv.Itoa(ID) + `)`
 	}
 
-	rows, errQuery := db.Query(sql)
+	rows, errQuery := db.Query(sql + " limit 100")
 	if errQuery != nil {
 		log.Println("db.FindAlerts()->Erro ao executar consulta. Error:", errQuery)
 	}

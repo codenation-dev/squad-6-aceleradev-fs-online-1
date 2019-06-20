@@ -13,24 +13,25 @@ class Customer extends Component {
       customerId: 0,
       customerForm: {
         id: 0,
-        email: '',
         name: '',
-        },
+      },
     };
   }
- 
+
   async componentDidMount() {
     if (this.props.match.params.id) {
       let customer;
       try {
-        customer = await customersService.getCustomerById(this.props.match.params.id);
+        customer = await customersService.getCustomerById(
+          this.props.match.params.id
+        );
       } catch (error) {
         console.log(error);
       }
       if (customer) {
         this.setState({
-            customerId: this.props.match.params.id,
-            customerForm: customer,
+          customerId: this.props.match.params.id,
+          customerForm: customer,
         });
       } else {
         this.setState({customerInvalid: true});
@@ -42,7 +43,7 @@ class Customer extends Component {
     event.preventDefault();
 
     let msg = '';
-   
+
     if (!this.state.customerForm.name) {
       msg += 'Preencha o campo Nome\n';
     }
@@ -109,22 +110,6 @@ class Customer extends Component {
                 disabled
               />
             </div>
-            <div className="form-group col-md-7">
-              <label htmlFor="inputEmail">Email</label>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Email"
-                id="inputEmail"
-                name="email"
-                value={this.state.customerForm.email}
-                onChange={e => {
-                  this.handleOnChange(e);
-                }}
-                required
-              />
-            
-            </div>
           </div>
           <div className="form-group">
             <label htmlFor="inputName">Nome</label>
@@ -141,10 +126,8 @@ class Customer extends Component {
             />
           </div>
 
-         
           <div className="form-group">
             <button
-              
               onClick={e => {
                 this.btnSalvarClick(e);
               }}

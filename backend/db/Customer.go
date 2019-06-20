@@ -135,14 +135,16 @@ func UpdateCustomerByID(id int, customer models.Customer) models.Customer {
 	db := ConnectDataBase()
 	defer CloseDataBase(db)
 
-	fmt.Println(id)
+	fmt.Println("update cliente set " +
+		" client_nome = $2 ," +
 
-	errUpdate := db.QueryRow(
-		"update cliente set "+
-			" client_nome = $2 ,"+
+		" where client_id = $1" +
+		" returning client_id, client_nome;")
 
-			" where client_id = $1"+
-			" returning client_id, client_nome;",
+	errUpdate := db.QueryRow("update cliente set "+
+		" client_nome = $2 "+
+		" where client_id = $1"+
+		" returning client_id, client_nome;",
 
 		id, customer.Name).Scan(&customerID, &customerName)
 
