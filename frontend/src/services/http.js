@@ -14,8 +14,6 @@ http.interceptors.request.use(
   async config => {
     const token = loginService.userLogged() && loginService.userLogged().token;
 
-    console.log(config);
-
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

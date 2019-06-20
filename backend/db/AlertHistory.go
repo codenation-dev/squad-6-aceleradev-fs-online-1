@@ -46,14 +46,24 @@ func InsertAlertHistory(optionalDB *sql.DB, alertHistory models.AlertHistory) mo
 }
 
 //FindAlerts retorna alertas
-func FindAlerts(userID int, customerID int, paymentID int, ID int) []models.AlertHistory {
+func FindAlerts(userID int, customerID int, paymentID int, ID int, onlyCustomers int) []models.AlertHistory {
 	var (
-		alertID                int
-		alertDate              time.Time
-		alertUserID            int
-		alertCustomerID        int
-		alertPaymentEmployeeID int
-		list                   []models.AlertHistory
+		alertID                        int
+		alertDate                      time.Time
+		alertUserID                    int
+		alertUserName                  string
+		alertUserEmail                 string
+		alertCustomerID                int
+		alertCustomerName              string
+		alertPaymentEmployeeID         int
+		alertPaymentEmployeeName       string
+		alertPaymentEmployeeOccupation string
+		alertPaymentEmployeeDepartment string
+		alertPaymentEmployeeSalary     float64
+		alertPaymentID                 int
+		alertPaymentYear               int
+		alertPaymentMonth              int
+		list                           []models.AlertHistory
 	)
 
 	db := ConnectDataBase()
@@ -64,51 +74,92 @@ func FindAlerts(userID int, customerID int, paymentID int, ID int) []models.Aler
 				historico_alerta.hisale_data,
 				historico_alerta.usuari_id,
 				coalesce(historico_alerta.client_id, 0) as client_id,
-				historico_alerta.pagfun_id				
-			from historico_alerta `
+				historico_alerta.pagfun_id,	
+				usuario.usuari_nome,
+				usuario.usuari_email,
+				coalesce(cliente.client_nome, '') as client_nome,
+				pagamento.pagame_id,
+				pagamento.pagame_ano,
+				pagamento.pagame_mes,
+				pagamento_funcionario.pagfun_nome,
+				pagamento_funcionario.pagfun_cargo,
+				pagamento_funcionario.pagfun_orgao,
+				pagamento_funcionario.pagfun_remuneracao
+			from historico_alerta 			
 
+			left join pagamento_funcionario on 
+				(pagamento_funcionario.pagfun_id = historico_alerta.pagfun_id)
+
+			left join pagamento on 
+				(pagamento_funcionario.pagame_id = pagamento.pagame_id)				
+
+			left join cliente on 
+				(cliente.client_id = historico_alerta.client_id)
+
+			left join usuario on 
+				(usuario.usuari_id = historico_alerta.usuari_id)
+			
+			`
+
+	sql = sql + "where (true) "
+	if ID > 0 {
+		sql = sql + ` and (hisale_id =` + strconv.Itoa(ID) + `)`
+	}
 	if paymentID > 0 {
-		sql = sql + " " +
-			`inner join pagamento_funcionario on 
-				(pagamento_funcionario.pagfun_id = historico_alerta.pagfun_id) and
-				(pagamento_funcionario.pagame_id = ` + strconv.Itoa(paymentID) + `)`
+		sql = sql + ` and (pagamento_funcionario.pagame_id = ` + strconv.Itoa(paymentID) + `)`
 	}
 	if customerID > 0 {
-		sql = sql + " " +
-			`inner join cliente on 
-				(cliente.client_id = historico_alerta.client_id) and
-				(cliente.client_id = ` + strconv.Itoa(customerID) + `)`
+		sql = sql + ` and (cliente.client_id = ` + strconv.Itoa(customerID) + `)`
 	}
 	if userID > 0 {
-		sql = sql + " " +
-			`inner join usuario on 
-				(usuario.usuari_id = historico_alerta.usuari_id) and
-				(usuario.usuari_id = ` + strconv.Itoa(userID) + `)`
+		sql = sql + ` and (usuario.usuari_id = ` + strconv.Itoa(userID) + `)`
+	}
+	if onlyCustomers == 1 {
+		sql = sql + ` and (cliente.client_id is not null)`
 	}
 
-	if ID > 0 {
-		sql = sql + " " +
-			`where (hisale_id =` + strconv.Itoa(ID) + `)`
-	}
-
-	rows, errQuery := db.Query(sql + " limit 100")
+	rows, errQuery := db.Query(sql)
 	if errQuery != nil {
 		log.Println("db.FindAlerts()->Erro ao executar consulta. Error:", errQuery)
 	}
 
 	for rows.Next() {
-		err := rows.Scan(&alertID, &alertDate, &alertUserID, &alertCustomerID, &alertPaymentEmployeeID)
+		err := rows.Scan(&alertID, &alertDate,
+			&alertUserID, &alertCustomerID, &alertPaymentEmployeeID,
+			&alertUserName, &alertUserEmail, &alertCustomerName,
+			&alertPaymentID, &alertPaymentYear, &alertPaymentMonth,
+			&alertPaymentEmployeeName, &alertPaymentEmployeeOccupation, &alertPaymentEmployeeDepartment,
+			&alertPaymentEmployeeSalary,
+		)
 		if err != nil {
 			log.Println("db.FindAlerts()->Erro ao executar consulta. Error:", err)
 		} else {
 			var payment = models.AlertHistory{
-				ID:                alertID,
-				Date:              alertDate,
-				CustomerID:        alertCustomerID,
-				UserID:            alertUserID,
-				PaymentEmployeeID: alertPaymentEmployeeID,
-				User:              FindUserByID(alertUserID),
-				Customer:          FindCustomerByID(alertCustomerID),
+				ID:         alertID,
+				Date:       alertDate,
+				CustomerID: alertCustomerID,
+				UserID:     alertUserID,
+				Payment: models.Payment{
+					ID:    alertPaymentID,
+					Year:  alertPaymentYear,
+					Month: alertPaymentMonth,
+				},
+				PaymentEmployee: models.PaymentEmployee{
+					ID:         alertPaymentEmployeeID,
+					Name:       alertPaymentEmployeeName,
+					Occupation: alertPaymentEmployeeOccupation,
+					Department: alertPaymentEmployeeDepartment,
+					Salary:     alertPaymentEmployeeSalary,
+				},
+				User: models.User{
+					ID:    alertUserID,
+					Name:  alertUserName,
+					Email: alertUserEmail,
+				},
+				Customer: models.Customer{
+					ID:   alertCustomerID,
+					Name: alertCustomerName,
+				},
 			}
 
 			list = append(list, payment)

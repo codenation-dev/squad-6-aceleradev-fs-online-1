@@ -32,7 +32,7 @@ func GetPayments(c *gin.Context) {
 		c.JSON(http.StatusOK, db.FindPayments(true, customerID))
 
 	} else {
-		c.JSON(http.StatusOK, db.FindPayments(true, 0))
+		c.JSON(http.StatusOK, db.FindPayments(false, 0))
 	}
 
 }

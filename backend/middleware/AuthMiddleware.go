@@ -42,9 +42,11 @@ func GetAuthMiddleware() *jwt.GinJWTMiddleware {
 			if err := c.ShouldBind(&loginVals); err != nil {
 				return "", jwt.ErrMissingLoginValues
 			}
-			var user = db.FindUserByEmail(loginVals.Email)
-			if user.Email == loginVals.Email && user.Password == loginVals.Password {
-				return &user, nil
+			if loginVals.Email != "" && loginVals.Password != "" {
+				var user = db.FindUserByEmail(loginVals.Email)
+				if user.Email == loginVals.Email && user.Password == loginVals.Password {
+					return &user, nil
+				}
 			}
 			return nil, jwt.ErrFailedAuthentication
 		},

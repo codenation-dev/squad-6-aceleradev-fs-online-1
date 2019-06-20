@@ -5,8 +5,10 @@
   "dependencies": {
     "axios": "^0.19.0",
     "bootstrap": "^4.3.1",
+    "dayjs": "^1.8.14",
     "filepond": "^4.4.9",
     "prop-types": "^15.7.2",
+    "query-string": "^6.8.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-filepond": "^7.0.1",

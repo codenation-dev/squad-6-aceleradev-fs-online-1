@@ -2,8 +2,10 @@ import http from './http';
 
 const {GET_ALERTS_ENDPOINT} = require('./configApi');
 
-async function getAlerts() {
-  const {data} = await http.get(GET_ALERTS_ENDPOINT);
+async function getAlerts(paramsQuery) {
+  const {data} = await http.get(
+    GET_ALERTS_ENDPOINT + (paramsQuery ? '?' + paramsQuery : '')
+  );
 
   return data;
 }
