@@ -149,7 +149,7 @@ func FindPaymentByYearAndMonth(returnEmployees bool, year int, month int) models
 }
 
 //InsertPayment cadastra pagamento
-func InsertPayment(returnEmployees bool, payment models.Payment) models.Payment {
+func InsertPayment(optionalDB *sql.DB, returnEmployees bool, payment models.Payment) models.Payment {
 	var (
 		paymentID                   int
 		paymentFileName             string
@@ -159,8 +159,13 @@ func InsertPayment(returnEmployees bool, payment models.Payment) models.Payment 
 		listPaymentEmployeeInserted []models.PaymentEmployee
 	)
 
-	db := ConnectDataBase()
-	defer CloseDataBase(db)
+	var db *sql.DB
+	if optionalDB != nil {
+		db = optionalDB
+	} else {
+		db = ConnectDataBase()
+		defer CloseDataBase(db)
+	}
 
 	insert :=
 		`INSERT INTO public.pagamento
@@ -192,7 +197,7 @@ func InsertPayment(returnEmployees bool, payment models.Payment) models.Payment 
 }
 
 //InsertPaymentEmployee cadastra pagamento
-func insertPaymentEmployee(db *sql.DB, payment models.Payment, paymentEmployee models.PaymentEmployee) models.PaymentEmployee {
+func insertPaymentEmployee(optionalDB *sql.DB, payment models.Payment, paymentEmployee models.PaymentEmployee) models.PaymentEmployee {
 	var (
 		paymentID                 int
 		paymentEmployeeInserted   models.PaymentEmployee
@@ -204,11 +209,19 @@ func insertPaymentEmployee(db *sql.DB, payment models.Payment, paymentEmployee m
 		paymentEmployeeCustomerID int
 	)
 
+	var db *sql.DB
+	if optionalDB != nil {
+		db = optionalDB
+	} else {
+		db = ConnectDataBase()
+		defer CloseDataBase(db)
+	}
+
 	insert :=
 		`INSERT INTO public.pagamento_funcionario
 		(pagame_id, pagfun_nome, pagfun_cargo, pagfun_orgao, pagfun_remuneracao, client_id)
-		VALUES ($1, $2, $3, $4, $5, $6)
-		returning pagfun_id, pagame_id, pagfun_nome, pagfun_cargo, pagfun_orgao, pagfun_remuneracao, client_id;`
+		VALUES ($1, $2, $3, $4, $5, NULLIF($6,0))
+		returning pagfun_id, pagame_id, pagfun_nome, pagfun_cargo, pagfun_orgao, pagfun_remuneracao, coalesce(client_id,0);`
 
 	var occupationFix string
 	if len(paymentEmployee.Occupation) > 3 {
@@ -267,7 +280,7 @@ func findPaymentsEmployeeByPaymentID(paymentID int, customerID int) []models.Pay
 				pagamento_funcionario.pagfun_cargo,
 				pagamento_funcionario.pagfun_orgao,
 				pagamento_funcionario.pagfun_remuneracao,
-				pagamento_funcionario.client_id
+				coalesce(pagamento_funcionario.client_id,0) as client_id
 			from pagamento_funcionario
 			where
 				pagamento_funcionario.pagame_id = $1 `
@@ -322,6 +335,34 @@ func DeletePaymentByID(id int) bool {
 		_, err2 := db.Exec(`delete from pagamento_funcionario where pagame_id = $1;`, id)
 		if err2 == nil {
 			_, err3 := db.Exec(`delete from pagamento where pagame_id = $1;`, id)
+			if err3 == nil {
+				return true
+			} else {
+				log.Fatal("db.DeletePaymentByID()-> Error:", err3)
+			}
+		} else {
+			log.Fatal("db.DeletePaymentByID()-> Error:", err2)
+		}
+
+	} else {
+		log.Fatal("db.DeletePaymentByID()->  Error:", err1)
+	}
+
+	return false
+}
+
+//DeleteAllPayment deleta todos pagamentos para poder fazer testes
+func DeleteAllPayment() bool {
+	db := ConnectDataBase()
+	defer CloseDataBase(db)
+
+	_, err1 := db.Exec(
+		`delete from historico_alerta;`)
+
+	if err1 == nil {
+		_, err2 := db.Exec(`delete from pagamento_funcionario;`)
+		if err2 == nil {
+			_, err3 := db.Exec(`delete from pagamento;`)
 			if err3 == nil {
 				return true
 			} else {

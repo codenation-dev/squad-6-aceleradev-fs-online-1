@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 	"strconv"
@@ -17,6 +18,8 @@ import (
 //RegisterAndNotifyAlerts a
 func RegisterAndNotifyAlerts(paymentID int) {
 
+	fmt.Println("RegisterAndNotifyAlerts()-> begin", services.DateToStr(time.Now()))
+
 	var listAlert []models.AlertHistory
 	var listUserAlert []models.User
 
@@ -26,8 +29,12 @@ func RegisterAndNotifyAlerts(paymentID int) {
 	}
 	payment := db.FindPaymentByID(true, paymentID)
 
+	connectionDB := db.ConnectDataBase()
+	defer db.CloseDataBase(connectionDB)
+
 	for _, employee := range payment.EmployeePayments {
-		if employee.Customer.ID > 0 && employee.Salary >= minSalaryForRegisterPayment {
+
+		if employee.Customer.ID > 0 || employee.Salary >= minSalaryForRegisterPayment {
 			listUserAlert = db.FindAllUsersReceiveAlert()
 			for _, user := range listUserAlert {
 
@@ -37,11 +44,12 @@ func RegisterAndNotifyAlerts(paymentID int) {
 					PaymentEmployee: employee,
 					User:            user,
 				}
-				alertInserted := db.InsertAlertHistory(alertHistory)
+				alertInserted := db.InsertAlertHistory(connectionDB, alertHistory)
 				listAlert = append(listAlert, alertInserted)
 			}
 		}
 	}
+	fmt.Println("RegisterAndNotifyAlerts()-> end", services.DateToStr(time.Now()))
 
 	if len(listAlert) > 0 && len(listAlert) > 0 {
 		services.SendEmailAlertEmployeeSalary(listUserAlert, listAlert)

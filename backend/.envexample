@@ -7,6 +7,9 @@ DB_USER=postgres
 DB_DATABASE=codenation
 DB_PASSWORD=cl123456
 
+APP_URL=http://app:3000/
+API_URL=http://api:4000/api/v1/
+
 CONFIG_MIN_SALARY_REGISTER_PAYMENT=20000
 
 EMAIL_SMTP_SERVER=<smtp_server> : for Gmail it's smtp.gmail.com

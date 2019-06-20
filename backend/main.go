@@ -18,4 +18,5 @@ func main() {
 	ginRouter = routes.StartRouter(ginRouter)
 
 	ginRouter.Run(":4000")
+
 }

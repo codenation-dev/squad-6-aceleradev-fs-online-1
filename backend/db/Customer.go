@@ -66,15 +66,20 @@ func FindCustomerByID(id int) models.Customer {
 }
 
 //FindCustomerByName retona usuaclienterio pelo seu email
-func FindCustomerByName(name string) models.Customer {
+func FindCustomerByName(optionalDB *sql.DB, name string) models.Customer {
 	var (
 		customerID   int
 		customerName string
 		customer     models.Customer
 	)
 
-	db := ConnectDataBase()
-	defer CloseDataBase(db)
+	var db *sql.DB
+	if optionalDB != nil {
+		db = optionalDB
+	} else {
+		db = ConnectDataBase()
+		defer CloseDataBase(db)
+	}
 
 	row := db.QueryRow("select cliente.* from cliente where client_nome = $1", name)
 
