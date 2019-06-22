@@ -146,44 +146,49 @@ class Customer extends Component {
             </button>
           </div>
         </form>
-
+        <br />
         <div className="row">
           {this.state.listPaymentsCustomer ? (
-            <table className="table table-hover">
-              <thead>
-                <tr>
-                  <th scope="col" hidden>
-                    #
-                  </th>
-                  <th scope="col">Ano-Mês</th>
-                  <th scope="col">Departamento</th>
-                  <th scope="col">Cargo</th>
-                  <th scope="col">Salário</th>
-                </tr>
-              </thead>
-              <tbody>
-                {this.state.listPaymentsCustomer
-                  ? this.state.listPaymentsCustomer.map((payment, index) =>
-                      payment.EmployeePayments.map((item, index2) => (
-                        <tr key={item.id}>
-                          <th scope="row" hidden>
-                            {item.id}
-                          </th>
-                          <th>{String(payment.year + '-' + payment.month)}</th>
-                          <th>{item.occupation}</th>
-                          <th>{item.department}</th>
-                          <th>
-                            {item.salary.toLocaleString('pt-br', {
-                              style: 'currency',
-                              currency: 'BRL',
-                            })}
-                          </th>
-                        </tr>
-                      ))
-                    )
-                  : ''}
-              </tbody>
-            </table>
+            <React.Fragment>
+              <h4>Histórico de Pagamentos pelo Governo de SP</h4>
+              <table className="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col" hidden>
+                      #
+                    </th>
+                    <th scope="col">Ano-Mês</th>
+                    <th scope="col">Departamento</th>
+                    <th scope="col">Cargo</th>
+                    <th scope="col">Salário</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.state.listPaymentsCustomer
+                    ? this.state.listPaymentsCustomer.map((payment, index) =>
+                        payment.EmployeePayments.map((item, index2) => (
+                          <tr key={item.id}>
+                            <th scope="row" hidden>
+                              {item.id}
+                            </th>
+                            <th>
+                              {String(payment.year + '-' + payment.month)}
+                            </th>
+                            <th>{item.occupation}</th>
+                            <th>{item.department}</th>
+                            <th>
+                              {item.salary.toLocaleString('pt-br', {
+                                style: 'currency',
+                                currency: 'BRL',
+                              })}
+                            </th>
+                          </tr>
+                        ))
+                      )
+                    : ''}
+                </tbody>
+              </table>
+            </React.Fragment>
           ) : (
             ''
           )}
