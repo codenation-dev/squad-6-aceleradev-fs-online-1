@@ -163,8 +163,6 @@ func DeleteCustomerByID(id int) bool {
 	db := ConnectDataBase()
 	defer CloseDataBase(db)
 
-	fmt.Println(id)
-
 	_, err := db.Exec("delete from cliente where client_id = $1", id)
 
 	if err != nil {
@@ -173,4 +171,20 @@ func DeleteCustomerByID(id int) bool {
 		return true
 	}
 	return false
+}
+
+//CountCustomers retona quantidade de usuarios
+func CountCustomers() int64 {
+	db := ConnectDataBase()
+	defer CloseDataBase(db)
+
+	var count int64
+
+	row := db.QueryRow("select count(cliente.client_id) from cliente")
+
+	err := row.Scan(&count)
+	if (err != nil) && (err != sql.ErrNoRows) {
+		log.Println("db.CountCustomers->Erro ao executar consulta. Error:", err)
+	}
+	return count
 }

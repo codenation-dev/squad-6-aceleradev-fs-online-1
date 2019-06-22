@@ -11,6 +11,7 @@ APP_URL=http://app:3000/
 API_URL=http://api:4000/api/v1/
 
 CONFIG_MIN_SALARY_REGISTER_PAYMENT=20000
+CONFIG_MIN_NUMBER_PAYMENT_HISTORY=2
 
 EMAIL_SMTP_SERVER=<smtp_server> : for Gmail it's smtp.gmail.com
 EMAIL_SMTP_PORT=<smtp_port> : for Gmail it's 465

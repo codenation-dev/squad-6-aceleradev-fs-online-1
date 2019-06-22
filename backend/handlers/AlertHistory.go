@@ -52,7 +52,7 @@ func RegisterAndNotifyAlerts(paymentID int) {
 	fmt.Println("RegisterAndNotifyAlerts()-> end", services.DateToStr(time.Now()))
 
 	if len(listAlert) > 0 && len(listAlert) > 0 {
-		services.SendEmailAlertEmployeeSalary(listUserAlert, listAlert)
+		services.SendEmailAlertEmployeeSalary(payment, listUserAlert, listAlert)
 	}
 
 }

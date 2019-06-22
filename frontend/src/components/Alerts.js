@@ -16,28 +16,39 @@ class Alerts extends Component {
       listAlerts: [],
       listUsers: [],
       listPayments: [],
-      filters: {onlyCustomers: 1, userId: 0, paymentId: 0},
+      filters: {onlyCustomers: 1, userId: 0, paymentId: -1},
     };
   }
   async componentDidMount() {
+    const listPayments = await paymentsService.getPayments();
+
     const paramsQuery =
       this.props.location && this.props.location.search
         ? qs.parse(this.props.location.search)
         : {onlyCustomers: 1, userId: 0, paymentId: 0};
 
-    this.setState({
-      listAlerts: await alertService.getAlerts(qs.stringify(paramsQuery)),
-      listUsers: await usersService.getUsers(),
-      listPayments: await paymentsService.getPayments(),
+    if (paramsQuery.paymentId === 0 && listPayments) {
+      paramsQuery.paymentId = listPayments[0].id;
+    }
 
-      filters: {
-        onlyCustomers: paramsQuery.onlyCustomers
-          ? paramsQuery.onlyCustomers
-          : 0,
-        userId: paramsQuery.userId ? paramsQuery.userId : 0,
-        paymentId: paramsQuery.paymentId ? paramsQuery.paymentId : 0,
+    this.setState(
+      {
+        listAlerts: await alertService.getAlerts(qs.stringify(paramsQuery)),
+        listUsers: await usersService.getUsers(),
+        listPayments: listPayments,
+
+        filters: {
+          onlyCustomers: paramsQuery.onlyCustomers
+            ? paramsQuery.onlyCustomers
+            : 0,
+          userId: paramsQuery.userId ? paramsQuery.userId : 0,
+          paymentId: paramsQuery.paymentId ? paramsQuery.paymentId : 0,
+        },
       },
-    });
+      () => {
+        console.log(this.state);
+      }
+    );
   }
 
   async handleChange(event) {
@@ -54,10 +65,10 @@ class Alerts extends Component {
           });
         }
       );
-    } else if (event.target.id === 'inputApenasClientes') {
+    } else if (event.target.id === 'inputPayment') {
       this.setState(
         {
-          filters: {...this.state.filters, onlyCustomers: event.target.value},
+          filters: {...this.state.filters, paymentId: event.target.value},
         },
         async () => {
           const params = qs.stringify(this.state.filters);
@@ -126,16 +137,16 @@ class Alerts extends Component {
                 : ''}
             </select>
             <div className="input-group-prepend">
-              <label
-                className="input-group-text"
-                htmlFor="inputPayment"
-                onChange={e => this.handleChange(e)}
-                value={this.state.filters.paymentId}
-              >
+              <label className="input-group-text" htmlFor="inputPayment">
                 Pagamento
               </label>
             </div>
-            <select className="custom-select" id="inputPayment">
+            <select
+              className="custom-select"
+              onChange={e => this.handleChange(e)}
+              value={this.state.filters.paymentId}
+              id="inputPayment"
+            >
               <option value="">Mostrar Tudo</option>
               {this.state.listPayments
                 ? this.state.listPayments.map((payment, index) => (

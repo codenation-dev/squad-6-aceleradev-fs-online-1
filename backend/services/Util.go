@@ -87,7 +87,7 @@ func ExtractRarFile(filepath string, outpath string) error {
 }
 
 //SendEmailAlertEmployeeSalary funcao que enviar notificacao para usuarios
-func SendEmailAlertEmployeeSalary(listUser []models.User, listAlert []models.AlertHistory) {
+func SendEmailAlertEmployeeSalary(payment models.Payment, listUser []models.User, listAlert []models.AlertHistory) {
 
 	fmt.Println("SendEmailAlertEmployeeSalary()-> begin", DateToStr(time.Now()))
 
@@ -153,7 +153,7 @@ func SendEmailAlertEmployeeSalary(listUser []models.User, listAlert []models.Ale
 						Button: hermes.Button{
 							Color: "#22BC66",
 							Text:  "Abrir Alertas",
-							Link:  APP_URL + "alerts/",
+							Link:  APP_URL + "alerts/?onlyCustomers=1&paymentId=" + fmt.Sprint(payment.ID) + "&userId=0",
 						},
 					},
 					{
@@ -164,7 +164,7 @@ func SendEmailAlertEmployeeSalary(listUser []models.User, listAlert []models.Ale
 						Button: hermes.Button{
 							Color: "#22BC66",
 							Text:  "Abrir",
-							Link:  APP_URL + "alerts/",
+							Link:  APP_URL + "alerts/?onlyCustomers=0&paymentId=" + fmt.Sprint(payment.ID) + "&userId=0",
 						},
 					},
 				},
@@ -199,7 +199,7 @@ func SendEmailAlertEmployeeSalary(listUser []models.User, listAlert []models.Ale
 		e := email.NewEmail()
 		e.From = os.Getenv("EMAIL_SENDER_IDENTITY") + " <" + os.Getenv("EMAIL_SENDER_EMAIL") + ">"
 		e.To = listEmailUsers
-		e.Subject = "Alertas gerados com Pagamento do Governo SP"
+		e.Subject = "Alertas gerados com Pagamento do Governo SP (" + fmt.Sprint(payment.Year) + "-" + fmt.Sprint(payment.Month) + ")"
 		e.Text = []byte(emailText)
 		e.HTML = []byte(emailBody)
 

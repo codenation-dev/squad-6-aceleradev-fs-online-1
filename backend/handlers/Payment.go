@@ -87,58 +87,75 @@ func GetCheckPayments(c *gin.Context) {
 // CheckPayments verifica se existe pagamentos para baixar e processar
 func CheckPayments() {
 
-	currentTime := time.Now()
+	if db.CountCustomers() > 0 {
 
-	run := true
-	for run {
-		run = false
-		year := currentTime.Year()
-		month := currentTime.Month()
+		minNumberOfPaymentHistories, err := strconv.ParseInt(os.Getenv("CONFIG_MIN_NUMBER_PAYMENT_HISTORY"), 10, 32)
+		if err != nil {
+			minNumberOfPaymentHistories = 1
+		}
 
-		payment := db.FindPaymentByYearAndMonth(false, year, int(month))
+		currentTime := time.Now()
 
-		if payment.ID <= 0 {
-			fileRarPayment, errDownload := services.DownloadPaymentFile(year, int(month))
-			if errDownload == nil {
-				fmt.Println("CheckPayments()-> file downloaded", fileRarPayment)
-				pathFolderExtracted := fileRarPayment[0 : len(fileRarPayment)-4]
+		run := true
+		for run {
+			run = false
+			year := currentTime.Year()
+			month := currentTime.Month()
 
-				if _, err := os.Stat(pathFolderExtracted); !os.IsNotExist(err) {
-					os.RemoveAll(pathFolderExtracted)
-				}
+			payment := db.FindPaymentByYearAndMonth(false, year, int(month))
 
-				errExtract := services.ExtractRarFile(fileRarPayment, pathFolderExtracted)
-				if errExtract == nil {
-					fmt.Println("CheckPayments()-> folder extracted:" + pathFolderExtracted)
+			if payment.ID <= 0 {
+				fileRarPayment, errDownload := services.DownloadPaymentFile(year, int(month))
+				if errDownload == nil {
+					fmt.Println("CheckPayments()-> file downloaded", fileRarPayment)
+					pathFolderExtracted := fileRarPayment[0 : len(fileRarPayment)-4]
 
-					files, err := ioutil.ReadDir(pathFolderExtracted)
-					if err != nil {
-						log.Fatal(err)
+					if _, err := os.Stat(pathFolderExtracted); !os.IsNotExist(err) {
+						os.RemoveAll(pathFolderExtracted)
 					}
-					pathCSV := pathFolderExtracted + "/" + files[0].Name()
 
-					fmt.Println("CheckPayments()-> TXT file:" + pathCSV)
-					if _, err := os.Stat(pathCSV); err == nil {
-						fmt.Println("CheckPayments()-> TXT file check: ok")
+					errExtract := services.ExtractRarFile(fileRarPayment, pathFolderExtracted)
+					if errExtract == nil {
+						fmt.Println("CheckPayments()-> folder extracted:" + pathFolderExtracted)
 
-						registerPaymentsFromCSV(pathCSV, year, int(month))
+						files, err := ioutil.ReadDir(pathFolderExtracted)
+						if err != nil {
+							log.Fatal(err)
+						}
+						pathCSV := pathFolderExtracted + "/" + files[0].Name()
+
+						fmt.Println("CheckPayments()-> TXT file:" + pathCSV)
+						if _, err := os.Stat(pathCSV); err == nil {
+							fmt.Println("CheckPayments()-> TXT file check: ok")
+
+							registerPaymentsFromCSV(pathCSV, year, int(month))
+						} else {
+							fmt.Println("CheckPayments()-> TXT file not found! Error")
+						}
+
 					} else {
-						fmt.Println("CheckPayments()-> TXT file not found! Error")
+						fmt.Println("CheckPayments()-> error to extract ->", fileRarPayment)
 					}
-
 				} else {
-					fmt.Println("CheckPayments()-> error to extract ->", fileRarPayment)
+					fmt.Println("CheckPayments()-> error on download ->", year, "-", int(month))
+					//processa novamente procurando no mes anterior a ultima busca
+					run = true
+					currentTime = currentTime.AddDate(0, -1, 0)
 				}
 			} else {
-				fmt.Println("CheckPayments()-> error on download ->", year, "-", int(month))
-				//processa novamente procurando no mes anterior a ultima busca
+				fmt.Println("CheckPayments()-> not found new payment")
+				fmt.Println("CheckPayments()-> last payment register ->", year, "-", int(month))
+			}
+
+			//cria historico de X pagamentos
+			listPayments := db.FindPayments(false, 0)
+			if int64(len(listPayments)) < minNumberOfPaymentHistories {
 				run = true
 				currentTime = currentTime.AddDate(0, -1, 0)
 			}
-		} else {
-			fmt.Println("CheckPayments()-> not found new payment")
-			fmt.Println("CheckPayments()-> last payment register ->", year, "-", int(month))
 		}
+	} else {
+		fmt.Println("CheckPayments()-> register customers before check")
 	}
 }
 
