@@ -3,7 +3,6 @@ import {withRouter} from 'react-router';
 import PropTypes from 'prop-types';
 
 import alertService from './../services/alertService';
-import loginService from '../services/loginService';
 
 class Alert extends Component {
   constructor(props) {
@@ -15,25 +14,25 @@ class Alert extends Component {
         id: 0,
         filename: '',
         month: '',
-        year:'',
-        EmployeePayments:''
-        },
+        year: '',
+        EmployeePayments: '',
+      },
     };
   }
- 
+
   async componentDidMount() {
     if (this.props.match.params.id) {
       let alert;
       try {
         alert = await alertService.getAlertById(this.props.match.params.id);
-        console.log(alert,"aqui nos alertas")
+        console.log(alert, 'aqui nos alertas');
       } catch (error) {
         console.log(error);
       }
       if (alert) {
         this.setState({
-            alertId: this.props.match.params.id,
-            alertForm:  alert[0]
+          alertId: this.props.match.params.id,
+          alertForm: alert[0],
         });
       } else {
         this.setState({alertInvalid: true});
@@ -77,22 +76,19 @@ class Alert extends Component {
   };
 
   handleOnChange(event) {
-  
-      this.setState({
-        ...this.state,
-        alertForm: {
-          ...this.state.alertForm,
-          [event.target.name]: event.target.value ? event.target.value : '',
-        },
-      });
-    
-    }
-  
+    this.setState({
+      ...this.state,
+      alertForm: {
+        ...this.state.alertForm,
+        [event.target.name]: event.target.value ? event.target.value : '',
+      },
+    });
+  }
 
   render = () => (
     <React.Fragment>
       <script>
-       {/*  console.log({JSON.stringify(loginService.userLogged(), null, 4)}); */}
+        {/*  console.log({JSON.stringify(loginService.userLogged(), null, 4)}); */}
       </script>
 
       <div className="container">
@@ -101,12 +97,9 @@ class Alert extends Component {
         </div>
         <form>
           <div className="form-row">
-
-
             <div className="form-group col-md-1">
               <label htmlFor="inputId">ID</label>
               <input
-                 
                 type="text"
                 className="form-control"
                 placeholder="0"
@@ -117,7 +110,6 @@ class Alert extends Component {
               />
             </div>
 
-
             <div className="form-group col-md-8">
               <label htmlFor="inputEmail"> Arquivo </label>
               <input
@@ -127,19 +119,14 @@ class Alert extends Component {
                 id="inputarquivo"
                 name="email"
                 value={this.state.alertForm.filename}
-               
                 onChange={e => {
                   this.handleOnChange(e);
                 }}
                 disabled
               />
-              
-             </div>  
+            </div>
 
-
-
-          
-          <div className="form-group col-md-1">
+            <div className="form-group col-md-1">
               <label htmlFor="inputEmail"> Mês</label>
               <input
                 type="text"
@@ -153,10 +140,9 @@ class Alert extends Component {
                 }}
                 disabled
               />
-             </div>
-         
-           
-             <div className="form-group col-md-1">
+            </div>
+
+            <div className="form-group col-md-1">
               <label htmlFor="inputEmail">Ano</label>
               <input
                 type="text"
@@ -170,28 +156,26 @@ class Alert extends Component {
                 }}
                 disabled
               />
-             </div>
-          
+            </div>
 
-          <div className="form-group col-md-7">
-            <label htmlFor="inputName">Salário Cód. Nº</label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Salário Cód."
-              onChange={e => {
-                this.handleOnChange(e);
-              }}
-              id="inputName"
-              name="name"
-              value={this.state.alertForm.EmployeePayments}
-              disabled
-            />
-          </div>
-
+            <div className="form-group col-md-7">
+              <label htmlFor="inputName">Salário Cód. Nº</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Salário Cód."
+                onChange={e => {
+                  this.handleOnChange(e);
+                }}
+                id="inputName"
+                name="name"
+                value={this.state.alertForm.EmployeePayments}
+                disabled
+              />
+            </div>
           </div>
           <div className="form-group">
-           {/*  <button
+            {/*  <button
               
               onClick={e => {
                 this.btnSalvarClick(e);

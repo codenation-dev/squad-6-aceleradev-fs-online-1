@@ -19,8 +19,8 @@ import Customers from './components/Customers';
 import Customer from './components/Customer';
 import UploadCSV from './components/UploadCSV';
 
-import Alerts from './components/Alerts'
-import Alert from './components/Alert'
+import Alerts from './components/Alerts';
+import Alert from './components/Alert';
 
 import './App.css';
 
@@ -88,7 +88,6 @@ const AlertsRoute = props => {
   return <Alerts />;
 };
 
-
 const AlertRoute = props => {
   if (!login.isLogged()) {
     props.history.push('/');
@@ -96,13 +95,16 @@ const AlertRoute = props => {
   }
   return <Alert />;
 };
+
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {};
   }
-
+  componentDidMount() {
+    document.title = 'Banco Uati';
+  }
   render() {
     return (
       <div className="App">
@@ -132,8 +134,6 @@ class App extends Component {
         <Route exact path="/customers" component={CustomersRoute} />
         <Route exact path="/customer" component={CustomerRoute} />
         <Route exact path="/customer/:id" component={CustomerRoute} />
-      
-
 
         {/* Upload Cliente */}
         <Route exact path="/uploadcsv" component={UploadCSVRoute} />

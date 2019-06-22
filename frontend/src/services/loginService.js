@@ -9,9 +9,7 @@ async function login(email, password) {
 
   if (data) {
     localStorageWrapper.set(NS_LOGGED_USER, {
-      // DANGER: user credentials being stored in the local storage.
       email,
-      password: password,
       token: data.token,
       expire: data.expire,
     });

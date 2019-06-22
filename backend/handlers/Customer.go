@@ -99,7 +99,7 @@ func UploadCustomersWithCSV(c *gin.Context) {
 	fileTemp := "./temp/" + file.Filename
 	c.SaveUploadedFile(file, fileTemp)
 
-	go registerCustomersFromCSV(fileTemp)
+	registerCustomersFromCSV(fileTemp)
 
 	c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
 }

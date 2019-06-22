@@ -19,7 +19,6 @@ class Customers extends Component {
 
   btnNewClick(event) {
     this.props.history.push('/customer/');
-    
   }
 
   btnEditClick(event, item) {
@@ -52,7 +51,6 @@ class Customers extends Component {
             id="btnNew"
             name="btnNew"
           >
-            
             Novo Cliente
           </button>
           <button
@@ -69,46 +67,50 @@ class Customers extends Component {
         </div>
         <br />
         <div className="row">
-          <table className="table table-hover">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Nome</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.state.listCustomers
-                ? this.state.listCustomers.map((item, index) => (
-                    <tr key={item.id}>
-                      <th scope="row">{item.id}</th>
-                      <td>{item.name}</td>
-                      <td>
-                        <input
-                          onClick={e => {
-                            this.btnEditClick(e, item);
-                          }}
-                          className="btn btn-primary btn-sm"
-                          type="button"
-                          value="Editar"
-                          name="btnEdit"
-                          id="btnEdit"
-                        />
-                        <input
-                          onClick={e => {
-                            this.btnDeleteClick(e, item);
-                          }}
-                          className="btn btn-danger btn-sm"
-                          type="button"
-                          value="Excluir"
-                          name="btnDelete"
-                          id="btnDelete"
-                        />
-                      </td>
-                    </tr>
-                  ))
-                : ''}
-            </tbody>
-          </table>
+          {this.state.listCustomers ? (
+            <table className="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Nome</th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.listCustomers
+                  ? this.state.listCustomers.map((item, index) => (
+                      <tr key={item.id}>
+                        <th scope="row">{item.id}</th>
+                        <td>{item.name}</td>
+                        <td>
+                          <input
+                            onClick={e => {
+                              this.btnEditClick(e, item);
+                            }}
+                            className="btn btn-primary btn-sm"
+                            type="button"
+                            value="Editar"
+                            name="btnEdit"
+                            id="btnEdit"
+                          />
+                          <input
+                            onClick={e => {
+                              this.btnDeleteClick(e, item);
+                            }}
+                            className="btn btn-danger btn-sm"
+                            type="button"
+                            value="Excluir"
+                            name="btnDelete"
+                            id="btnDelete"
+                          />
+                        </td>
+                      </tr>
+                    ))
+                  : ''}
+              </tbody>
+            </table>
+          ) : (
+            ''
+          )}
         </div>
       </div>
     </React.Fragment>

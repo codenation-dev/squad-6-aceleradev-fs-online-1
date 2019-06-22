@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import { withRouter } from "react-router";
-import PropTypes from "prop-types";
+import React, {Component} from 'react';
+import {withRouter} from 'react-router';
+import PropTypes from 'prop-types';
 
 class Home extends Component {
   constructor(props) {
@@ -13,7 +13,7 @@ class Home extends Component {
       <div className="container">
         <div className="row">
           <h1>Banco Uati</h1>
-          <p>
+          <p align="justify">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
             imperdiet quam at leo tempor bibendum. Mauris sed ipsum nec nibh
             posuere sodales a eu urna. Nam bibendum lacus vitae ex scelerisque
@@ -47,7 +47,7 @@ class Home extends Component {
 
   static propTypes = {
     location: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired
+    history: PropTypes.object.isRequired,
   };
 }
 

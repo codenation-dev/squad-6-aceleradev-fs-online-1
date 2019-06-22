@@ -33,8 +33,9 @@ http.interceptors.response.use(
     }
 
     if (error.response && error.response.status === 401) {
-      // The token does not exist or is invalid
-      // Clean the local storage and navigate the user to login page
+      loginService.logout();
+    } else if (error.response && error.response.status === 403) {
+      loginService.logout();
     }
 
     return Promise.reject(error);

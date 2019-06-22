@@ -150,43 +150,50 @@ class Alerts extends Component {
 
         <br />
         <div className="row">
-          <table className="table table-sm table-hover">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Data\Hora</th>
-                <th scope="col">Usuário Alerta</th>
-                <th scope="col">Usuário Email</th>
-                <th scope="col">Cliente?</th>
-                <th scope="col">Pagamento</th>
-                <th scope="col">Funcionário Gov. SP</th>
-                <th scope="col">Salário</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.state.listAlerts
-                ? this.state.listAlerts.map((item, index) => (
-                    <tr key={item.id}>
-                      <th scope="row">{item.id}</th>
-                      <td>{dayjs(item.date).format('YYYY-MM-DD HH:mm:ss')}</td>
-                      <td>{item.user.name}</td>
-                      <td>{item.user.email}</td>
-                      <td>{item.customer.id ? 'Sim' : 'Não'}</td>
-                      <td>
-                        {String(item.payment.year + '-' + item.payment.month)}
-                      </td>
-                      <td>{item.paymentEmployee.name}</td>
-                      <td>
-                        {item.paymentEmployee.salary.toLocaleString('pt-br', {
-                          style: 'currency',
-                          currency: 'BRL',
-                        })}
-                      </td>
-                    </tr>
-                  ))
-                : ''}
-            </tbody>
-          </table>
+          {this.state.listAlerts ? (
+            <table className="table table-sm table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Data\Hora</th>
+                  <th scope="col">Usuário Alerta</th>
+                  <th scope="col">Usuário Email</th>
+                  <th scope="col">Cliente?</th>
+                  <th scope="col">Pagamento</th>
+                  <th scope="col">Funcionário Gov. SP</th>
+                  <th scope="col">Salário</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {this.state.listAlerts
+                  ? this.state.listAlerts.map((item, index) => (
+                      <tr key={item.id}>
+                        <th scope="row">{item.id}</th>
+                        <td>
+                          {dayjs(item.date).format('YYYY-MM-DD HH:mm:ss')}
+                        </td>
+                        <td>{item.user.name}</td>
+                        <td>{item.user.email}</td>
+                        <td>{item.customer.id ? 'Sim' : 'Não'}</td>
+                        <td>
+                          {String(item.payment.year + '-' + item.payment.month)}
+                        </td>
+                        <td>{item.paymentEmployee.name}</td>
+                        <td>
+                          {item.paymentEmployee.salary.toLocaleString('pt-br', {
+                            style: 'currency',
+                            currency: 'BRL',
+                          })}
+                        </td>
+                      </tr>
+                    ))
+                  : ''}
+              </tbody>
+            </table>
+          ) : (
+            ''
+          )}
         </div>
       </div>
     </React.Fragment>

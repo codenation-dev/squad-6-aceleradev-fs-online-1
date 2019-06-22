@@ -23,7 +23,11 @@ class Login extends Component {
       this.props.history.push('/');
     } catch (error) {
       event.preventDefault();
-      alert(error);
+      if (String(error).indexOf('401') >= 0) {
+        alert('Usuario ou/e senha incorreto(s).');
+      } else {
+        alert('Erro ao tentar fazer o login.\n' + error);
+      }
     }
   }
 
@@ -36,7 +40,7 @@ class Login extends Component {
 
       <form className="form-signin">
         <div className="form-label-group">
-          <label htmlFor="inputEmail">Username</label>
+          <label htmlFor="inputEmail">E-mail</label>
           <input
             name="username"
             onChange={e => {
@@ -44,12 +48,12 @@ class Login extends Component {
             }}
             value={this.state.username}
             className="form-control"
-            placeholder="Username"
+            placeholder="e-mail"
             required
           />
 
           <div className="form-label-group mt-2">
-            <label htmlFor="inputPassword">Password</label>
+            <label htmlFor="inputPassword">Senha</label>
             <input
               name="password"
               onChange={e => {
@@ -58,7 +62,7 @@ class Login extends Component {
               value={this.state.password}
               type="password"
               className="form-control"
-              placeholder="Password"
+              placeholder="senha"
               required
             />
           </div>
