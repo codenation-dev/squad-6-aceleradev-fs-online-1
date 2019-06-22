@@ -3,7 +3,7 @@ import {withRouter} from 'react-router';
 import PropTypes from 'prop-types';
 
 import customersService from './../services/customerService';
-import loginService from '../services/loginService';
+import paymentsService from './../services/paymentsService';
 
 class Customer extends Component {
   constructor(props) {
@@ -15,16 +15,21 @@ class Customer extends Component {
         id: 0,
         name: '',
       },
+      listPaymentsCustomer: [],
     };
   }
 
   async componentDidMount() {
     if (this.props.match.params.id) {
+      let listPaymentsCustomer = [];
       let customer;
       try {
         customer = await customersService.getCustomerById(
           this.props.match.params.id
         );
+        if (customer.id) {
+          listPaymentsCustomer = await paymentsService.getPayments(customer.id);
+        }
       } catch (error) {
         console.log(error);
       }
@@ -32,6 +37,7 @@ class Customer extends Component {
         this.setState({
           customerId: this.props.match.params.id,
           customerForm: customer,
+          listPaymentsCustomer: listPaymentsCustomer,
         });
       } else {
         this.setState({customerInvalid: true});
@@ -88,14 +94,7 @@ class Customer extends Component {
 
   render = () => (
     <React.Fragment>
-      <script>
-        console.log({JSON.stringify(loginService.userLogged(), null, 4)});
-      </script>
-
       <div className="container">
-        <div className="alert alert-danger" role="alert" hidden>
-          This is a primary alert—check it out!
-        </div>
         <form>
           <div className="form-row">
             <div className="form-group col-md-2">
@@ -147,6 +146,48 @@ class Customer extends Component {
             </button>
           </div>
         </form>
+
+        <div className="row">
+          {this.state.listPaymentsCustomer ? (
+            <table className="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col" hidden>
+                    #
+                  </th>
+                  <th scope="col">Ano-Mês</th>
+                  <th scope="col">Departamento</th>
+                  <th scope="col">Cargo</th>
+                  <th scope="col">Salário</th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.listPaymentsCustomer
+                  ? this.state.listPaymentsCustomer.map((payment, index) =>
+                      payment.EmployeePayments.map((item, index2) => (
+                        <tr key={item.id}>
+                          <th scope="row" hidden>
+                            {item.id}
+                          </th>
+                          <th>{String(payment.year + '-' + payment.month)}</th>
+                          <th>{item.occupation}</th>
+                          <th>{item.department}</th>
+                          <th>
+                            {item.salary.toLocaleString('pt-br', {
+                              style: 'currency',
+                              currency: 'BRL',
+                            })}
+                          </th>
+                        </tr>
+                      ))
+                    )
+                  : ''}
+              </tbody>
+            </table>
+          ) : (
+            ''
+          )}
+        </div>
       </div>
     </React.Fragment>
   );

@@ -3,7 +3,6 @@ import {withRouter} from 'react-router';
 import PropTypes from 'prop-types';
 
 import usersService from './../services/usersService';
-import loginService from '../services/loginService';
 
 class User extends Component {
   constructor(props) {
@@ -26,7 +25,6 @@ class User extends Component {
       let user;
       try {
         user = await usersService.getUserById(this.props.match.params.id);
-        console.log(user, "usuários");
       } catch (error) {
         console.log(error);
       }
@@ -95,10 +93,6 @@ class User extends Component {
 
   render = () => (
     <React.Fragment>
-      <script>
-        console.log({JSON.stringify(loginService.userLogged(), null, 4)});
-      </script>
-
       <div className="container">
         <div className="alert alert-danger" role="alert" hidden>
           This is a primary alert—check it out!

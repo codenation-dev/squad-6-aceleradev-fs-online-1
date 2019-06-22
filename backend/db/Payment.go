@@ -33,7 +33,13 @@ func FindPayments(returnEmployees bool, customerID int) []models.Payment {
 			`inner join pagamento_funcionario on 
 				pagamento_funcionario.pagame_id = pagamento.pagame_id
 			where
-				pagamento_funcionario.client_id = ` + strconv.Itoa(customerID)
+				pagamento_funcionario.client_id = ` + strconv.Itoa(customerID) +
+			` group by 
+				pagamento.pagame_id,
+				pagamento.pagame_arquivo,
+				pagamento.pagame_ano,
+				pagamento.pagame_mes`
+
 	}
 
 	rows, errQuery := db.Query(sql)
