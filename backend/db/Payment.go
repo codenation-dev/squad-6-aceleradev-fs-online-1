@@ -226,13 +226,14 @@ func insertPaymentEmployee(optionalDB *sql.DB, payment models.Payment, paymentEm
 	insert :=
 		`INSERT INTO public.pagamento_funcionario
 		(pagame_id, pagfun_nome, pagfun_cargo, pagfun_orgao, pagfun_remuneracao, client_id)
-		VALUES ($1, $2, $3, $4, $5, NULLIF($6,0))
-		returning pagfun_id, pagame_id, pagfun_nome, pagfun_cargo, pagfun_orgao, pagfun_remuneracao, coalesce(client_id,0);`
+		VALUES ($1, $2, NULLIF($3,''), $4, $5, NULLIF($6,0))
+		returning pagfun_id, pagame_id, pagfun_nome, coalesce(pagfun_cargo, '') as pagfun_cargo, pagfun_orgao, pagfun_remuneracao, coalesce(client_id,0);`
 
-	var occupationFix string
-	if len(paymentEmployee.Occupation) > 3 {
-		occupationFix = "(vazio)"
+	occupationFix := paymentEmployee.Occupation
+	if len(paymentEmployee.Occupation) < 3 {
+		occupationFix = ""
 	}
+
 	errInsert := db.QueryRow(insert,
 		payment.ID,
 		paymentEmployee.Name,
@@ -283,7 +284,7 @@ func findPaymentsEmployeeByPaymentID(paymentID int, customerID int) []models.Pay
 	sql := `select 
 				pagamento_funcionario.pagfun_id,
 				pagamento_funcionario.pagfun_nome,
-				pagamento_funcionario.pagfun_cargo,
+				coalesce(pagamento_funcionario.pagfun_cargo, '') as pagfun_cargo,
 				pagamento_funcionario.pagfun_orgao,
 				pagamento_funcionario.pagfun_remuneracao,
 				coalesce(pagamento_funcionario.client_id,0) as client_id

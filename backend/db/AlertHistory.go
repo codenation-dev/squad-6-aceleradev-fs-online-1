@@ -82,7 +82,7 @@ func FindAlerts(userID int, customerID int, paymentID int, ID int, onlyCustomers
 				pagamento.pagame_ano,
 				pagamento.pagame_mes,
 				pagamento_funcionario.pagfun_nome,
-				pagamento_funcionario.pagfun_cargo,
+				(pagamento_funcionario.pagfun_cargo,'') as pagfun_cargo,
 				pagamento_funcionario.pagfun_orgao,
 				pagamento_funcionario.pagfun_remuneracao
 			from historico_alerta 			
