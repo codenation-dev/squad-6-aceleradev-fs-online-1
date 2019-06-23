@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -41,8 +40,6 @@ func PutUser(c *gin.Context) {
 	c.Header("Content-Type", "application/json")
 	var user models.User
 	c.Bind(&user)
-
-	fmt.Println(user)
 
 	if id, err := strconv.Atoi(c.Params.ByName("id")); err == nil {
 		userUpdated := db.UpdateUserByID(id, user)
